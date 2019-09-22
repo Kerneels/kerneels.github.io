@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Stored Procedure on Good Fast</title>
+    <link>http://goodfast.info/tags/stored-procedure/</link>
+    <description>Recent content in Stored Procedure on Good Fast</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Thu, 08 Jun 2017 08:31:17 +0200</lastBuildDate>
+    <atom:link href="http://goodfast.info/tags/stored-procedure/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>Speed up slow views through custom materialization</title>
+      <link>http://goodfast.info/post/speed-up-views-through-custom-materialization/</link>
+      <pubDate>Thu, 08 Jun 2017 08:31:17 +0200</pubDate>
+      
+      <guid>http://goodfast.info/post/speed-up-views-through-custom-materialization/</guid>
+      <description>
+
+&lt;p&gt;SQL views are aluring as a means of abstraction; a &amp;ldquo;building block&amp;rdquo; to hide away commonly used complexity.
+It is no wonder then that us developers will try them out, and before you know it, your clever recursive CTE view on that hierarchy is used everywhere, by everyone, but how is it affecting overall database performance&amp;hellip;&lt;/p&gt;
+
+&lt;p&gt;They look like tables, can be joined on, selected from, and in some cases even updated just like tables, yet the reality is that they are not like tables.
+So, you cannot consider a view to be a type of stored procedure, and you can also not consider a view to be a type of table or index; it is something in between.&lt;/p&gt;
+
+&lt;p&gt;It is possible for the query planner to &amp;ldquo;reach into&amp;rdquo; a view, and discover which indexes to use in order to access information in the best way, but this quikcly breaks down once you perform any kind of complicated thing, such as a CTE, UNION statement, or anything else that breaks up the link from the source tables to the result set of the view.
+When exactly you break this ability of the query planner to use appropriate indexes is a great idea for a future post - I have not found anything that directly states this as of yet.
+Intuitivly  it makes sense that some kinds of data mangling will just make it impossible for the query planner to find indexes to use.&lt;/p&gt;
+Note that it&#39;s of course always best to first inspect the query plan before concluding that a fiew is or is not making use of a particular index. I have made the mistake before of making grand statements on how poor the query planner is at choosing an index when dealing with a view, only to be shown that it in fact can do a bit more than what you might expect!
+
+&lt;p&gt;My goal in this post is simply to make you aware of the possability that complex views might be causing your database to perform sub optimally, and then to offer an in place, zero downtime solution to the problem.&lt;/p&gt;
+
+&lt;h3 id=&#34;when-to-use-views:0d7721be2247c9da7d04dc0c01e0fcf2&#34;&gt;When to use views&lt;/h3&gt;
+
+&lt;p&gt;The way I currently understand it,  you should use views when you want different &lt;em&gt;views&lt;/em&gt; on the same table, or simple connected set of tables; i.e. you want to include/exclude certain columns/rows, so in other words, as a means of information hiding, a means of performing restricted access to the information in the underlying tables; a different take on the same data.
+It is debatable how many new systems are developed, that would choose to deligate security, access restriction type of functionality to the database, but there is a fair chance that it is happening out in the wild, since a recent SQL Server feature is row-level access, and data masking.&lt;/p&gt;
+
+&lt;h3 id=&#34;discovering-the-problem:0d7721be2247c9da7d04dc0c01e0fcf2&#34;&gt;Discovering the problem&lt;/h3&gt;
+
+&lt;p&gt;It was while I was performance tuning a very busy Azure Database, that I discovered a collection of particularly slow executing queries, spending most of their time in CPU.
+The data volume involved could not account for the poor performance, being in the mere tens of thousands of small rows.
+As far as I could determine, most of the appropriate indexes existed that would normally make things perform acceptably.
+Something else was up&amp;hellip;&lt;/p&gt;
+
+&lt;p&gt;Turning to the query plans, a pattern started emerging; slow, very slow views were joined on.
+The views themselves were not very complex, but they did something interesting: they were recursive CTEs designed to traverse
+a hierarchy, essentially a tree structure, and produce a full fan out of the entire tree.&lt;/p&gt;
+
+&lt;h3 id=&#34;solution:0d7721be2247c9da7d04dc0c01e0fcf2&#34;&gt;Solution&lt;/h3&gt;
+
+&lt;p&gt;My first inclination was to have SQL Server materialize these views for me. Materialized (or indexed) views is an &lt;a href=&#34;http://sqlmag.com/database-performance-tuning/introducing-indexed-views&#34;&gt;old feature of the server&lt;/a&gt;, dating back to SQL Server 2000 if I&amp;rsquo;m not mistaking, so surely in 2017 this should be completely possible.
+Well, it turns out that in order for a view to be materialized, &lt;a href=&#34;https://docs.microsoft.com/en-us/sql/relational-databases/views/create-indexed-views&#34;&gt;a whole list of requirements&lt;/a&gt; need to be satisfied. For example, something as innocently looking as a LEFT JOIN in the view query would put a quick end to this solution path.&lt;br /&gt;
+Researching it a bit further shed some light on why all these restrictions apply, but although it does make you be a bit more understanding, it still feels like this is something that should be possible, no matter how complex the view is.&lt;/p&gt;
+
+&lt;p&gt;Completely redesigning the underlying hierarchical representation, with something like transative closures was not really an option, so the next best idea was to custom materialize these views.
+The data access characteristics of the hierarchy and supporting tables was that they did not change all that often, yet they were queried all the time.
+This was great news, since it meant that even if the materialization process took a bit of time, this would quickly be compensated for by the much, much faster query times.
+Having the previously computed data now reside in a proper table also meant that it could be appropriately indexed, clustered, and even partitioned (although the volume was far too low for this need).&lt;/p&gt;
+
+&lt;h4 id=&#34;the-procedure:0d7721be2247c9da7d04dc0c01e0fcf2&#34;&gt;The procedure&lt;/h4&gt;
+
+&lt;ol&gt;
+&lt;li&gt;Create a table (we&amp;rsquo;ll call it the Working) that structurally mirrors the result of querying the view (the View, later to be renamed to the Origin).&lt;/li&gt;
+&lt;li&gt;Create a stored procedure (RefreshWorking) that will make use of Origin to refresh Working.&lt;/li&gt;
+&lt;li&gt;Create AFTER triggers for all tables referenced by Origin, that will call RefreshWorking.&lt;/li&gt;
+&lt;li&gt;Make the triggers intelligent in that they will only call RefreshWorking when the DML operation of the source table would actually affect the outcome of the Origin view.&lt;/li&gt;
+&lt;li&gt;Optionally pass the source table name and the key values, through a table valued parameter to RefreshWorking, so that the procedure can more intelligently pick out which parts of Working will need refreshing.&lt;/li&gt;
+&lt;li&gt;Create a view, CheckWorkingAndOrigin, that FULL JOIN view Origin and table Working, to ensure that they are identical.&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;Once all of this is done, it is time to test.
+For your testing I can highly recommend &lt;a href=&#34;http://tsqlt.org/&#34;&gt;tSQLt&lt;/a&gt;; a completely T-SQL based unit testing system.
+When you have assured yourself that RefreshWorking properly updates table Working, it is time for the deployment.&lt;/p&gt;
+
+&lt;p&gt;In one transaction, rename  the original, slow view to Origin, create a synonym with the same name as the original slow view, and point the synonym at the Working table.
+As the last step of the transaction, run RefreshWorking procedure so that the Working table will get properly updated and be primed for showtime.&lt;/p&gt;
+
+&lt;h3 id=&#34;reward:0d7721be2247c9da7d04dc0c01e0fcf2&#34;&gt;Reward&lt;/h3&gt;
+
+&lt;p&gt;After we implemented this procedure on a heavily queried complex view, we saw a query plan simplification going from
+over 70 steps, to only 3 steps. More impressive is that the plan now took 481 times less CPU time!
+The RefreshWorking procedure still called the original, slow, complex view, but it did this only when the source tables changed and in particular ways.
+The procedure also minimized writes to the Working table, to prevent table locking for the heavy reading on it.&lt;/p&gt;
+
+&lt;h3 id=&#34;summary:0d7721be2247c9da7d04dc0c01e0fcf2&#34;&gt;Summary&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;One way we make sense of the world is by modelling relationships between things as a tree-like hierarchy.&lt;/li&gt;
+&lt;li&gt;Most database systems, however, are essentially flat when it comes to the most basic collection of storage; the table.&lt;/li&gt;
+&lt;li&gt;We overcome the flatness in one particular way, the simpler  of possible ways, by representing the unbounded nested characteristic of hierarchies by self referencing records in a table.&lt;/li&gt;
+&lt;li&gt;Self referencing records in a single table makes manipulation of the hierarchy a very simple operation, but this simplicity comes at a cost when you want to traverse the hierarchy.&lt;/li&gt;
+&lt;li&gt;For traversing arbitrarily  deep hierarchies represented by self referencing records, you inevitably require recursion.&lt;/li&gt;
+&lt;li&gt;Recursive CTEs break the essential link between the source tables and the view result set, making it impossible for the query planner to do anything but perform the entire process of the view&amp;rsquo;s query, even when you only desire a small subset.&lt;/li&gt;
+&lt;li&gt;In the scenario where the source tables for the complex view are written to less than they are read from, you can optimize the complex view by materializing it into a concrete table.&lt;/li&gt;
+&lt;li&gt;The materialized table can then be properly indexed for maximum query performance, at a relatively small index maintenance cost at write time.&lt;/li&gt;
+&lt;li&gt;With this approach you are trading computation time for storage space.&lt;/li&gt;
+&lt;li&gt;The writing of the materialized table happens on DML AFTER triggers, so that you first have the change written to the source tables before the materialized table is updated.&lt;/li&gt;
+&lt;li&gt;Updating of the materialized table need not be a complete rewrite; the AFTER triggers can be programmed so that they only fire when columns that partake in the SELECT list for the origin view query change.&lt;/li&gt;
+&lt;li&gt;A further optimization can be made where by the refresh stored procedure recieves a list of keys of rows that changed, and can then use this info to only update the materialized table where it actually needs to change.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;I hope that you will try out this procedure on slow views on your databases; it has really helped us a lot.&lt;/p&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>

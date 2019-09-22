@@ -1,0 +1,409 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Readability on Good Fast</title>
+    <link>http://goodfast.info/categories/readability/</link>
+    <description>Recent content in Readability on Good Fast</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Sun, 09 Oct 2016 21:26:17 +0200</lastBuildDate>
+    <atom:link href="http://goodfast.info/categories/readability/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>CTE : simplify those nested sub queries</title>
+      <link>http://goodfast.info/post/cte-sub-queries-simplified/</link>
+      <pubDate>Sun, 09 Oct 2016 21:26:17 +0200</pubDate>
+      
+      <guid>http://goodfast.info/post/cte-sub-queries-simplified/</guid>
+      <description>
+
+&lt;p&gt;This article examines how sub queries can be substituted for the far more readable common table expressions, or CTEs available in many RDBMS systems.
+I was motivated to write this article when a friend who is fairly new to SQL expressed difficulty in grasping queries containing nested sub queries.&lt;/p&gt;
+
+&lt;p&gt;If you&amp;rsquo;ve never heard of CTEs before and you want to get the most out of this article, I recommend you get &lt;a href=&#34;https://msftdbprodsamples.codeplex.com/releases/view/125550&#34;&gt;AdventureWorks2014&lt;/a&gt; sample database and experiment a little with the queries below.
+Adventureworks is a nice sample database designed to demonstrate SQL Server features, and many examples online makes use of it.
+If on the other hand CTEs are old hat to you a quick skim reading of the below will suffice, but pay attention since there is something
+interesting below which you might never have known, or maybe forgotten.&lt;/p&gt;
+
+&lt;h2 id=&#34;is-it-just-me-or-is-this-strange:0dc054d968169eec76f7161b9d98121b&#34;&gt;Is it just me, or is this strange?&lt;/h2&gt;
+
+&lt;p&gt;No-no, this thing came from long, long ago, was what I was thinking
+the first time I was confronted with SQL SELECT syntax.&lt;/p&gt;
+
+&lt;p&gt;It&amp;rsquo;s all the wrong way round.
+Take the most basic form of  a SELECT statement for example&amp;hellip;&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;You start out with what you want in the column list while starting the SELECT statement.&lt;/li&gt;
+&lt;li&gt;Next you proceed to say from where you want the data  to come from, in the FROM clause.&lt;/li&gt;
+&lt;li&gt;Then you stipulate  how  you want to filter what is returned when you write the WHERE clause.&lt;/li&gt;
+&lt;li&gt;Finally  you end off with how stuff should be ordered in the ORDER BY clause.&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;Now, I do realise that there are (were) probably very good reasons why this particular order was chosen, but
+would it not make more sense to rather start out with saying where you want to draw info from (FROM clause), proceed to filter that with the WHERE clause, followed by your preferred ordering in the ORDER BY, and finishing up with the list of which columns you are interested in, e.g:&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;FROM&lt;/li&gt;
+&lt;li&gt;WHERE&lt;/li&gt;
+&lt;li&gt;ORDER BY&lt;/li&gt;
+&lt;li&gt;SELECT&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;Well, it is really of no consequence now - we have come too far along this road, however, note that the fluent way of constructing queries
+with .NET C# Linq offer exactly this; a more logical flow of steps.&lt;/p&gt;
+
+&lt;p&gt;This post is about simplifying subqueries, so getting back on track, it turns out there is a powerful feature of SQL99 called
+Common Table Expressions, or CTEs which offers a great help when you are dealing with a monster query with little minions of subqueries, nested deeper in there than  your TV remote that sunk into the couch folds.&lt;/p&gt;
+
+&lt;p&gt;Whereas sub query syntax quickly gets confusing and convoluted, using the CTE approach breaks down complexity and deals with each step of the workload in separate parts before moving on to
+constructing a more intertwined picture.&lt;/p&gt;
+
+&lt;p&gt;To me, it somewhat moves towards my &amp;ldquo;more ideal&amp;rdquo; ordering of statements, all be it no real alteration to the standard SELECT syntax.&lt;/p&gt;
+
+&lt;p&gt;Let&amp;rsquo;s have a look at an example.&lt;/p&gt;
+
+&lt;h2 id=&#34;adventureworks-customers-and-their-addresses:0dc054d968169eec76f7161b9d98121b&#34;&gt;Adventureworks customers and their addresses&lt;/h2&gt;
+
+&lt;p&gt;In Adventureworks, customers are modeled in the person.BusinessEntity table, and their addresses in the person.Address table.
+The relation between customers and their addresses is maintained in the person.BusinessEntityAddress table, which adds a type
+for each address (Billing, Home, Main Office etc).&lt;/p&gt;
+
+&lt;h2 id=&#34;we-want-to-know-how-many-customers-have-one-two-and-three-or-more-addresses:0dc054d968169eec76f7161b9d98121b&#34;&gt;We want to know how many customers have one, two and three or more addresses.&lt;/h2&gt;
+Since the purpose of this article is to discuss subquery vs CTEs, excuse the somewhat contrived query.
+At the end of this article I&#39;ll show  a simpler way to accomplish the tast at hand.
+
+&lt;h2 id=&#34;sub-query-building-block:0dc054d968169eec76f7161b9d98121b&#34;&gt;Sub query building block&lt;/h2&gt;
+
+&lt;p&gt;We can establish that no BusinessEntity has more than two addresses by the empty result set returned by:&lt;/p&gt;
+select ba.BusinessEntityId, count(ba.AddressId)
+from person.BusinessEntity b
+join person.BusinessEntityAddress ba on ba.BusinessEntityId = b.BusinessEntityId
+group by ba.BusinessEntityId
+having count(ba.AddressId) &gt; 2;
+
+&lt;p&gt;We&amp;rsquo;ll assume for the remainder of this article that  this query is our best attempt, and that
+it is a &amp;ldquo;black box&amp;rdquo; with which we cannot tamper, save for adjusting the count in the HAVING clause.&lt;/p&gt;
+
+&lt;p&gt;Note that technically we do not need the additional join:&lt;/p&gt;
+join person.BusinessEntityAddress ba on ba.BusinessEntityId = b.BusinessEntityId
+
+&lt;p&gt;however this ensures we do not consider addresses in isolation - we ensure all addresses actually have an existing business tied to them.&lt;/p&gt;
+
+&lt;h2 id=&#34;sub-query-with-count-of-zero-instead-of-nothing:0dc054d968169eec76f7161b9d98121b&#34;&gt;Sub query with count of zero instead of nothing&lt;/h2&gt;
+
+&lt;p&gt;Now we would like to improve this result a bit, by rather returning a count of zero instead of nothing.
+We do this by wrapping the above query in a super query:&lt;/p&gt;
+select 
+count(businessEntitiesWithMoreThanTwoAddresses.BusinessEntityId) as NumberOfBusinessesWithMoreThanTwoAddresses
+from
+(select ba.BusinessEntityId, 
+count(ba.AddressId) as NumberOfAddresses
+from person.BusinessEntity b
+join person.BusinessEntityAddress ba on ba.BusinessEntityId = b.BusinessEntityId
+group by ba.BusinessEntityId
+having count(ba.AddressId) &gt; 2
+) as businessEntitiesWithMoreThanTwoAddresses;
+
+&lt;p&gt;Not too bad in terms of readability, and since we alias the sub query we always know where the result for the outer select column list comes from.
+But what if we would like to augment this query to also return the number of businesses with only one, and two addresses respectively?
+Or to cover all possabilities, the number of businesses with one, two and three or more addresses respectively.
+Let&amp;rsquo;s try with the sub query approach:&lt;/p&gt;
+
+&lt;h2 id=&#34;combined-sub-query-approach:0dc054d968169eec76f7161b9d98121b&#34;&gt;Combined sub query approach&lt;/h2&gt;
+select 
+count(businessEntitiesWithOneAddress.BusinessEntityId) as NumberOfBusinessesWithOneAddress,
+count(businessEntitiesWithTwoAddresses.BusinessEntityId) as NumberOfBusinessesWithTwoAddresses,
+count(businessEntitiesWithMoreThanTwoAddresses.BusinessEntityId) as NumberOfBusinessesWithMoreThanTwoAddresses
+from
+(select ba.BusinessEntityId, 
+count(ba.AddressId) as NumberOfAddresses
+from person.BusinessEntity b
+join person.BusinessEntityAddress ba on ba.BusinessEntityId = b.BusinessEntityId
+group by ba.BusinessEntityId
+having count(ba.AddressId) = 1
+) as businessEntitiesWithOneAddress,
+(select ba.BusinessEntityId, 
+count(ba.AddressId) as NumberOfAddresses
+from person.BusinessEntity b
+join person.BusinessEntityAddress ba on ba.BusinessEntityId = b.BusinessEntityId
+group by ba.BusinessEntityId
+having count(ba.AddressId) = 2
+) as businessEntitiesWithTwoAddresses,
+(select ba.BusinessEntityId, 
+count(ba.AddressId) as NumberOfAddresses
+from person.BusinessEntity b
+join person.BusinessEntityAddress ba on ba.BusinessEntityId = b.BusinessEntityId
+group by ba.BusinessEntityId
+having count(ba.AddressId) &gt; 2
+) as businessEntitiesWithMoreThanTwoAddresses;
+
+&lt;p&gt;Hmm&amp;hellip; We get zero for everything. Something has gone wrong.
+Running each super/sub query pair separately we obtain a number for the one and two address scenario, but nothing for the three or more one.
+Somehow, the zero result from the three or more address scenario is forcing the other two to become zero as well.
+Well, where else would two hole numbers and zero uniformly combined yeald zero?
+Multiplication of course, and observing how we unwittingly join the three subqueries with a comma (&amp;ldquo;,&amp;rdquo;) which is nothing but a
+cartesian or cross join, everything start to make sense!
+The cross join is causing our result set to first be the number of rows returned by the first subquery,  but then these rows are &amp;ldquo;multiplied&amp;rdquo; in the first cross join with the two address subquery, at which point we are already off track, and finally, to make matters even
+worse, the last subquery returns zero rows, and anything multiplied by zero is of course again zero.&lt;/p&gt;
+
+&lt;h2 id=&#34;fixup-by-throwing-more-sub-queries-at-the-problem:0dc054d968169eec76f7161b9d98121b&#34;&gt;Fixup by throwing more sub queries at the problem&lt;/h2&gt;
+
+&lt;p&gt;Now, let&amp;rsquo;s first remedy this situation by cross joining on only one row each time.
+Hold on, it is going to get a bit messy since in order to do this, we have to introduce yet another subquery.&lt;/p&gt;
+select 
+A.NumberOfBusinessesWithOneAddress,
+B.NumberOfBusinessesWithTwoAddresses,
+C.NumberOfBusinessesWithMoreThanTwoAddresses
+from
+(select 
+count(businessEntitiesWithOneAddress.BusinessEntityId) as NumberOfBusinessesWithOneAddress
+from
+(select ba.BusinessEntityId, 
+count(ba.AddressId) as NumberOfAddresses
+from person.BusinessEntity b
+join person.BusinessEntityAddress ba on ba.BusinessEntityId = b.BusinessEntityId
+group by ba.BusinessEntityId
+having count(ba.AddressId) = 1
+) as businessEntitiesWithOneAddress) as A,
+(select
+count(businessEntitiesWithTwoAddresses.BusinessEntityId) as NumberOfBusinessesWithTwoAddresses
+from
+(select ba.BusinessEntityId, 
+count(ba.AddressId) as NumberOfAddresses
+from person.BusinessEntity b
+join person.BusinessEntityAddress ba on ba.BusinessEntityId = b.BusinessEntityId
+group by ba.BusinessEntityId
+having count(ba.AddressId) = 2
+) as businessEntitiesWithTwoAddresses) as B,
+(select
+count(businessEntitiesWithMoreThanTwoAddresses.BusinessEntityId) as NumberOfBusinessesWithMoreThanTwoAddresses
+from
+(select ba.BusinessEntityId, 
+count(ba.AddressId) as NumberOfAddresses
+from person.BusinessEntity b
+join person.BusinessEntityAddress ba on ba.BusinessEntityId = b.BusinessEntityId
+group by ba.BusinessEntityId
+having count(ba.AddressId) &gt; 2
+) as businessEntitiesWithMoreThanTwoAddresses) as C;
+
+&lt;p&gt;Success, but at quite a complexity and readability cost.&lt;/p&gt;
+
+&lt;h2 id=&#34;first-cte-attempt:0dc054d968169eec76f7161b9d98121b&#34;&gt;First CTE attempt&lt;/h2&gt;
+
+&lt;p&gt;Let&amp;rsquo;s see if we can simplify this into something more readable by using a few CTEs instead of so many subqueries.&lt;/p&gt;
+
+&lt;p&gt;Our query will consist of 3 parts:&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;First, the three innermost sub queries are stated as CTEs named businessEntitiesWithOneAddress, businessEntitiesWithTwoAddresses and businessEntitiesWithMoreThanTwoAddresses.&lt;/li&gt;
+&lt;li&gt;Next, the encapsulating super queries that reduce the sub queries to  single values are also stated as CTEs named A, B and C.&lt;/li&gt;
+&lt;li&gt;Finally we simply select from the aggregation CTEs A, B and C.&lt;/li&gt;
+&lt;/ol&gt;
+-- First, the three innermost sub queries are stated as CTEs named businessEntitiesWithOneAddress, businessEntitiesWithTwoAddresses and businessEntitiesWithMoreThanTwoAddresses.
+with  businessEntitiesWithOneAddress as
+(select ba.BusinessEntityId, 
+count(ba.AddressId) as NumberOfAddresses
+from person.BusinessEntity b
+join person.BusinessEntityAddress ba on ba.BusinessEntityId = b.BusinessEntityId
+group by ba.BusinessEntityId
+having count(ba.AddressId) = 1
+), businessEntitiesWithTwoAddresses as
+(select ba.BusinessEntityId, 
+count(ba.AddressId) as NumberOfAddresses
+from person.BusinessEntity b
+join person.BusinessEntityAddress ba on ba.BusinessEntityId = b.BusinessEntityId
+group by ba.BusinessEntityId
+having count(ba.AddressId) = 2
+), businessEntitiesWithMoreThanTwoAddresses  as
+(select ba.BusinessEntityId, 
+count(ba.AddressId) as NumberOfAddresses
+from person.BusinessEntity b
+join person.BusinessEntityAddress ba on ba.BusinessEntityId = b.BusinessEntityId
+group by ba.BusinessEntityId
+having count(ba.AddressId) &gt; 2
+), 
+
+-- Next, the encapsulating super queries that reduce the sub queries to  single values are also stated as CTEs named A, B and C.
+A as
+(select count(businessEntitiesWithOneAddress.BusinessEntityId) as NumberOfBusinessesWithOneAddress
+from businessEntitiesWithOneAddress
+), B as
+(select count(businessEntitiesWithTwoAddresses.BusinessEntityId) as NumberOfBusinessesWithTwoAddresses
+from businessEntitiesWithTwoAddresses
+), C as
+(select count(businessEntitiesWithMoreThanTwoAddresses.BusinessEntityId) as NumberOfBusinessesWithMoreThanTwoAddresses
+from businessEntitiesWithMoreThanTwoAddresses
+)
+
+-- Finally we simply select from the aggregation CTEs A, B and C.
+select
+A.NumberOfBusinessesWithOneAddress,
+B.NumberOfBusinessesWithTwoAddresses,
+C.NumberOfBusinessesWithMoreThanTwoAddresses
+from A, B, C;
+
+&lt;h2 id=&#34;is-this-not-so-much-more-readable:0dc054d968169eec76f7161b9d98121b&#34;&gt;Is this not so much more readable?&lt;/h2&gt;
+
+&lt;p&gt;This last query (with CTEs only) is functionally equivalent   to the full query with only sub queries, yet, personally I find the CTE-based one
+significnatly more readable and understandable.
+For me there are many reasons for this, but I list a few:&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;Instead of a nested style, the CTEs flow in a top to bottom manner.&lt;/li&gt;
+&lt;li&gt;Each similar set of queries are grouped together.&lt;/li&gt;
+&lt;li&gt;The CTEs are named upfront, so you have an idea of what is being done right from the start.&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h2 id=&#34;cte-support:0dc054d968169eec76f7161b9d98121b&#34;&gt;CTE support&lt;/h2&gt;
+
+&lt;p&gt;CTE is well supported among database systems, and I was surprised to learn that even SqLite supports it!&lt;/p&gt;
+
+&lt;p&gt;Wikipedia says:&lt;/p&gt;
+
+&lt;p&gt;Recursive CTEs are also supported by&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Microsoft SQL Server,&lt;/li&gt;
+&lt;li&gt;Firebird 2.1,&lt;/li&gt;
+&lt;li&gt;PostgreSQL 8.4+,&lt;/li&gt;
+&lt;li&gt;SQLite 3.8.3+,&lt;/li&gt;
+&lt;li&gt;Oracle 11g Release 2,&lt;/li&gt;
+&lt;li&gt;IBM Informix version 11.50+ and&lt;/li&gt;
+&lt;li&gt;CUBRID.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;CTE support has been lacking from MySQL for some time now, however, derived tables can be used successfully to achieve standard or non recursive CTE functionality.
+The good news is that &lt;a href=&#34;http://mysqlserverteam.com/mysql-8-0-labs-recursive-common-table-expressions-in-mysql-ctes/&#34;&gt;full featured CTE support, including recursiveness&lt;/a&gt; is not far off for MySQL.&lt;/p&gt;
+
+&lt;h2 id=&#34;but-can-we-not-just-join-better:0dc054d968169eec76f7161b9d98121b&#34;&gt;But, can we not just join better?&lt;/h2&gt;
+
+&lt;p&gt;Now that I&amp;rsquo;ve shown how the use of CTEs can eliminate sub queries, lets briefly return to the problem of the cartesian join.
+I really did not like the additional sub query, and it&amp;rsquo;s additional CTE counterpart, for reducing the result sets into something that could
+cross join without problems (those A, B and C).
+Is there not perhaps a way to join without throwing anything away?&lt;/p&gt;
+
+&lt;p&gt;Let&amp;rsquo;s consider the &lt;a href=&#34;http://sqlmag.com/t-sql/t-sql-join-types&#34;&gt;possible join types&lt;/a&gt;:&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;CROSS JOIN :  We already saw this does not work.&lt;/li&gt;
+&lt;li&gt;INNER JOIN : This will also not work since per definition our three sets are disjoint / contain no similar items.&lt;/li&gt;
+&lt;li&gt;LEFT, RIGHT JOIN : We have the same problem; our sets are disjoint.&lt;/li&gt;
+&lt;li&gt;FULL JOIN : Bingo! Full joins attempt to join on the join condition, but thereafter behaves like a LEFT and RIGHT JOIN combined; nothing is lost, and unmatched rows are still returned.&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;Did you know about the full join? I will admit that although I knew there had to be something like it, I did not know / forgotten all about it.&lt;/p&gt;
+
+&lt;h2 id=&#34;sub-query-approach-simplified-with-a-full-join:0dc054d968169eec76f7161b9d98121b&#34;&gt;Sub query approach simplified with a FULL JOIN&lt;/h2&gt;
+select 
+count(businessEntitiesWithOneAddress.BusinessEntityId) as NumberOfBusinessesWithOneAddress,
+count(businessEntitiesWithTwoAddresses.BusinessEntityId) as NumberOfBusinessesWithTwoAddresses,
+count(businessEntitiesWithMoreThanTwoAddresses.BusinessEntityId) as NumberOfBusinessesWithMoreThanTwoAddresses
+from
+(select ba.BusinessEntityId, 
+count(ba.AddressId) as NumberOfAddresses
+from person.BusinessEntity b
+join person.BusinessEntityAddress ba on ba.BusinessEntityId = b.BusinessEntityId
+group by ba.BusinessEntityId
+having count(ba.AddressId) = 1
+) as businessEntitiesWithOneAddress 
+full join
+(select ba.BusinessEntityId, 
+count(ba.AddressId) as NumberOfAddresses
+from person.BusinessEntity b
+join person.BusinessEntityAddress ba on ba.BusinessEntityId = b.BusinessEntityId
+group by ba.BusinessEntityId
+having count(ba.AddressId) = 2
+) as businessEntitiesWithTwoAddresses 
+on
+businessEntitiesWithOneAddress.BusinessEntityId = 
+businessEntitiesWithTwoAddresses.BusinessEntityId  
+full join
+(select ba.BusinessEntityId, 
+count(ba.AddressId) as NumberOfAddresses
+from person.BusinessEntity b
+join person.BusinessEntityAddress ba on ba.BusinessEntityId = b.BusinessEntityId
+group by ba.BusinessEntityId
+having count(ba.AddressId) &gt; 2
+) as businessEntitiesWithMoreThanTwoAddresses
+on
+businessEntitiesWithTwoAddresses.BusinessEntityId   = 
+businessEntitiesWithMoreThanTwoAddresses.BusinessEntityId;
+
+&lt;p&gt;Yes, we do away with one level of sub queries, but it&amp;rsquo;s still not great.&lt;/p&gt;
+
+&lt;h2 id=&#34;cte-approach-simplified-with-full-join:0dc054d968169eec76f7161b9d98121b&#34;&gt;CTE approach simplified with FULL JOIN&lt;/h2&gt;
+with  businessEntitiesWithOneAddress as
+(select ba.BusinessEntityId, 
+count(ba.AddressId) as NumberOfAddresses
+from person.BusinessEntity b
+join person.BusinessEntityAddress ba on ba.BusinessEntityId = b.BusinessEntityId
+group by ba.BusinessEntityId
+having count(ba.AddressId) = 1
+), businessEntitiesWithTwoAddresses as
+(select ba.BusinessEntityId, 
+count(ba.AddressId) as NumberOfAddresses
+from person.BusinessEntity b
+join person.BusinessEntityAddress ba on ba.BusinessEntityId = b.BusinessEntityId
+group by ba.BusinessEntityId
+having count(ba.AddressId) = 2
+), businessEntitiesWithMoreThanTwoAddresses  as
+(select ba.BusinessEntityId, 
+count(ba.AddressId) as NumberOfAddresses
+from person.BusinessEntity b
+join person.BusinessEntityAddress ba on ba.BusinessEntityId = b.BusinessEntityId
+group by ba.BusinessEntityId
+having count(ba.AddressId) &gt; 2
+)
+select 
+count(businessEntitiesWithOneAddress.BusinessEntityId) as NumberOfBusinessesWithOneAddress,
+count(businessEntitiesWithTwoAddresses.BusinessEntityId) as NumberOfBusinessesWithTwoAddresses,
+count(businessEntitiesWithMoreThanTwoAddresses.BusinessEntityId) as NumberOfBusinessesWithMoreThanTwoAddresses
+from businessEntitiesWithOneAddress
+full join businessEntitiesWithTwoAddresses
+on businessEntitiesWithOneAddress.BusinessEntityId = businessEntitiesWithTwoAddresses.BusinessEntityId
+full join businessEntitiesWithMoreThanTwoAddresses
+on businessEntitiesWithTwoAddresses.BusinessEntityId = businessEntitiesWithMoreThanTwoAddresses.BusinessEntityId
+
+&lt;h2 id=&#34;simplest-solution:0dc054d968169eec76f7161b9d98121b&#34;&gt;Simplest solution&lt;/h2&gt;
+
+&lt;p&gt;Finally, if we relax the requirement (which was self imposed in the first place) to have the results in one row,
+as well as not worrying about returning the count for the three or more scenario,
+we can simplify everything very nice like this:&lt;/p&gt;
+with  businessEntitiesAddressCount as
+(select ba.BusinessEntityId, 
+count(ba.AddressId) as NumberOfAddresses
+from person.BusinessEntity b
+join person.BusinessEntityAddress ba on ba.BusinessEntityId = b.BusinessEntityId
+group by ba.BusinessEntityId
+)
+select 
+count(BusinessEntityId) as NumberOfBusinesses,
+NumberOfAddresses 
+from businessEntitiesAddressCount 
+group by NumberOfAddresses;
+
+&lt;p&gt;Best of all; we still get to use a wonderful CTE!&lt;/p&gt;
+
+&lt;h2 id=&#34;final-thoughts:0dc054d968169eec76f7161b9d98121b&#34;&gt;Final Thoughts&lt;/h2&gt;
+
+&lt;p&gt;The first time I realised that it is possible to nest queries arbitrarily it seemed like the sky would be the limit to what wonderfully complex and deep stuff one could do,
+all be it with a heavy performance penalty if you were not careful.
+As time went on and I wrote larger and larger queries, often times with many levels of nested sub queries, it became
+apparent that the readability of the code drastically reduced.
+In general purpose programming languages one could avoid deep nested structures quite successfully, but in SQL there seemed to be no way around it
+save for making use of temporary tables, or breaking the work up into smaller parts.&lt;/p&gt;
+
+&lt;p&gt;When I found out about CTEs I was very impressed - what an elegant solution!
+Yes, a carefully thought out join can often times remove the need for a sub query or CTE, but in cases where sub query is required I now opt for the CTE approach instead.&lt;/p&gt;
+
+&lt;p&gt;Some prominant SQL experts even &lt;a href=&#34;http://modern-sql.com/use-case/literate-sql&#34;&gt;equate the use of CTEs / the WITH clause to literate programming&lt;/a&gt;, and I concur as far as readability and logical flow is concerned.
+There is much more to CTEs, especially when considering the recursive variaty, but that is a story for another time.&lt;/p&gt;
+
+&lt;p&gt;It&amp;rsquo;s been a bit of a ramble, but if you made it this far, you&amp;rsquo;ll do well to give CTEs a try,
+and maybe even find it as useful as I do.&lt;/p&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>

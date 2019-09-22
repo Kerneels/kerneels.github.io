@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+<meta charset="utf-8">
+<meta name="description" content="">
+<meta name="keywords" content="">
+<meta name="author" content="Kerneels Roos">
+<meta name="generator" content="Hugo 0.15" />
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="http://goodfast.info/css/style.css" type="text/css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Code+Pro:400,700" type="text/css">
+<link rel="alternate" href="http://goodfast.info/index.xml" type="application/rss+xml" title="Good Fast">
+<title>T Sql - Good Fast</title>
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.0/jquery.min.js"></script>
+<script type="text/javascript" src="https://blockchain.info/Resources/js/pay-now-button.js"></script>
+<script type="text/javascript" async
+  src="https://cdn.rawgit.com/mathjax/MathJax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+  MathJax.Hub.Config({
+  tex2jax: {
+    inlineMath: [['$','$'], ['\\(','\\)']],
+    displayMath: [['$$','$$']],
+    processEscapes: true,
+    processEnvironments: true,
+    skipTags: ['script', 'noscript', 'style', 'textarea', 'pre'],
+    TeX: { equationNumbers: { autoNumber: "AMS" },
+         extensions: ["AMSmath.js", "AMSsymbols.js"] }
+  }
+  });
+  MathJax.Hub.Queue(function() {
+    
+    
+    
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i = 0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+
+  MathJax.Hub.Config({
+  
+  TeX: { equationNumbers: { autoNumber: "AMS" } }
+  });
+</script>
+
+</head>
+<body>
+
+<header>
+  <div class="container clearfix">
+    <a class="path" href="http://goodfast.info/">[Good Fast]</a>
+    <span class="caret"># _</span>
+    <div class="right">
+      
+    </div>
+  </div>
+</header>
+
+<div class="container">
+
+<main role="main" class="article-list">
+  <h1 class="list-title">T Sql</h1>
+  
+    
+<article class="list-item" itemscope itemtype="http://schema.org/Blog">
+  <h2 class="headline" itemprop="headline"><a href="/post/transitive-closures/">How to use the transitive closure over a set of relations for fast path finding in SQL</a></h2>
+  <div class="meta">
+
+    <span class="key">published on</span>
+    <span class="val"><time itemprop="datePublished" datetime="2017-09-26">September 26, 2017</time></span>
+
+  </div>
+  <section class="summary">
+    In a previous post, I wrote about how we make sense of the world by modelling relationships between things as tree-like hierarchies. This time we will add to this hierarchical data structure, a representation derived by calculating all possible paths. This set of paths is referred to as a transitive closure, and can be thought of as the set of all paths if you start at each node in the tree.  <a href="/post/transitive-closures/">Read More...</a>
+  </section>
+</article>
+
+  
+    
+<article class="list-item" itemscope itemtype="http://schema.org/Blog">
+  <h2 class="headline" itemprop="headline"><a href="/post/speed-up-views-through-custom-materialization/">Speed up slow views through custom materialization</a></h2>
+  <div class="meta">
+
+    <span class="key">published on</span>
+    <span class="val"><time itemprop="datePublished" datetime="2017-06-08">June 08, 2017</time></span>
+
+  </div>
+  <section class="summary">
+    SQL views are aluring as a means of abstraction; a &ldquo;building block&rdquo; to hide away commonly used complexity. It is no wonder then that us developers will try them out, and before you know it, your clever recursive CTE view on that hierarchy is used everywhere, by everyone, but how is it affecting overall database performance&hellip; They look like tables, can be joined on, selected from, and in some cases even updated just like tables, yet the reality is that they are not like tables.  <a href="/post/speed-up-views-through-custom-materialization/">Read More...</a>
+  </section>
+</article>
+
+  
+    
+<article class="list-item" itemscope itemtype="http://schema.org/Blog">
+  <h2 class="headline" itemprop="headline"><a href="/post/cte-sub-queries-simplified/">CTE : simplify those nested sub queries</a></h2>
+  <div class="meta">
+
+    <span class="key">published on</span>
+    <span class="val"><time itemprop="datePublished" datetime="2016-10-09">October 09, 2016</time></span>
+
+  </div>
+  <section class="summary">
+    This article examines how sub queries can be substituted for the far more readable common table expressions, or CTEs available in many RDBMS systems. I was motivated to write this article when a friend who is fairly new to SQL expressed difficulty in grasping queries containing nested sub queries. If you&rsquo;ve never heard of CTEs before and you want to get the most out of this article, I recommend you get AdventureWorks2014 sample database and experiment a little with the queries below.  <a href="/post/cte-sub-queries-simplified/">Read More...</a>
+  </section>
+</article>
+
+  
+    
+<article class="list-item" itemscope itemtype="http://schema.org/Blog">
+  <h2 class="headline" itemprop="headline"><a href="/post/now-make-it-fast/">now make it fast</a></h2>
+  <div class="meta">
+
+    <span class="key">published on</span>
+    <span class="val"><time itemprop="datePublished" datetime="2014-11-21">November 21, 2014</time></span>
+
+  </div>
+  <section class="summary">
+    &ldquo;He began to copy one of our tables, which contained partial user information, including email IDs, hashed passwords, and last tested URL. His copy operation locked the database table, which raised alerts on our monitoring system. On receiving the alerts, we checked the logs, saw an unrecognized IP, and blocked it right away. In that time, the hacker had been able to retrieve only a portion of the data.&rdquo; &ndash; From the postmortem of the Browser Stack hack of 9th November, 2014 at 23:30 GMT Since relational database management systems (RDBMS) have been used in production environments since 1970 (Micro DBMS), and the theory on which they run was developed in the preceding decade,and perfected in the three remaining decades of the previous century (long ago), it was not surprising that, as a subject, it received very little attention in our curriculum - at least where I studied.  <a href="/post/now-make-it-fast/">Read More...</a>
+  </section>
+</article>
+
+  
+</main>
+
+</div>
+
+<footer>
+  <div class="container">
+<div style="font-size:16px;margin:0 auto;width:300px" class="blockchain-btn"
+     data-address="1DNw8dEG14NazWDEQUkwPZJ2kfgoaSa7dv"
+     data-shared="false">
+    <div class="blockchain stage-begin">
+        <img src="https://blockchain.info/Resources/buttons/donate_64.png"/>
+    </div>
+    <div class="blockchain stage-loading" style="text-align:center">
+        <img src="https://blockchain.info/Resources/loading-large.gif"/>
+    </div>
+    <div class="blockchain stage-ready">
+         <p align="center">If you'd like to support this site and see the content here grow, please donate to Bitcoin address: <b>[[address]]</b></p>
+         <p align="center" class="qr-code"></p>
+    </div>
+    <div class="blockchain stage-paid">
+         Donation of <b>[[value]] BTC</b> Received. Thank You Very Much!
+    </div>
+    <div class="blockchain stage-error">
+        <font color="red">[[error]]</font>
+    </div>
+</div>
+  </div>
+  <div class="container">
+    <span class="copyright">&copy; 2017  Good Fast - <a rel="license" href="http://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a></span>
+  </div>
+</footer>
+
+</body>
+</html>
+

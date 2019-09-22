@@ -1,0 +1,602 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+<meta charset="utf-8">
+<meta name="description" content="Technical article explaining how to compute and maintain the transitive closure over a set of relations.">
+<meta name="keywords" content="SQL,T-SQL,hierarchy,transitive closure,stored procedure,recursion,recursive CTE,CTE">
+<meta name="author" content="Kerneels Roos">
+<meta name="generator" content="Hugo 0.15" />
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="http://goodfast.info/css/style.css" type="text/css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Code+Pro:400,700" type="text/css">
+<link rel="alternate" href="http://goodfast.info/index.xml" type="application/rss+xml" title="Good Fast">
+<title>How to use the transitive closure over a set of relations for fast path finding in SQL - Good Fast</title>
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.0/jquery.min.js"></script>
+<script type="text/javascript" src="https://blockchain.info/Resources/js/pay-now-button.js"></script>
+<script type="text/javascript" async
+  src="https://cdn.rawgit.com/mathjax/MathJax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+  MathJax.Hub.Config({
+  tex2jax: {
+    inlineMath: [['$','$'], ['\\(','\\)']],
+    displayMath: [['$$','$$']],
+    processEscapes: true,
+    processEnvironments: true,
+    skipTags: ['script', 'noscript', 'style', 'textarea', 'pre'],
+    TeX: { equationNumbers: { autoNumber: "AMS" },
+         extensions: ["AMSmath.js", "AMSsymbols.js"] }
+  }
+  });
+  MathJax.Hub.Queue(function() {
+    
+    
+    
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i = 0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+
+  MathJax.Hub.Config({
+  
+  TeX: { equationNumbers: { autoNumber: "AMS" } }
+  });
+</script>
+
+</head>
+<body>
+
+<header>
+  <div class="container clearfix">
+    <a class="path" href="http://goodfast.info/">[Good Fast]</a>
+    <span class="caret"># _</span>
+    <div class="right">
+      
+    </div>
+  </div>
+</header>
+
+<div class="container">
+
+
+<main role="main" class="article">
+  
+<article class="single" itemscope itemtype="http://schema.org/BlogPosting">
+  <div class="meta">
+
+    <span class="key">published on</span>
+    <span class="val"><time itemprop="datePublished" datetime="2017-09-26">September 26, 2017</time></span>
+
+
+    <span class="key">in</span>
+    <span class="val">
+
+        <a href="http://goodfast.info/categories/procedures">procedures</a>
+
+        <a href="http://goodfast.info/categories/performance">performance</a>
+
+        <a href="http://goodfast.info/categories/optimization">optimization</a>
+
+        <a href="http://goodfast.info/categories/t-sql">T-SQL</a>
+
+        <a href="http://goodfast.info/categories/transativity">transativity</a>
+
+        <a href="http://goodfast.info/categories/hierarchies">hierarchies</a>
+
+    </span>
+
+
+  </div>
+  <h1 class="headline" itemprop="headline">How to use the transitive closure over a set of relations for fast path finding in SQL</h1>
+    <div id="toc" class="well col-md-4 col-sm-6">
+    <nav id="TableOfContents">
+<ul>
+<li>
+<ul>
+<li><a href="#background:594089c9c61d3c8bcdb4d6b1895da11a">Background</a></li>
+<li><a href="#representing-the-hierarchy:594089c9c61d3c8bcdb4d6b1895da11a">Representing the hierarchy</a></li>
+<li><a href="#setup:594089c9c61d3c8bcdb4d6b1895da11a">Setup</a>
+<ul>
+<li><a href="#closure-insert:594089c9c61d3c8bcdb4d6b1895da11a">Closure insert</a></li>
+<li><a href="#closure-delete:594089c9c61d3c8bcdb4d6b1895da11a">Closure delete</a></li>
+<li><a href="#closure-update:594089c9c61d3c8bcdb4d6b1895da11a">Closure update</a></li>
+<li><a href="#closure-refresh:594089c9c61d3c8bcdb4d6b1895da11a">Closure refresh</a></li>
+</ul></li>
+<li><a href="#testing:594089c9c61d3c8bcdb4d6b1895da11a">Testing</a></li>
+<li><a href="#go-forth-and-conquer:594089c9c61d3c8bcdb4d6b1895da11a">Go forth and conquer!</a></li>
+</ul></li>
+</ul>
+</nav>
+    </div>
+  <section class="body" itemprop="articleBody">
+    
+
+<p>In a <a href="http://goodfast.info/post/speed-up-views-through-custom-materialization/">previous post</a>, I wrote about how we make sense of the world by modelling relationships between things as tree-like hierarchies.
+This time we will add to this hierarchical data structure, a representation derived by calculating all possible paths.
+This set of paths is referred to as a <a href="https://en.wikipedia.org/wiki/Transitive_closurejj">transitive closure</a>, and can be thought of as the set of all paths if you start at each node in the tree.</p>
+
+<p>I wish I could tell you that it is as simple as Mr. Eby in <a href="http://dirtsimple.org/2010/11/simplest-way-to-do-tree-based-queries.html">this article</a> makes it out to be, but
+alas, when I got right down implementing a full solution, things got quite involved.
+It tends to be like that.
+None the less, credit where credit is due; go read that article first I can highly recommend it, and then come back here for more!</p>
+
+<p>I&rsquo;ve developed the code for SQL Server, so it is immediately T-SQL compatible, but you can surely alter it for any decent database.</p>
+
+<h2 id="background:594089c9c61d3c8bcdb4d6b1895da11a">Background</h2>
+
+<p>Trees and hierarchies in general can get quite complicated, so why would we choose to add to this complexity yet another data structure?
+The reason is so that we can apply <a href="https://en.wikipedia.org/wiki/Memoization">memoization</a>; we buy time with space.
+At the cost of the time to compute the transitive closure once, and the cost of the space required to persist it, we gain the time it would have taken to calculate it each time it is needed.</p>
+
+<p>Previously I wrote about how one can go about to materialize an entire complex and expensive view.
+The use of the transitive closure can also be thought of as a kind of materialization, but it is far smarter and promises to be more useful.</p>
+
+<p>The [transitive] part in the name refers to a property that a relation can exhibit.
+Since you are related to your father, and your child is related to you, your child is also related to your father.
+We can say that the inheritance relation is transitive.
+Since 9 &gt; 5, and 5 &gt; 3, it is also true that 9 &gt; 5 &gt; 3 and 9 &gt; 3;
+the &ldquo;greater than&rdquo; relation is transitive.</p>
+
+<h2 id="representing-the-hierarchy:594089c9c61d3c8bcdb4d6b1895da11a">Representing the hierarchy</h2>
+
+<p>The hierarchy we will work with is a simple one:</p>
+
+
+<img srcset="../../ct_tree.svg" src="../../ct_tree.png" alt="Diagram of the tree with node a at root, nodes b and c below it, below node b is node d and e, below node c is node f, below node d is node g."> 
+
+
+
+<p>The usual way to represent such a hierarchy in a table is through self referencing records:</p>
+
+<table>
+<thead>
+<tr>
+<th>id</th>
+<th>parent_id</th>
+<th>label</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td>1</td>
+<td>0</td>
+<td>&lsquo;a&rsquo;</td>
+</tr>
+
+<tr>
+<td>2</td>
+<td>1</td>
+<td>&lsquo;b&rsquo;</td>
+</tr>
+
+<tr>
+<td>3</td>
+<td>1</td>
+<td>&lsquo;c&rsquo;</td>
+</tr>
+
+<tr>
+<td>4</td>
+<td>2</td>
+<td>&rsquo;d&rsquo;</td>
+</tr>
+
+<tr>
+<td>5</td>
+<td>2</td>
+<td>&lsquo;e&rsquo;</td>
+</tr>
+
+<tr>
+<td>6</td>
+<td>3</td>
+<td>&lsquo;f&rsquo;</td>
+</tr>
+
+<tr>
+<td>7</td>
+<td>4</td>
+<td>&lsquo;g&rsquo;</td>
+</tr>
+</tbody>
+</table>
+
+<p>Such self referencing records in a single table makes manipulation of the hierarchy very simple.
+For example, to move the sub tree rooted in node 2 and make it fall under node 6, we simply update the parent_id of node 2 to reference node 6.
+This simplicity, however, comes at a cost.
+When you want to traverse the hierarchy, you require iteration or recursion which is generally expensive.
+This is especially so if all that you are after is only a portion of the tree, or worse, only the path from the root to a particular intermediate or leaf node.</p>
+
+<p>Suppose you want to find out the path from  node &lsquo;g&rsquo; to the root.
+After finding the entry for node &lsquo;g&rsquo;, you have to repeatedly find the parent until there is no more parent.
+Suppose you want to get the path from the root for each node in the tree.
+The database has to do this process for every node.</p>
+
+<p>A transitive closure over all the relations in the base table gives you a ready-made set of paths which you can index and query, just like any other set of records.
+No more need for recursive CTE&rsquo;s each time you want path information, or worse still, multiple queries!</p>
+
+<h2 id="setup:594089c9c61d3c8bcdb4d6b1895da11a">Setup</h2>
+
+-- create table node to represent the relations
+create table node (id int, parent_id int, label varchar(50));
+
+-- load noad
+insert into node values 
+(1,0,'a'),
+(2,1,'b'),
+(3,1,'c'),
+(4,2,'d'),
+(5,2,'e'),
+(6,3,'f'),
+(7,4,'g');
+
+-- table to hold the transitive closure over nodes
+create table closure (parent_id int, child_id int, depth int, route varchar(100));
+
+<p>Table node is the standard self referencing structure, and table closure will contain the paths that node represent.
+Column node.label is only the label that applies to the particular node row, but column closure.route will contain a nice chain of all the labels from closure.parent_id to closure.child_id.
+In a database that supports arrays, such as PostgreSQL, we can even go so far as to store the actual id values of the whole path.
+In column closure.depth we want to store how many hops it takes to go from the node at parent_id to the node at child_id.</p>
+
+<p>What we want to achieve is to calculate all possible paths in the tree and represent them like this:</p>
+
+<table>
+<thead>
+<tr>
+<th>parent_id</th>
+<th>child_id</th>
+<th>depth</th>
+<th>route</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td>1</td>
+<td>1</td>
+<td>0</td>
+<td>a</td>
+</tr>
+
+<tr>
+<td>2</td>
+<td>2</td>
+<td>0</td>
+<td>b</td>
+</tr>
+
+<tr>
+<td>1</td>
+<td>2</td>
+<td>1</td>
+<td>a &gt; b</td>
+</tr>
+
+<tr>
+<td>3</td>
+<td>3</td>
+<td>0</td>
+<td>c</td>
+</tr>
+
+<tr>
+<td>1</td>
+<td>3</td>
+<td>1</td>
+<td>a &gt; c</td>
+</tr>
+
+<tr>
+<td>6</td>
+<td>6</td>
+<td>0</td>
+<td>f</td>
+</tr>
+
+<tr>
+<td>3</td>
+<td>6</td>
+<td>1</td>
+<td>c &gt; f</td>
+</tr>
+
+<tr>
+<td>1</td>
+<td>6</td>
+<td>2</td>
+<td>a &gt; c &gt; f</td>
+</tr>
+
+<tr>
+<td>4</td>
+<td>4</td>
+<td>0</td>
+<td>d</td>
+</tr>
+
+<tr>
+<td>2</td>
+<td>4</td>
+<td>1</td>
+<td>b &gt; d</td>
+</tr>
+
+<tr>
+<td>1</td>
+<td>4</td>
+<td>2</td>
+<td>a &gt; b &gt; d</td>
+</tr>
+
+<tr>
+<td>5</td>
+<td>5</td>
+<td>0</td>
+<td>e</td>
+</tr>
+
+<tr>
+<td>2</td>
+<td>5</td>
+<td>1</td>
+<td>b &gt; e</td>
+</tr>
+
+<tr>
+<td>1</td>
+<td>5</td>
+<td>2</td>
+<td>a &gt; b &gt; e</td>
+</tr>
+
+<tr>
+<td>7</td>
+<td>7</td>
+<td>0</td>
+<td>g</td>
+</tr>
+
+<tr>
+<td>4</td>
+<td>7</td>
+<td>1</td>
+<td>d &gt; g</td>
+</tr>
+
+<tr>
+<td>2</td>
+<td>7</td>
+<td>2</td>
+<td>b &gt; d &gt; g</td>
+</tr>
+
+<tr>
+<td>1</td>
+<td>7</td>
+<td>3</td>
+<td>a &gt; b &gt; d &gt; g</td>
+</tr>
+</tbody>
+</table>
+
+<p>Notice the identity paths, or paths starting and ending in the same node, with depth of zero.
+Later on it will become apparent why we require these.</p>
+
+<h3 id="closure-insert:594089c9c61d3c8bcdb4d6b1895da11a">Closure insert</h3>
+
+<p>A new entry in table node can only be one of the following:</p>
+
+<ol>
+<li>a new, additional root - there exists no parent for it</li>
+<li>a new, additional child - there exists a parent for it</li>
+</ol>
+
+<p>For either type of new node, table closure requires a new identity path.
+Furthermore, if the new node has a parent, we also need to add entries for all paths ending in the new node.</p>
+create proc closure_insert @parent_id int, @child_id int, @route varchar(50) as 
+begin
+-- always insert identity
+insert into closure (parent_id,child_id,depth,route) 
+values (@child_id,@child_id,0, @route);
+if  @parent_id <> @child_id and @parent_id is not null
+insert into closure (parent_id,child_id,depth, route) 
+select parent.parent_id, child.child_id,
+parent.depth + child.depth + 1, 
+parent.route + ' > ' + child.route 
+from closure as parent cross join closure as child 
+where parent.child_id = @parent_id and child.parent_id = @child_id;
+end;
+
+<h3 id="closure-delete:594089c9c61d3c8bcdb4d6b1895da11a">Closure delete</h3>
+
+<p>Deleting a relation (suppose it is the node with id @child_id)from the node table requires us to delete all paths from the closure table that:</p>
+
+<ol>
+<li>start out from @child_id,</li>
+<li>end in @child_id,</li>
+<li>runs through @child_id, so any path that starts at any of @child_id&rsquo;s parents,and any path that ends in any of @child_id&rsquo;s children<br /></li>
+</ol>
+create proc closure_delete @child_id int as begin
+delete from link  
+from closure as parent, closure as link, closure as child, closure as to_delete 
+where 
+parent.parent_id = link.parent_id and child.child_id = link.child_id
+and parent.child_id = to_delete.parent_id and child.parent_id = to_delete.child_id
+and (to_delete.child_id = @child_id or to_delete.parent_id = @child_id) 
+and to_delete.depth < 2;
+end;
+
+<h3 id="closure-update:594089c9c61d3c8bcdb4d6b1895da11a">Closure update</h3>
+
+<p>Similar to the delete operation, if a node changes, all paths that start from, or end in, or go through that node needs to be updated since the label of the node might have changed and thus the routes need to be built again.
+If a node moved; if it is now a sub node of another node then all paths starting from, ending in and going through the node that moved needs to be deleted, and new paths added.</p>
+
+<p>To simplify matters we are going to delete all such starting from, ending in, and going through paths, and re-insert the individual nodes again in the correct order.
+Before we delete all the paths we first will temporarily store all the nodes we will be re-inserting afresh after the delete.
+Then we will do the delete, followed by successively calling the insert proc to insert everything again.</p>
+
+<p>But what if we insert a node (think add all paths involving this node) before we inserted the node&rsquo;s parent(s)?
+If you take a look at our insert proc you&rsquo;ll see very quickly that this will result in problems; we will not find the parent paths, and thus add too few actual paths.
+For this reason it is essential that we first insert all nodes without parents, then followed by the rest of the set that do have a parent, which will already be inserted.
+The insert proc will take care of adding all required paths, but only if we insert in the correct order.</p>
+create proc closure_update @child_id int as begin
+-- temp storage of nodes to insert after the deletion
+declare @t as table (id int primary key, parent_id int, label varchar(50));
+
+insert into @t (id,parent_id,label) 
+select link.child_id,n.parent_id,n.label 
+from closure as link join node as n on n.id = link.child_id
+where  link.parent_id = @child_id;
+
+delete from link 
+from closure as link join @t as t
+on link.child_id = t.id or link.child_id = @child_id;
+
+-- repeatedly call the insert proc in the correct order, 
+-- which is ensured by the recursive CTE over the set of nodes to insert
+declare @_p int, @_c int, @_l varchar(50);
+declare cur cursor fast_forward for 
+with  to_insert as (
+	select parent_id, id, label from @t
+),  to_insert_ordered  as (
+-- the anchor for the recursion
+	select ti.parent_id, ti.id, ti.label 
+	from to_insert as ti
+	where ti.parent_id = 0
+	or ti.id = @child_id
+	or ti.parent_id not in (
+		select id from to_insert
+	)
+	union all
+	select ti.parent_id, ti.id, ti.label 
+	from to_insert_ordered as tio
+	join to_insert as ti
+	on ti.parent_id = tio.id
+) select parent_id, id, label from to_insert_ordered;
+open cur;
+fetch next from cur into @_p, @_c, @_l;
+while @@FETCH_STATUS = 0 begin
+	exec closure_insert @_p,@_c,@_l;
+fetch next from cur into @_p, @_c, @_l;
+end close cur deallocate cur;
+end;
+
+<p>The insertion cursor query follows the usual pattern for a recursive CTE:</p>
+
+<ol>
+<li>establish the data to recurse over: to_insert</li>
+<li>establish the anchor, or starting point: to_insert_ordered</li>
+<li>union with a join onto itself and the whole list to_insert</li>
+<li>select the result</li>
+</ol>
+
+<h3 id="closure-refresh:594089c9c61d3c8bcdb4d6b1895da11a">Closure refresh</h3>
+
+<p>To do the initial load, and in case something goes wrong, we add one more proc; a full refresh proc, which is simply successive calls to the insert proc, but in the correct order as described in the previous section.</p>
+create proc closure_refresh as begin
+truncate table closure;
+
+declare @p int, @c int, @l varchar(50);
+declare cur cursor fast_forward for with  to_insert as (
+	select parent_id, id, label from node
+),  to_insert_ordered  as (
+	select ti.parent_id, ti.id, ti.label 
+	from to_insert as ti
+	where ti.parent_id = 0 or
+	ti.parent_id not in (
+		select id from to_insert
+	)
+	union all
+	select ti.parent_id, ti.id, ti.label 
+	from to_insert_ordered as tio
+	join to_insert as ti
+	on ti.parent_id = tio.id
+) select parent_id, id, label from to_insert_ordered;
+open cur;
+fetch next from cur into @p, @c, @l;
+while @@FETCH_STATUS = 0 begin
+	exec closure_insert @p,@c,@l;
+fetch next from cur into @p, @c, @l;
+end close cur deallocate cur;
+end;
+
+<h2 id="testing:594089c9c61d3c8bcdb4d6b1895da11a">Testing</h2>
+
+<p>Here are some sample queries which you can use to test your solution. I&rsquo;ve done it, not going to paste 50 tables of output here, try all sorts and see what happens:</p>
+-- start clean
+exec closure_refresh;
+-- check that everything is in order
+select * from closure;
+-- relabel node 2
+update node set label = 'z' where id = 2;
+-- do what the after update trigger will do:
+exec closure_update 2;
+-- not only node 2's identity entry, 
+-- but all paths involving it should now say 'z' instead of 'b'
+select * from closure;
+-- fix node 2 again:
+update node set label = 'b' where id = 2;
+exec closure_update 2;
+-- things should be back to what it was initially...
+select * from closure;
+-- move node 2, or 'b' under node 6
+update node set parent_id = 6 where id = 2;
+exec closure_update 2;
+-- node 2 should now be under node 6
+select * from closure;
+
+<h2 id="go-forth-and-conquer:594089c9c61d3c8bcdb4d6b1895da11a">Go forth and conquer!</h2>
+
+<p>Armed with the procedures we developed thus far, we can proceed to hook them up with after triggers on the node table.
+When the node table change, the after triggers fire and the closure table stays up to date.</p>
+
+<p>When we want to answer questions such as, does there exist a path from X to Y, what is the longest path from X to Y (for obtaining the full path from the root), and many more such queries, we can simply perform fast selects against the closure table.
+We can index parent_id, child_id, and (parent_id,child_id) and so on in order to speed things up.
+We can create a few custom views for quickly determining all the paths from the roots to the individual intermediate and leaf nodes.</p>
+
+<p>The recursive CTE that is needed for the update procedure is unfortunate, but luckily it only operates on the set of nodes that need to change.
+Unless you are altering root nodes all the time, this will generally be limited to a small number, and not the entire set of data as is the case in a full materialization of the whole tree.
+This means that the maintenance overhead will generally be far less.</p>
+
+<p>This is only a proof of concept, but you can go forth from here and use it as a reference to implement more complex and advanced transitive closures.
+I hope it helps you maintain performance on queries on hierarchies, and I hope you&rsquo;ve learned something new along the way.</p>
+
+  </section>
+</article>
+
+</main>
+
+
+</div>
+
+<footer>
+  <div class="container">
+<div style="font-size:16px;margin:0 auto;width:300px" class="blockchain-btn"
+     data-address="1DNw8dEG14NazWDEQUkwPZJ2kfgoaSa7dv"
+     data-shared="false">
+    <div class="blockchain stage-begin">
+        <img src="https://blockchain.info/Resources/buttons/donate_64.png"/>
+    </div>
+    <div class="blockchain stage-loading" style="text-align:center">
+        <img src="https://blockchain.info/Resources/loading-large.gif"/>
+    </div>
+    <div class="blockchain stage-ready">
+         <p align="center">If you'd like to support this site and see the content here grow, please donate to Bitcoin address: <b>[[address]]</b></p>
+         <p align="center" class="qr-code"></p>
+    </div>
+    <div class="blockchain stage-paid">
+         Donation of <b>[[value]] BTC</b> Received. Thank You Very Much!
+    </div>
+    <div class="blockchain stage-error">
+        <font color="red">[[error]]</font>
+    </div>
+</div>
+  </div>
+  <div class="container">
+    <span class="copyright">&copy; 2017  Good Fast - <a rel="license" href="http://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a></span>
+  </div>
+</footer>
+
+</body>
+</html>
+

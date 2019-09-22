@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Bash on Good Fast</title>
+    <link>http://goodfast.info/tags/bash/</link>
+    <description>Recent content in Bash on Good Fast</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Tue, 19 Jan 2016 21:26:17 +0200</lastBuildDate>
+    <atom:link href="http://goodfast.info/tags/bash/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>Efficient git command line &amp; reasonable workflo</title>
+      <link>http://goodfast.info/post/reasonable-git-workflow/</link>
+      <pubDate>Tue, 19 Jan 2016 21:26:17 +0200</pubDate>
+      
+      <guid>http://goodfast.info/post/reasonable-git-workflow/</guid>
+      <description>
+
+&lt;p&gt;Owning a software development shop, or being the prolific master coder that you are, what would you say is your most valuable assit? Is it your carefully acquired intellectual capital in the form of your people / your awesome self? Is it your revolutionary, novel  ideas?  Perhaps it&amp;rsquo;s both of those, in some sense, but how about something more mundane, like the great code written in the last hour, or day or months?
+People might leave, ideas might deliver less than what they originally promised, but your code lives forever - should you not be pedantic to take excellent care of it, to track it&amp;rsquo;s growth and progress through every feature added to your products?&lt;/p&gt;
+
+&lt;p&gt;When thinking about preserving even the seemingly insignificant little pieces, the old story of how IBM managed to boost sales of their casch register machines during the American great depression years always springs to mind.
+The sales line reportedly went something like this. Since times are so tough you cannot afford to loose one penny, so upgrade your casch register to prevent this.&lt;/p&gt;
+
+&lt;p&gt;In our coder context, enter git: the defacto distributed version control system, developed by none other than the linux kernel overlord, Mr. Linus Torvalds himself.
+In this article I&amp;rsquo;ll put forward a painless and efficient git workflow that has been battle tested by our team over two years.
+There are excellent git resources online, but I feel it still worth wile to write this  in order to cement these ideas for myself, and hopefully help others that have possibly been burnt by the very versatile git system.&lt;/p&gt;
+
+&lt;p&gt;Since git developed as a command line tool for linux kernel hackers, I believe that if you want the best out of it you need to use the command line version, which  is git + bash.
+The Git Extensions UI tools seems promising and useful at times, but I believe that with a little bit of setup and thought, the command line can fasilitate a much more efficient workflow.
+The secret to efficient git command line usage I believe lies in making use of bash aliases and other standard bash features.
+Most of the commands and aliases presented here came from my buddy Jacques over at Subverting Complexity.
+He started me on a nice set of aliases and I&amp;rsquo;ve been tweaking them ever since.&lt;/p&gt;
+
+&lt;h2 id=&#34;getting-the-most-out-of-this-article:43ce4f2c703a95a3e073d309189c3a90&#34;&gt;Getting the most out of this article&lt;/h2&gt;
+
+&lt;p&gt;If you want to gain the most out of this article I recommend you install git bash and open up (or create) the file  ~/.bash_aliases which will become your secret weapon towards git guru status.
+In your ~/.bash_aliases file you will define short commands for  lengthy git command sequences.
+To ensure that your ~/.bash_aliases file is sourced on bash startup, put this in your ~/.bashrc file:&lt;/p&gt;
+if [ -f ~/.bash_aliases ]; then
+    . ~/.bash_aliases
+fi
+
+&lt;h2 id=&#34;learn-how-to-jump-to-git-bash-quickly-you-will-need-to-do-this-often:43ce4f2c703a95a3e073d309189c3a90&#34;&gt;Learn how to jump to git bash quickly: you will need to do this often&lt;/h2&gt;
+
+&lt;p&gt;After installing git for Windows you get shell integration, which means that you can right click a folder and open up a git bash session for that folder as the PWD (present working directory).
+Besides some general bash and git setup that would live in your user home, everything about the repo (repository) is self contained - you can copy it somewhere else and git will function exactly as before.
+This is wonderful when you are working on a large repo and need to take it with you, to work on it from somewhere where you won&amp;rsquo;t have good Internet connectivity.&lt;/p&gt;
+
+&lt;p&gt;A nice trick to be able to open git with one keystroke, no matter what you are currently busy with, is to use the Windows quick launch list. Items that are pinned down in the quick  launch list can be activated by the Windows Key + Number Key corresponding to the position the icon appears in the list.
+For example, on my system git is seventh in the list, so Windows Key + 7 will always open it immediately, and Shift + Windows Key + 7 would open a new instance instead of jumping to the currently running one.
+This quick launch behaviour is very useful for other applications too of course.
+I&amp;rsquo;ve found that the main part of my work day is spent only between 5 or 6 at most applications, and being able to jump between them instantly is really lovely.&lt;/p&gt;
+
+&lt;h2 id=&#34;what-we-will-be-looking-at:43ce4f2c703a95a3e073d309189c3a90&#34;&gt;What we will be looking at&amp;hellip;&lt;/h2&gt;
+
+&lt;ol&gt;
+&lt;li&gt;Always branch off into a feature branch named after the ticket / issue number, prefixed with the parent branch name - so you and everyone else know why the branch exists.&lt;/li&gt;
+&lt;li&gt;Commit regularly, rebasing on master each time - so you always have everyone&amp;rsquo;s latest and greatest to work with.&lt;/li&gt;
+&lt;li&gt;Since you rebase down, always merge up.&lt;/li&gt;
+&lt;li&gt;Before travelling commit and push remotely - so the thug / hardware failure / bus crush / bath tub / lightning don&amp;rsquo;t cost you a days work in addition to everything else.&lt;/li&gt;
+&lt;li&gt;Provide short meaningful commit messages that include the issue number - so others know at a glance how your commit change the codebase.&lt;/li&gt;
+&lt;li&gt;Try always to have a short lived feature branch - so you can avoid wandering too far from the parent branch.&lt;/li&gt;
+&lt;li&gt;Schedule a time to nuke  your spent  feature branches locally and remotely if applicable.&lt;/li&gt;
+&lt;li&gt;Proactive mutual understanding always trumps resolving merge conflicts.&lt;/li&gt;
+&lt;li&gt;No need to memorise and type  lengthy git commands - use the power of bash aliases and functions.&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h3 id=&#34;always-branch-off-into-a-feature-branch-named-after-the-ticket-issue-number-prefixed-with-the-parent-branch-name-so-you-and-everyone-else-know-why-the-branch-exists:43ce4f2c703a95a3e073d309189c3a90&#34;&gt;Always branch off into a feature branch named after the ticket / issue number, prefixed with the parent branch name - so you and everyone else know why the branch exists.&lt;/h3&gt;
+
+&lt;p&gt;Cryptic and creative nameing of feature branches, vairiables or anything for that matter have never worked out for me.  Why bother if one can simply use the proper key, the feature or issue number generated by your issue tracking system?
+A proper   issue tracking system like the excellent Atlassian Jira names issues with the project short code, followed by a dash and a number: i.e. &amp;ldquo;BANK-123&amp;rdquo;.
+When you suspect that confusion might arise over which branch your feature branch stemmed off from you can include that name as well: &amp;ldquo;master-BANK-123&amp;rdquo;.
+If you can see this feature branch being worked on by others also, and you want to make everyone know you are the original owner / creator you can prepend your initials: &amp;ldquo;kr/BANK-123&amp;rdquo;.&lt;/p&gt;
+
+&lt;p&gt;Here is your first three commands and aliases to make working with short lived feature branches a breeze:&lt;/p&gt;
+alias +=&#39;git checkout -b&#39;
+alias D=&#39;git branch -D&#39;
+alias C=&#39;git checkout&#39;
+
+&lt;p&gt;With those you can quickly:&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;create a new branch off the current: # + BANK-123&lt;/li&gt;
+&lt;li&gt;change branches: $ C master&lt;/li&gt;
+&lt;li&gt;nuke spent branches: $ D BANK-123&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h3 id=&#34;commit-regularly-rebasing-on-master-each-time-so-you-always-have-everyone-s-latest-and-greatest-to-work-with:43ce4f2c703a95a3e073d309189c3a90&#34;&gt;Commit regularly, rebasing on master each time - so you always have everyone&amp;rsquo;s latest and greatest to work with.&lt;/h3&gt;
+
+&lt;p&gt;I had to learn the hard way, getting into the zone, working for an hour (or a shocking two hours) between commits, only to realise that in some way I&amp;rsquo;ve broken everything during the last 5 minutes of that two hours.
+&amp;ldquo;Is it nice to bang your head against the wall?&amp;rdquo; a colleague remarked.
+Now everything up to 5 minutes earlier was great work, yet it seems impossible to undo the tragedy that has been the last 5 minutes.&lt;/p&gt;
+
+&lt;p&gt;Had I commited even half an hour ago I could have spared myself tremendous frustration.
+We&amp;rsquo;ve all experienced this. It use to be a big deal in computer gaming, but I believe that these days the games saves for you.&lt;/p&gt;
+
+&lt;p&gt;Here is your commands and aliases  so you have no more excuses - they make committing regularly totally painless:&lt;/p&gt;
+# git add &amp; commit
+	# git add
+	alias ga=&#39;git add -A&#39;
+
+	#git commit (usage: gc &#34;&lt;message&gt;&#34;)
+	alias gc=&#39;git commit -m&#39;
+	
+	#git commit (usage: gac &#34;&lt;message&gt;&#34;
+	alias gac=&#39;git add -A &amp;&amp; git commit&#39;
+
+&lt;p&gt;Of these I tend to only use gac, and should probably change it to c only, but hey who&amp;rsquo;s perfect now?&lt;/p&gt;
+
+&lt;p&gt;Here are some aliases for rebasing on the remote branch, or local parent branch:&lt;/p&gt;
+	# rebase this branch of its tracked remote branch
+	alias gpr=&#39;git pull --rebase&#39;
+
+&lt;p&gt;However, if your local feature branch  (call it BANK-123) came from a local branch (call it master) which in turn is tracking the remote branch origin/master, then the following command will:&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;pull the remotely tracked master right from within your feature branch&lt;/li&gt;
+&lt;li&gt;rebase your local feature branch on the remote master&lt;/li&gt;
+&lt;/ol&gt;
+	# rebase this branch off its original parent tracked remote branch named master
+	alias gprm=&#39;git pull --rebase origin master&#39;
+
+&lt;p&gt;You can achieve the same effect with more steps:&lt;/p&gt;
+	$ C master &amp;&amp; gpr &amp;&amp; C BANK-123 &amp;&amp; gpr master
+
+&lt;p&gt;Notice the &amp;amp;&amp;amp; logical combinators. It&amp;rsquo;s a bash feature that will shortcut as expected - i.e. if you have unstaged changes in your current branch, the &amp;lsquo;C master&amp;rsquo; will fail and hence the whole command line.
+This combining commands on the fly is very useful if you want to fire and forget and only come back later to check if everything went according to plan.
+Notice that the above will also bring your local master up to date, while the &amp;lsquo;gprm&amp;rsquo; will not.&lt;/p&gt;
+
+&lt;h3 id=&#34;since-you-rebase-down-always-merge-up:43ce4f2c703a95a3e073d309189c3a90&#34;&gt;Since you rebase down, always merge up.&lt;/h3&gt;
+
+&lt;p&gt;When you are sure you want to add your changes to your parent branch, we call it master for argument&amp;rsquo;s sake, you need to merge.
+Note that this is after you have successfully rebased on master, ran all relevant testing, pushed to your remote tracked feature branch (if applicable).
+You need one more alias:&lt;/p&gt;
+	alias gm=&#39;git merge&#39;
+
+&lt;p&gt;You will now want to change to master, get the latest, merge in your feature branch and push to master.
+You can do this with the following:&lt;/p&gt;
+  $ C master &amp;&amp; gpr &amp;&amp; gm BANK-123 &amp;&amp; gh
+
+&lt;p&gt;where BANK-123 is the name of your feature branch.
+Of course you can make an alias out of this too, but personally I like to retain a little bit of control / do some things explicitly :-) else it gets a little bit scary ($ rm -R / # anyone perhaps?).&lt;/p&gt;
+
+&lt;h3 id=&#34;before-travelling-commit-and-push-remotely-so-the-thug-hardware-failure-bus-crush-bath-tub-lightning-don-t-cost-you-a-days-work-in-addition-to-everything-else:43ce4f2c703a95a3e073d309189c3a90&#34;&gt;Before travelling commit and push remotely - so the thug / hardware failure / bus crush / bath tub / lightning don&amp;rsquo;t cost you a days work in addition to everything else.&lt;/h3&gt;
+
+&lt;p&gt;It&amp;rsquo;s a good idea to always have code that can go directly into production without breaking anything.
+If you apply TDD properly, and hide more involved not yet completed features behind toggles this is very possible, however there might be times when you are not confident your code is ready for production yet you need to commit and push remotely.&lt;/p&gt;
+
+&lt;p&gt;Here is an alias for setting a remote branch upstream to track your local branch and push there in one go:&lt;/p&gt;
+	alias ghr=&#39;git push --set-upstream origin &#39;
+
+&lt;p&gt;After issuing this command you can use the &amp;lsquo;gh&amp;rsquo; alias for subsequent pushes.&lt;/p&gt;
+
+&lt;h3 id=&#34;provide-short-meaningful-commit-messages-that-include-the-issue-number-so-others-know-at-a-glance-how-your-commit-change-the-codebase:43ce4f2c703a95a3e073d309189c3a90&#34;&gt;Provide short meaningful commit messages that include the issue number - so others know at a glance how your commit change the codebase.&lt;/h3&gt;
+
+&lt;p&gt;A format that works well is to write your commit message as if you are completing the sentance: &amp;ldquo;When this commit is applied it will &amp;hellip;&amp;rdquo;.
+Example: &amp;ldquo;When this commit is applied it will proove P = NP and solve everything at once&amp;rdquo;.
+Example: &amp;ldquo;When this commit is applied it will add feature X which was not in the spec, yet the client wants it&amp;rdquo;.&lt;/p&gt;
+
+&lt;p&gt;In addition, it is helpful to prepend the issue number to the message.
+If your branch name is the same as your issue number you can use the following command to do this automatically for you:&lt;/p&gt;
+	alias gab=&#39;git add -A &amp;&amp; git commit -m &#34;`git rev-parse --abbrev-ref HEAD` - &#39;
+
+&lt;p&gt;So if you are on branch BANK-123 you can issue:&lt;/p&gt;
+	$ gab proove P = NP and solve everything&#34;
+
+&lt;p&gt;and the commit message would read: &amp;ldquo;BANK-123 - proove P = NP and solve everything&amp;rdquo;&lt;/p&gt;
+
+&lt;h3 id=&#34;try-always-to-have-a-short-lived-feature-branch-so-you-can-avoid-wandering-too-far-from-the-parent-branch:43ce4f2c703a95a3e073d309189c3a90&#34;&gt;Try always to have a short lived feature branch - so you can avoid wandering too far from the parent branch.&lt;/h3&gt;
+
+&lt;p&gt;As stated earlier, this is very possible when you apply reasonable TDD and hide larger incomplete functionality behind configurable toggles.
+This is just a piece of wisdom. I&amp;rsquo;ll give you one more, for free: &lt;a href=&#34;http://en.wikipedia.org/wiki/Release_early,_release_often&#34;&gt;release early, release often (RERO)&lt;/a&gt;.&lt;/p&gt;
+
+&lt;h3 id=&#34;proactive-mutual-understanding-always-trumps-resolving-merge-conflicts:43ce4f2c703a95a3e073d309189c3a90&#34;&gt;Proactive mutual understanding always trumps resolving merge conflicts.&lt;/h3&gt;
+
+&lt;p&gt;I find manually merging files very difficult, and I&amp;rsquo;m sure no one really enjoys it. I&amp;rsquo;ve also found that a little bit of mutual understanding in terms of who is working on what part of the system goes a long, long way towards avoiding merge conflicts.
+That, together with the other good principals presented here, such as rebasing often, and short lived feature branches also can do a lot to prevent merge conflicts.&lt;/p&gt;
+
+&lt;h2 id=&#34;no-need-to-memorise-and-type-lengthy-git-commands-use-the-power-of-bash-aliases-and-functions:43ce4f2c703a95a3e073d309189c3a90&#34;&gt;No need to memorise and type  lengthy git commands - use the power of bash aliases and functions.&lt;/h2&gt;
+
+&lt;p&gt;If the only thing you take with you after reading this article is that you can use bash features to make lengthy and hard to remember commands simpler then you did well and got the main idea.&lt;/p&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>
