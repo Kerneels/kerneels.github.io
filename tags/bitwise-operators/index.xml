@@ -2,19 +2,19 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Bitwise Operators on Good Fast</title>
-    <link>http://goodfast.info/tags/bitwise-operators/</link>
+    <link>https://kerneels.github.io/tags/bitwise-operators/</link>
     <description>Recent content in Bitwise Operators on Good Fast</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <lastBuildDate>Wed, 12 Oct 2016 22:01:20 +0200</lastBuildDate>
-    <atom:link href="http://goodfast.info/tags/bitwise-operators/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="https://kerneels.github.io/tags/bitwise-operators/index.xml" rel="self" type="application/rss+xml" />
     
     <item>
       <title>Knapsack Bitwise</title>
-      <link>http://goodfast.info/post/knapsack-bitwise/</link>
+      <link>https://kerneels.github.io/post/knapsack-bitwise/</link>
       <pubDate>Wed, 12 Oct 2016 22:01:20 +0200</pubDate>
       
-      <guid>http://goodfast.info/post/knapsack-bitwise/</guid>
+      <guid>https://kerneels.github.io/post/knapsack-bitwise/</guid>
       <description>
 
 &lt;p&gt;An interesting bit of computer science, the &lt;a href=&#34;https://en.wikipedia.org/wiki/Knapsack_problem&#34;&gt;knapsack problem&lt;/a&gt; has been studied for over a century, and according to Wikipedia, seems to be quite  popular - as these sort of things go.

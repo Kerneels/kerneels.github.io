@@ -2,19 +2,19 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Big Ideas on Good Fast</title>
-    <link>http://goodfast.info/tags/big-ideas/</link>
+    <link>https://kerneels.github.io/tags/big-ideas/</link>
     <description>Recent content in Big Ideas on Good Fast</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <lastBuildDate>Wed, 24 Jul 2019 21:45:07 +0200</lastBuildDate>
-    <atom:link href="http://goodfast.info/tags/big-ideas/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="https://kerneels.github.io/tags/big-ideas/index.xml" rel="self" type="application/rss+xml" />
     
     <item>
       <title>Two big ideas of SQL: The What, not How, and querying with ease</title>
-      <link>http://goodfast.info/post/what-not-how/</link>
+      <link>https://kerneels.github.io/post/what-not-how/</link>
       <pubDate>Wed, 24 Jul 2019 21:45:07 +0200</pubDate>
       
-      <guid>http://goodfast.info/post/what-not-how/</guid>
+      <guid>https://kerneels.github.io/post/what-not-how/</guid>
       <description>
 
 &lt;p&gt;There are many factors that have contributed to the slow but steady rise of the popularity and ubiquity of SQL as a way to work with data.

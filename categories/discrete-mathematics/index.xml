@@ -2,19 +2,19 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Discrete Mathematics on Good Fast</title>
-    <link>http://goodfast.info/categories/discrete-mathematics/</link>
+    <link>https://kerneels.github.io/categories/discrete-mathematics/</link>
     <description>Recent content in Discrete Mathematics on Good Fast</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <lastBuildDate>Sun, 23 Jun 2019 22:26:20 +0000</lastBuildDate>
-    <atom:link href="http://goodfast.info/categories/discrete-mathematics/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="https://kerneels.github.io/categories/discrete-mathematics/index.xml" rel="self" type="application/rss+xml" />
     
     <item>
       <title>Bar-sized factorial</title>
-      <link>http://goodfast.info/post/big-factorial/</link>
+      <link>https://kerneels.github.io/post/big-factorial/</link>
       <pubDate>Sun, 23 Jun 2019 22:26:20 +0000</pubDate>
       
-      <guid>http://goodfast.info/post/big-factorial/</guid>
+      <guid>https://kerneels.github.io/post/big-factorial/</guid>
       <description>&lt;p&gt;What&amp;rsquo;s the first five digits of 1,000,000! or 1 million factorial?
 Let&amp;rsquo;s ask Haskell:&lt;/p&gt;
 Prelude&gt; take 5 $ show $ product [1..1000000] 
@@ -47,10 +47,10 @@ Thus far I&amp;rsquo;m rather impressed.&lt;/p&gt;
     
     <item>
       <title>Permutations and combinations, and ways to calculate the number of draws in a lottery</title>
-      <link>http://goodfast.info/post/permutations-combinations/</link>
+      <link>https://kerneels.github.io/post/permutations-combinations/</link>
       <pubDate>Sun, 23 Jun 2019 08:25:20 +0000</pubDate>
       
-      <guid>http://goodfast.info/post/permutations-combinations/</guid>
+      <guid>https://kerneels.github.io/post/permutations-combinations/</guid>
       <description>
 
 &lt;p&gt;With a recent, unusually high Power Ball jackpot of ZAR ~220 million, we could not help discussing one&amp;rsquo;s chances for actually hitting the jackpot as a bit of nice office banter.&lt;/p&gt;

@@ -2,19 +2,19 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Full Join on Good Fast</title>
-    <link>http://goodfast.info/tags/full-join/</link>
+    <link>https://kerneels.github.io/tags/full-join/</link>
     <description>Recent content in Full Join on Good Fast</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <lastBuildDate>Sun, 09 Oct 2016 21:26:17 +0200</lastBuildDate>
-    <atom:link href="http://goodfast.info/tags/full-join/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="https://kerneels.github.io/tags/full-join/index.xml" rel="self" type="application/rss+xml" />
     
     <item>
       <title>CTE : simplify those nested sub queries</title>
-      <link>http://goodfast.info/post/cte-sub-queries-simplified/</link>
+      <link>https://kerneels.github.io/post/cte-sub-queries-simplified/</link>
       <pubDate>Sun, 09 Oct 2016 21:26:17 +0200</pubDate>
       
-      <guid>http://goodfast.info/post/cte-sub-queries-simplified/</guid>
+      <guid>https://kerneels.github.io/post/cte-sub-queries-simplified/</guid>
       <description>
 
 &lt;p&gt;This article examines how sub queries can be substituted for the far more readable common table expressions, or CTEs available in many RDBMS systems.
