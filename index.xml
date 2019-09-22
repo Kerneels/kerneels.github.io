@@ -2,19 +2,19 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Good Fast</title>
-    <link>https://kerneels.github.io/</link>
+    <link>https://blog.goodfast.info/</link>
     <description>Recent content on Good Fast</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <lastBuildDate>Wed, 24 Jul 2019 21:45:07 +0200</lastBuildDate>
-    <atom:link href="https://kerneels.github.io/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="https://blog.goodfast.info/index.xml" rel="self" type="application/rss+xml" />
     
     <item>
       <title>Two big ideas of SQL: The What, not How, and querying with ease</title>
-      <link>https://kerneels.github.io/post/what-not-how/</link>
+      <link>https://blog.goodfast.info/post/what-not-how/</link>
       <pubDate>Wed, 24 Jul 2019 21:45:07 +0200</pubDate>
       
-      <guid>https://kerneels.github.io/post/what-not-how/</guid>
+      <guid>https://blog.goodfast.info/post/what-not-how/</guid>
       <description>
 
 &lt;p&gt;There are many factors that have contributed to the slow but steady rise of the popularity and ubiquity of SQL as a way to work with data.
@@ -313,10 +313,10 @@ For SQLite examples of these more admin-type keywords and functions are the ones
     
     <item>
       <title>Bar-sized factorial</title>
-      <link>https://kerneels.github.io/post/big-factorial/</link>
+      <link>https://blog.goodfast.info/post/big-factorial/</link>
       <pubDate>Sun, 23 Jun 2019 22:26:20 +0000</pubDate>
       
-      <guid>https://kerneels.github.io/post/big-factorial/</guid>
+      <guid>https://blog.goodfast.info/post/big-factorial/</guid>
       <description>&lt;p&gt;What&amp;rsquo;s the first five digits of 1,000,000! or 1 million factorial?
 Let&amp;rsquo;s ask Haskell:&lt;/p&gt;
 Prelude&gt; take 5 $ show $ product [1..1000000] 
@@ -349,10 +349,10 @@ Thus far I&amp;rsquo;m rather impressed.&lt;/p&gt;
     
     <item>
       <title>Permutations and combinations, and ways to calculate the number of draws in a lottery</title>
-      <link>https://kerneels.github.io/post/permutations-combinations/</link>
+      <link>https://blog.goodfast.info/post/permutations-combinations/</link>
       <pubDate>Sun, 23 Jun 2019 08:25:20 +0000</pubDate>
       
-      <guid>https://kerneels.github.io/post/permutations-combinations/</guid>
+      <guid>https://blog.goodfast.info/post/permutations-combinations/</guid>
       <description>
 
 &lt;p&gt;With a recent, unusually high Power Ball jackpot of ZAR ~220 million, we could not help discussing one&amp;rsquo;s chances for actually hitting the jackpot as a bit of nice office banter.&lt;/p&gt;
@@ -476,10 +476,10 @@ Prelude&gt; draws 50 20 5
     
     <item>
       <title>How to use the transitive closure over a set of relations for fast path finding in SQL</title>
-      <link>https://kerneels.github.io/post/transitive-closures/</link>
+      <link>https://blog.goodfast.info/post/transitive-closures/</link>
       <pubDate>Tue, 26 Sep 2017 08:31:17 +0200</pubDate>
       
-      <guid>https://kerneels.github.io/post/transitive-closures/</guid>
+      <guid>https://blog.goodfast.info/post/transitive-closures/</guid>
       <description>
 
 &lt;p&gt;In a &lt;a href=&#34;http://goodfast.info/post/speed-up-views-through-custom-materialization/&#34;&gt;previous post&lt;/a&gt;, I wrote about how we make sense of the world by modelling relationships between things as tree-like hierarchies.
@@ -937,10 +937,10 @@ I hope it helps you maintain performance on queries on hierarchies, and I hope y
     
     <item>
       <title>Wizen up a bit : solve problems bitwize</title>
-      <link>https://kerneels.github.io/post/wizen-up-a-bit/</link>
+      <link>https://blog.goodfast.info/post/wizen-up-a-bit/</link>
       <pubDate>Wed, 20 Sep 2017 08:31:17 +0200</pubDate>
       
-      <guid>https://kerneels.github.io/post/wizen-up-a-bit/</guid>
+      <guid>https://blog.goodfast.info/post/wizen-up-a-bit/</guid>
       <description>
 
 &lt;p&gt;I&amp;rsquo;m rather obsessed with bits. All sorts of bits, at various times, but in particular, the digital bit of the Binary system. Notice the capitalization of &amp;ldquo;Binary&amp;rdquo; - it is intended.
@@ -1161,10 +1161,10 @@ namespace ConsoleApplication1
     
     <item>
       <title>10 Ways to outsmart cyber criminals</title>
-      <link>https://kerneels.github.io/post/outsmart-cyber-crims/</link>
+      <link>https://blog.goodfast.info/post/outsmart-cyber-crims/</link>
       <pubDate>Tue, 27 Jun 2017 14:14:17 +0200</pubDate>
       
-      <guid>https://kerneels.github.io/post/outsmart-cyber-crims/</guid>
+      <guid>https://blog.goodfast.info/post/outsmart-cyber-crims/</guid>
       <description>
 
 &lt;p&gt;Big day; our first guest contribution! &lt;a href=&#34;http://www.proz.com/profile/1571336&#34;&gt;Johann Bergh&lt;/a&gt;, a professional translator and recovering software developer put together this list of 10 ways how you can be proactive and outsmart cyber criminals. Enjoy, and take action!&lt;/p&gt;
@@ -1233,10 +1233,10 @@ Most websites that you visit store a small file on your computer’s hard drive ca
     
     <item>
       <title>Speed up slow views through custom materialization</title>
-      <link>https://kerneels.github.io/post/speed-up-views-through-custom-materialization/</link>
+      <link>https://blog.goodfast.info/post/speed-up-views-through-custom-materialization/</link>
       <pubDate>Thu, 08 Jun 2017 08:31:17 +0200</pubDate>
       
-      <guid>https://kerneels.github.io/post/speed-up-views-through-custom-materialization/</guid>
+      <guid>https://blog.goodfast.info/post/speed-up-views-through-custom-materialization/</guid>
       <description>
 
 &lt;p&gt;SQL views are aluring as a means of abstraction; a &amp;ldquo;building block&amp;rdquo; to hide away commonly used complexity.
@@ -1327,10 +1327,10 @@ The procedure also minimized writes to the Working table, to prevent table locki
     
     <item>
       <title>Knapsack Bitwise</title>
-      <link>https://kerneels.github.io/post/knapsack-bitwise/</link>
+      <link>https://blog.goodfast.info/post/knapsack-bitwise/</link>
       <pubDate>Wed, 12 Oct 2016 22:01:20 +0200</pubDate>
       
-      <guid>https://kerneels.github.io/post/knapsack-bitwise/</guid>
+      <guid>https://blog.goodfast.info/post/knapsack-bitwise/</guid>
       <description>
 
 &lt;p&gt;An interesting bit of computer science, the &lt;a href=&#34;https://en.wikipedia.org/wiki/Knapsack_problem&#34;&gt;knapsack problem&lt;/a&gt; has been studied for over a century, and according to Wikipedia, seems to be quite  popular - as these sort of things go.
@@ -1924,10 +1924,10 @@ other, harder versions of this interesting computer science problem.&lt;/p&gt;
     
     <item>
       <title>CTE : simplify those nested sub queries</title>
-      <link>https://kerneels.github.io/post/cte-sub-queries-simplified/</link>
+      <link>https://blog.goodfast.info/post/cte-sub-queries-simplified/</link>
       <pubDate>Sun, 09 Oct 2016 21:26:17 +0200</pubDate>
       
-      <guid>https://kerneels.github.io/post/cte-sub-queries-simplified/</guid>
+      <guid>https://blog.goodfast.info/post/cte-sub-queries-simplified/</guid>
       <description>
 
 &lt;p&gt;This article examines how sub queries can be substituted for the far more readable common table expressions, or CTEs available in many RDBMS systems.
@@ -2320,10 +2320,10 @@ and maybe even find it as useful as I do.&lt;/p&gt;
     
     <item>
       <title>Efficient git command line &amp; reasonable workflo</title>
-      <link>https://kerneels.github.io/post/reasonable-git-workflow/</link>
+      <link>https://blog.goodfast.info/post/reasonable-git-workflow/</link>
       <pubDate>Tue, 19 Jan 2016 21:26:17 +0200</pubDate>
       
-      <guid>https://kerneels.github.io/post/reasonable-git-workflow/</guid>
+      <guid>https://blog.goodfast.info/post/reasonable-git-workflow/</guid>
       <description>
 
 &lt;p&gt;Owning a software development shop, or being the prolific master coder that you are, what would you say is your most valuable assit? Is it your carefully acquired intellectual capital in the form of your people / your awesome self? Is it your revolutionary, novel  ideas?  Perhaps it&amp;rsquo;s both of those, in some sense, but how about something more mundane, like the great code written in the last hour, or day or months?
@@ -2495,10 +2495,10 @@ That, together with the other good principals presented here, such as rebasing o
     
     <item>
       <title>now make it fast</title>
-      <link>https://kerneels.github.io/post/now-make-it-fast/</link>
+      <link>https://blog.goodfast.info/post/now-make-it-fast/</link>
       <pubDate>Fri, 21 Nov 2014 00:00:00 +0000</pubDate>
       
-      <guid>https://kerneels.github.io/post/now-make-it-fast/</guid>
+      <guid>https://blog.goodfast.info/post/now-make-it-fast/</guid>
       <description>
 
 &lt;p&gt;&amp;ldquo;He began to copy one of our tables, which contained partial user information, including email IDs, hashed passwords, and last tested URL. His copy operation

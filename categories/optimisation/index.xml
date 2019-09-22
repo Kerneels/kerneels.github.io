@@ -2,19 +2,19 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Optimisation on Good Fast</title>
-    <link>https://kerneels.github.io/categories/optimisation/</link>
+    <link>https://blog.goodfast.info/categories/optimisation/</link>
     <description>Recent content in Optimisation on Good Fast</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <lastBuildDate>Wed, 12 Oct 2016 22:01:20 +0200</lastBuildDate>
-    <atom:link href="https://kerneels.github.io/categories/optimisation/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="https://blog.goodfast.info/categories/optimisation/index.xml" rel="self" type="application/rss+xml" />
     
     <item>
       <title>Knapsack Bitwise</title>
-      <link>https://kerneels.github.io/post/knapsack-bitwise/</link>
+      <link>https://blog.goodfast.info/post/knapsack-bitwise/</link>
       <pubDate>Wed, 12 Oct 2016 22:01:20 +0200</pubDate>
       
-      <guid>https://kerneels.github.io/post/knapsack-bitwise/</guid>
+      <guid>https://blog.goodfast.info/post/knapsack-bitwise/</guid>
       <description>
 
 &lt;p&gt;An interesting bit of computer science, the &lt;a href=&#34;https://en.wikipedia.org/wiki/Knapsack_problem&#34;&gt;knapsack problem&lt;/a&gt; has been studied for over a century, and according to Wikipedia, seems to be quite  popular - as these sort of things go.
@@ -608,10 +608,10 @@ other, harder versions of this interesting computer science problem.&lt;/p&gt;
     
     <item>
       <title>now make it fast</title>
-      <link>https://kerneels.github.io/post/now-make-it-fast/</link>
+      <link>https://blog.goodfast.info/post/now-make-it-fast/</link>
       <pubDate>Fri, 21 Nov 2014 00:00:00 +0000</pubDate>
       
-      <guid>https://kerneels.github.io/post/now-make-it-fast/</guid>
+      <guid>https://blog.goodfast.info/post/now-make-it-fast/</guid>
       <description>
 
 &lt;p&gt;&amp;ldquo;He began to copy one of our tables, which contained partial user information, including email IDs, hashed passwords, and last tested URL. His copy operation

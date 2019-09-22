@@ -2,19 +2,19 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Merge on Good Fast</title>
-    <link>https://kerneels.github.io/tags/merge/</link>
+    <link>https://blog.goodfast.info/tags/merge/</link>
     <description>Recent content in Merge on Good Fast</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <lastBuildDate>Tue, 19 Jan 2016 21:26:17 +0200</lastBuildDate>
-    <atom:link href="https://kerneels.github.io/tags/merge/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="https://blog.goodfast.info/tags/merge/index.xml" rel="self" type="application/rss+xml" />
     
     <item>
       <title>Efficient git command line &amp; reasonable workflo</title>
-      <link>https://kerneels.github.io/post/reasonable-git-workflow/</link>
+      <link>https://blog.goodfast.info/post/reasonable-git-workflow/</link>
       <pubDate>Tue, 19 Jan 2016 21:26:17 +0200</pubDate>
       
-      <guid>https://kerneels.github.io/post/reasonable-git-workflow/</guid>
+      <guid>https://blog.goodfast.info/post/reasonable-git-workflow/</guid>
       <description>
 
 &lt;p&gt;Owning a software development shop, or being the prolific master coder that you are, what would you say is your most valuable assit? Is it your carefully acquired intellectual capital in the form of your people / your awesome self? Is it your revolutionary, novel  ideas?  Perhaps it&amp;rsquo;s both of those, in some sense, but how about something more mundane, like the great code written in the last hour, or day or months?

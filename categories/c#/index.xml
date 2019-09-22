@@ -2,19 +2,19 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>C# on Good Fast</title>
-    <link>https://kerneels.github.io/categories/c/</link>
+    <link>https://blog.goodfast.info/categories/c/</link>
     <description>Recent content in C# on Good Fast</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <lastBuildDate>Wed, 20 Sep 2017 08:31:17 +0200</lastBuildDate>
-    <atom:link href="https://kerneels.github.io/categories/c" rel="self" type="application/rss+xml" />
+    <atom:link href="https://blog.goodfast.info/categories/c" rel="self" type="application/rss+xml" />
     
     <item>
       <title>Wizen up a bit : solve problems bitwize</title>
-      <link>https://kerneels.github.io/post/wizen-up-a-bit/</link>
+      <link>https://blog.goodfast.info/post/wizen-up-a-bit/</link>
       <pubDate>Wed, 20 Sep 2017 08:31:17 +0200</pubDate>
       
-      <guid>https://kerneels.github.io/post/wizen-up-a-bit/</guid>
+      <guid>https://blog.goodfast.info/post/wizen-up-a-bit/</guid>
       <description>
 
 &lt;p&gt;I&amp;rsquo;m rather obsessed with bits. All sorts of bits, at various times, but in particular, the digital bit of the Binary system. Notice the capitalization of &amp;ldquo;Binary&amp;rdquo; - it is intended.
@@ -235,10 +235,10 @@ namespace ConsoleApplication1
     
     <item>
       <title>Knapsack Bitwise</title>
-      <link>https://kerneels.github.io/post/knapsack-bitwise/</link>
+      <link>https://blog.goodfast.info/post/knapsack-bitwise/</link>
       <pubDate>Wed, 12 Oct 2016 22:01:20 +0200</pubDate>
       
-      <guid>https://kerneels.github.io/post/knapsack-bitwise/</guid>
+      <guid>https://blog.goodfast.info/post/knapsack-bitwise/</guid>
       <description>
 
 &lt;p&gt;An interesting bit of computer science, the &lt;a href=&#34;https://en.wikipedia.org/wiki/Knapsack_problem&#34;&gt;knapsack problem&lt;/a&gt; has been studied for over a century, and according to Wikipedia, seems to be quite  popular - as these sort of things go.

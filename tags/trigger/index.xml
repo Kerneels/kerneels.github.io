@@ -2,19 +2,19 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Trigger on Good Fast</title>
-    <link>https://kerneels.github.io/tags/trigger/</link>
+    <link>https://blog.goodfast.info/tags/trigger/</link>
     <description>Recent content in Trigger on Good Fast</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <lastBuildDate>Thu, 08 Jun 2017 08:31:17 +0200</lastBuildDate>
-    <atom:link href="https://kerneels.github.io/tags/trigger/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="https://blog.goodfast.info/tags/trigger/index.xml" rel="self" type="application/rss+xml" />
     
     <item>
       <title>Speed up slow views through custom materialization</title>
-      <link>https://kerneels.github.io/post/speed-up-views-through-custom-materialization/</link>
+      <link>https://blog.goodfast.info/post/speed-up-views-through-custom-materialization/</link>
       <pubDate>Thu, 08 Jun 2017 08:31:17 +0200</pubDate>
       
-      <guid>https://kerneels.github.io/post/speed-up-views-through-custom-materialization/</guid>
+      <guid>https://blog.goodfast.info/post/speed-up-views-through-custom-materialization/</guid>
       <description>
 
 &lt;p&gt;SQL views are aluring as a means of abstraction; a &amp;ldquo;building block&amp;rdquo; to hide away commonly used complexity.

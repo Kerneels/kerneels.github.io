@@ -2,19 +2,19 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Hierarchies on Good Fast</title>
-    <link>https://kerneels.github.io/categories/hierarchies/</link>
+    <link>https://blog.goodfast.info/categories/hierarchies/</link>
     <description>Recent content in Hierarchies on Good Fast</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <lastBuildDate>Tue, 26 Sep 2017 08:31:17 +0200</lastBuildDate>
-    <atom:link href="https://kerneels.github.io/categories/hierarchies/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="https://blog.goodfast.info/categories/hierarchies/index.xml" rel="self" type="application/rss+xml" />
     
     <item>
       <title>How to use the transitive closure over a set of relations for fast path finding in SQL</title>
-      <link>https://kerneels.github.io/post/transitive-closures/</link>
+      <link>https://blog.goodfast.info/post/transitive-closures/</link>
       <pubDate>Tue, 26 Sep 2017 08:31:17 +0200</pubDate>
       
-      <guid>https://kerneels.github.io/post/transitive-closures/</guid>
+      <guid>https://blog.goodfast.info/post/transitive-closures/</guid>
       <description>
 
 &lt;p&gt;In a &lt;a href=&#34;http://goodfast.info/post/speed-up-views-through-custom-materialization/&#34;&gt;previous post&lt;/a&gt;, I wrote about how we make sense of the world by modelling relationships between things as tree-like hierarchies.
