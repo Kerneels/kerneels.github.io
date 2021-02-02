@@ -43,10 +43,12 @@ we can consider how similar the contained data is by looking at the vertical (ro
 
 &lt;p&gt;It is worth noting that:&lt;/p&gt;
 
-&lt;p&gt;a) We have set equivalence if we have both &lt;code&gt;table_a&lt;/code&gt; is a subset of &lt;code&gt;table_b&lt;/code&gt;, AND &lt;code&gt;table_b&lt;/code&gt; is a subset of &lt;code&gt;table_a&lt;/code&gt;.
-a) If row counts for the tables differ we can never have set equivalence.
-a) Even if row counts for the tables differ, we can still potentially have non empty union or a subset scenario.
-a) If row counts for the two tables are both &lt;code&gt;N&lt;/code&gt;, , and the row count for the set intersection between the two tables is also  &lt;code&gt;N&lt;/code&gt;, then we have set equivalence.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;We have set equivalence if we have both &lt;code&gt;table_a&lt;/code&gt; is a subset of &lt;code&gt;table_b&lt;/code&gt;, AND &lt;code&gt;table_b&lt;/code&gt; is a subset of &lt;code&gt;table_a&lt;/code&gt;.&lt;/li&gt;
+&lt;li&gt;If row counts for the tables differ we can never have set equivalence.&lt;/li&gt;
+&lt;li&gt;Even if row counts for the tables differ, we can still potentially have non empty union or a subset scenario.&lt;/li&gt;
+&lt;li&gt;If row counts for the two tables are both &lt;code&gt;N&lt;/code&gt;, , and the row count for the set intersection between the two tables is also  &lt;code&gt;N&lt;/code&gt;, then we have set equivalence.&lt;/li&gt;
+&lt;/ul&gt;
 
 &lt;p&gt;To find differing/similar rows, you might be tempted to construct elaborate joins involving all the columns, perhaps using FULL JOIN, but there exist a more elegant approach which involves some of SQL&amp;rsquo;s set operators.&lt;/p&gt;
 

@@ -137,10 +137,12 @@ we can consider how similar the contained data is by looking at the vertical (ro
 
 <p>It is worth noting that:</p>
 
-<p>a) We have set equivalence if we have both <code>table_a</code> is a subset of <code>table_b</code>, AND <code>table_b</code> is a subset of <code>table_a</code>.
-a) If row counts for the tables differ we can never have set equivalence.
-a) Even if row counts for the tables differ, we can still potentially have non empty union or a subset scenario.
-a) If row counts for the two tables are both <code>N</code>, , and the row count for the set intersection between the two tables is also  <code>N</code>, then we have set equivalence.</p>
+<ul>
+<li>We have set equivalence if we have both <code>table_a</code> is a subset of <code>table_b</code>, AND <code>table_b</code> is a subset of <code>table_a</code>.</li>
+<li>If row counts for the tables differ we can never have set equivalence.</li>
+<li>Even if row counts for the tables differ, we can still potentially have non empty union or a subset scenario.</li>
+<li>If row counts for the two tables are both <code>N</code>, , and the row count for the set intersection between the two tables is also  <code>N</code>, then we have set equivalence.</li>
+</ul>
 
 <p>To find differing/similar rows, you might be tempted to construct elaborate joins involving all the columns, perhaps using FULL JOIN, but there exist a more elegant approach which involves some of SQL&rsquo;s set operators.</p>
 
