@@ -151,7 +151,7 @@ When we execute this query, we get the number of different rows - no surprises.&
 
 &lt;h2 id=&#34;performing-a-binary-search-over-the-column-names:b0fe8f0bcf3b6892f71d222f4dd92b20&#34;&gt;Performing a binary search over the column names&lt;/h2&gt;
 
-&lt;p&gt;It is tempting at this point to start commenting out any column that appears suspicious&amp;hellip;. &amp;ldquo;That &lt;code&gt;column_066&lt;/code&gt; looks like a problem, let&amp;rsquo;s comment it out and run the query again&amp;rdquo; , you might reason:&lt;/p&gt;
+&lt;p&gt;It is tempting at this point to start commenting out any column that appears suspicious&amp;hellip; &amp;ldquo;That &lt;code&gt;column_066&lt;/code&gt; looks like a problem, let&amp;rsquo;s comment it out and run the query again&amp;rdquo; , you might reason:&lt;/p&gt;
 
 &lt;pre&gt;&lt;code class=&#34;language-sql&#34;&gt;select count(1) from (
 select
