@@ -125,15 +125,19 @@ we can consider how similar the contained data is by looking at the vertical (ro
 
 <h1 id="vertical-or-row-difference:b0fe8f0bcf3b6892f71d222f4dd92b20">Vertical, or row difference</h1>
 
-<p>these possibilities exist:
-1. full disjunction : <code>table_a</code> and <code>table_b</code> differ completely and do not overlap at all
-1. non empty union : <code>table_a</code> and <code>table_b</code> partially overlap, but differ in all other rows
-1. <code>table_a</code> is entirely contained in <code>table_b</code> : <code>table_a</code> is a subset of <code>table_b</code>
-1. <code>table_b</code> is entirely contained in <code>table_a</code> : <code>table_b</code> is a subset of <code>table_a</code>
-1. set equivalence : <code>table_a</code> and <code>table_b</code> overlap completely and do not differ at all</p>
+<p>these possibilities exist:</p>
 
-<p>It is worth noting that:
-a. We have set equivalence if we have both <code>table_a</code> is a subset of <code>table_b</code>, AND <code>table_b</code> is a subset of <code>table_a</code>.
+<ol>
+<li>full disjunction : <code>table_a</code> and <code>table_b</code> differ completely and do not overlap at all</li>
+<li>non empty union : <code>table_a</code> and <code>table_b</code> partially overlap, but differ in all other rows</li>
+<li><code>table_a</code> is entirely contained in <code>table_b</code> : <code>table_a</code> is a subset of <code>table_b</code></li>
+<li><code>table_b</code> is entirely contained in <code>table_a</code> : <code>table_b</code> is a subset of <code>table_a</code></li>
+<li>set equivalence : <code>table_a</code> and <code>table_b</code> overlap completely and do not differ at all</li>
+</ol>
+
+<p>It is worth noting that:</p>
+
+<p>a. We have set equivalence if we have both <code>table_a</code> is a subset of <code>table_b</code>, AND <code>table_b</code> is a subset of <code>table_a</code>.
 a. If row counts for the tables differ we can never have set equivalence.
 a. Even if row counts for the tables differ, we can still potentially have non empty union or a subset scenario.
 a. If row counts for the two tables are both <code>N</code>, , and the row count for the set intersection between the two tables is also  <code>N</code>, then we have set equivalence.</p>
@@ -181,13 +185,16 @@ select * from table_b
 except
 select * from table_a;
 
-<p>Some points to note about <code>EXCEPT</code>:
-1. if the row counts for both tables are the same, then the row count for the result of applying the <code>EXCEPT</code> operator will always be equal to, or less than the row count for the tables.
-1. If the row counts for the tables are equal, and the row count for the <code>EXCEPT</code> query is equal to that number, then the two tables differ completely.
-1. If the row counts for the tables are equal), then the  row count for an <code>EXCEPT</code> query between the two tables gives us the number of different rows between the two tables.
-1. If the row counts for the tables are equal, and the row count for the <code>table_a EXCEPT table_b</code> query is equal to zero, then it means that <code>table_a</code> is completely contained in <code>table_b</code>, but because the tables have the same number of rows, it must be that <code>table_b</code> and <code>table_a</code>  are set equivalent.
+<p>Some points to note about <code>EXCEPT</code>:</p>
+
+<ol>
+<li>if the row counts for both tables are the same, then the row count for the result of applying the <code>EXCEPT</code> operator will always be equal to, or less than the row count for the tables.</li>
+<li>If the row counts for the tables are equal, and the row count for the <code>EXCEPT</code> query is equal to that number, then the two tables differ completely.</li>
+<li>If the row counts for the tables are equal), then the  row count for an <code>EXCEPT</code> query between the two tables gives us the number of different rows between the two tables.</li>
+<li>If the row counts for the tables are equal, and the row count for the <code>table_a EXCEPT table_b</code> query is equal to zero, then it means that <code>table_a</code> is completely contained in <code>table_b</code>, but because the tables have the same number of rows, it must be that <code>table_b</code> and <code>table_a</code>  are set equivalent.
 Obtaining the query results for both <code>table_a EXCEPT table_b</code> and <code>table_b EXCEPT table_a</code> is especially useful when the row counts for <code>table_a</code> and <code>table_b</code> are equivalent.
-Armed with those two query results, we can now move on to the task of determining in which columns the differences occur.</p>
+Armed with those two query results, we can now move on to the task of determining in which columns the differences occur.</li>
+</ol>
 
 <h1 id="horizontal-or-column-differences:b0fe8f0bcf3b6892f71d222f4dd92b20">Horizontal, or column differences</h1>
 

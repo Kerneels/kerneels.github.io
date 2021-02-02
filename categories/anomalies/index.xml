@@ -31,15 +31,19 @@ we can consider how similar the contained data is by looking at the vertical (ro
 
 &lt;h1 id=&#34;vertical-or-row-difference:b0fe8f0bcf3b6892f71d222f4dd92b20&#34;&gt;Vertical, or row difference&lt;/h1&gt;
 
-&lt;p&gt;these possibilities exist:
-1. full disjunction : &lt;code&gt;table_a&lt;/code&gt; and &lt;code&gt;table_b&lt;/code&gt; differ completely and do not overlap at all
-1. non empty union : &lt;code&gt;table_a&lt;/code&gt; and &lt;code&gt;table_b&lt;/code&gt; partially overlap, but differ in all other rows
-1. &lt;code&gt;table_a&lt;/code&gt; is entirely contained in &lt;code&gt;table_b&lt;/code&gt; : &lt;code&gt;table_a&lt;/code&gt; is a subset of &lt;code&gt;table_b&lt;/code&gt;
-1. &lt;code&gt;table_b&lt;/code&gt; is entirely contained in &lt;code&gt;table_a&lt;/code&gt; : &lt;code&gt;table_b&lt;/code&gt; is a subset of &lt;code&gt;table_a&lt;/code&gt;
-1. set equivalence : &lt;code&gt;table_a&lt;/code&gt; and &lt;code&gt;table_b&lt;/code&gt; overlap completely and do not differ at all&lt;/p&gt;
+&lt;p&gt;these possibilities exist:&lt;/p&gt;
 
-&lt;p&gt;It is worth noting that:
-a. We have set equivalence if we have both &lt;code&gt;table_a&lt;/code&gt; is a subset of &lt;code&gt;table_b&lt;/code&gt;, AND &lt;code&gt;table_b&lt;/code&gt; is a subset of &lt;code&gt;table_a&lt;/code&gt;.
+&lt;ol&gt;
+&lt;li&gt;full disjunction : &lt;code&gt;table_a&lt;/code&gt; and &lt;code&gt;table_b&lt;/code&gt; differ completely and do not overlap at all&lt;/li&gt;
+&lt;li&gt;non empty union : &lt;code&gt;table_a&lt;/code&gt; and &lt;code&gt;table_b&lt;/code&gt; partially overlap, but differ in all other rows&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;table_a&lt;/code&gt; is entirely contained in &lt;code&gt;table_b&lt;/code&gt; : &lt;code&gt;table_a&lt;/code&gt; is a subset of &lt;code&gt;table_b&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;table_b&lt;/code&gt; is entirely contained in &lt;code&gt;table_a&lt;/code&gt; : &lt;code&gt;table_b&lt;/code&gt; is a subset of &lt;code&gt;table_a&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;set equivalence : &lt;code&gt;table_a&lt;/code&gt; and &lt;code&gt;table_b&lt;/code&gt; overlap completely and do not differ at all&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;It is worth noting that:&lt;/p&gt;
+
+&lt;p&gt;a. We have set equivalence if we have both &lt;code&gt;table_a&lt;/code&gt; is a subset of &lt;code&gt;table_b&lt;/code&gt;, AND &lt;code&gt;table_b&lt;/code&gt; is a subset of &lt;code&gt;table_a&lt;/code&gt;.
 a. If row counts for the tables differ we can never have set equivalence.
 a. Even if row counts for the tables differ, we can still potentially have non empty union or a subset scenario.
 a. If row counts for the two tables are both &lt;code&gt;N&lt;/code&gt;, , and the row count for the set intersection between the two tables is also  &lt;code&gt;N&lt;/code&gt;, then we have set equivalence.&lt;/p&gt;
@@ -87,13 +91,16 @@ select * from table_b
 except
 select * from table_a;
 
-&lt;p&gt;Some points to note about &lt;code&gt;EXCEPT&lt;/code&gt;:
-1. if the row counts for both tables are the same, then the row count for the result of applying the &lt;code&gt;EXCEPT&lt;/code&gt; operator will always be equal to, or less than the row count for the tables.
-1. If the row counts for the tables are equal, and the row count for the &lt;code&gt;EXCEPT&lt;/code&gt; query is equal to that number, then the two tables differ completely.
-1. If the row counts for the tables are equal), then the  row count for an &lt;code&gt;EXCEPT&lt;/code&gt; query between the two tables gives us the number of different rows between the two tables.
-1. If the row counts for the tables are equal, and the row count for the &lt;code&gt;table_a EXCEPT table_b&lt;/code&gt; query is equal to zero, then it means that &lt;code&gt;table_a&lt;/code&gt; is completely contained in &lt;code&gt;table_b&lt;/code&gt;, but because the tables have the same number of rows, it must be that &lt;code&gt;table_b&lt;/code&gt; and &lt;code&gt;table_a&lt;/code&gt;  are set equivalent.
+&lt;p&gt;Some points to note about &lt;code&gt;EXCEPT&lt;/code&gt;:&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;if the row counts for both tables are the same, then the row count for the result of applying the &lt;code&gt;EXCEPT&lt;/code&gt; operator will always be equal to, or less than the row count for the tables.&lt;/li&gt;
+&lt;li&gt;If the row counts for the tables are equal, and the row count for the &lt;code&gt;EXCEPT&lt;/code&gt; query is equal to that number, then the two tables differ completely.&lt;/li&gt;
+&lt;li&gt;If the row counts for the tables are equal), then the  row count for an &lt;code&gt;EXCEPT&lt;/code&gt; query between the two tables gives us the number of different rows between the two tables.&lt;/li&gt;
+&lt;li&gt;If the row counts for the tables are equal, and the row count for the &lt;code&gt;table_a EXCEPT table_b&lt;/code&gt; query is equal to zero, then it means that &lt;code&gt;table_a&lt;/code&gt; is completely contained in &lt;code&gt;table_b&lt;/code&gt;, but because the tables have the same number of rows, it must be that &lt;code&gt;table_b&lt;/code&gt; and &lt;code&gt;table_a&lt;/code&gt;  are set equivalent.
 Obtaining the query results for both &lt;code&gt;table_a EXCEPT table_b&lt;/code&gt; and &lt;code&gt;table_b EXCEPT table_a&lt;/code&gt; is especially useful when the row counts for &lt;code&gt;table_a&lt;/code&gt; and &lt;code&gt;table_b&lt;/code&gt; are equivalent.
-Armed with those two query results, we can now move on to the task of determining in which columns the differences occur.&lt;/p&gt;
+Armed with those two query results, we can now move on to the task of determining in which columns the differences occur.&lt;/li&gt;
+&lt;/ol&gt;
 
 &lt;h1 id=&#34;horizontal-or-column-differences:b0fe8f0bcf3b6892f71d222f4dd92b20&#34;&gt;Horizontal, or column differences&lt;/h1&gt;
 
