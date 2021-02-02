@@ -155,13 +155,16 @@ As a reminder, <code>UNION</code> between two queries will produce the set union
 <h3 id="intersect:b0fe8f0bcf3b6892f71d222f4dd92b20">INTERSECT</h3>
 
 <p>For obtaining a possible set intersection between two tables, we can use the <code>INTERSECT</code> operator:</p>
-select * from table_a
+
+<pre><code class="language-sql">select * from table_a
 intersect
 select * from table_b
 ;
+</code></pre>
 
 <p>As pointed out earlier, if the row count for the intersection is the same as the row counts for the two tables, we have set equivalence:</p>
-select sum(row_count) = 0 as set_equivalence from (
+
+<pre><code class="language-sql">select sum(row_count) = 0 as set_equivalence from (
 select count(1) as row_count from (
 select * from table_a
 intersect
@@ -172,20 +175,25 @@ select count(1) as row_count from table_a
 union all
 select -2 * count(1) as row_count from table_b
 );
+</code></pre>
 
 <h3 id="except:b0fe8f0bcf3b6892f71d222f4dd92b20">EXCEPT</h3>
 
 <p>When we use the <code>EXCEPT</code> set operator, for example, <code>query_1 EXCEPT query_2</code>, we are left with all rows from <code>query_1</code> that do not occur in <code>query_2</code>.
 Note that <code>query_2</code> might contain rows that are not present in <code>query_1</code>, but because <code>EXCEPT</code> is not commutative, similar to how minus is not commutative, <code>query_1 EXCEPT query_2</code> is not the same as <code>query_2 EXCEPT 
 query_1</code>, and we are only left with non occurring rows in <code>query_1</code>.</p>
-select * from table_a
+
+<pre><code class="language-sql">select * from table_a
 except
 select * from table_b;
+</code></pre>
 
 <p>&hellip;is not the same as:</p>
-select * from table_b
+
+<pre><code class="language-sql">select * from table_b
 except
 select * from table_a;
+</code></pre>
 
 <p>Some points to note about <code>EXCEPT</code>:</p>
 
@@ -212,7 +220,8 @@ Persisting the result sets to actual tables is a better choice when the <code>EX
 
 <p>We want to find out what subset of columns cause <code>except_ab</code> and <code>except_ba</code> to differ.
 We start out by crafting a query of the form:</p>
-select count(1) from (
+
+<pre><code class="language-sql">select count(1) from (
 select
 column_001
 ,column_002
@@ -229,6 +238,7 @@ column_001
 ,column_100
 from except_ba
 );
+</code></pre>
 
 <p>Of course, in practice, we  rarely have such clean column names, but rather have all sorts of interesting and creative names to deal with.
 When we execute this query, we get the number of different rows - no surprises.</p>
@@ -236,7 +246,8 @@ When we execute this query, we get the number of different rows - no surprises.<
 <h2 id="performing-a-binary-search-over-the-column-names:b0fe8f0bcf3b6892f71d222f4dd92b20">Performing a binary search over the column names</h2>
 
 <p>It is tempting at this point to start commenting out any column that appears suspicious&hellip;. &ldquo;That <code>column_066</code> looks like a problem, let&rsquo;s comment it out and run the query again&rdquo; , you might reason:</p>
-select count(1) from (
+
+<pre><code class="language-sql">select count(1) from (
 select
 column_001
 ,column_002
@@ -257,6 +268,7 @@ column_001
 ,column_100
 from except_ba
 );
+</code></pre>
 
 <p>Resist this urge in favor of a more systematic approach, which will lead you to the offending column(s) in the least amount of time.
 The basic idea of the systematic approach is not to try and identify individual columns, but rather finding regions of columns that contain differing column values, and then to shrink them one by one.
@@ -287,7 +299,8 @@ When we found the regions that cause the two result sets to differ, we reduce th
 </ol>
 
 <p>Most databases provide the multi-line commenting so that you can comment  like this:</p>
-select count(1) from (
+
+<pre><code class="language-sql">select count(1) from (
 select
 /*column_001
 ,column_002
@@ -312,6 +325,7 @@ select
 ,column_100
 from except_ba
 );
+</code></pre>
 
 <h1 id="next-steps:b0fe8f0bcf3b6892f71d222f4dd92b20">Next steps</h1>
 
@@ -329,9 +343,11 @@ Such a manual approach is only applicable if the schema is relatively small;
 for larger schemas that would take too long to compare manually we can use diff tools.</p>
 
 <p>When we know the schemas are equivalent, the next logical step would be to count rows - something as simple as:</p>
-select count(1) from table_a
+
+<pre><code class="language-sql">select count(1) from table_a
 union all
 select count(1) from table_b;
+</code></pre>
 
 <h1 id="conclusion:b0fe8f0bcf3b6892f71d222f4dd92b20">Conclusion</h1>
 

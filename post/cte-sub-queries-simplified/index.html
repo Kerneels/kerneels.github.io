@@ -179,23 +179,29 @@ The relation between customers and their addresses is maintained in the person.B
 for each address (Billing, Home, Main Office etc).</p>
 
 <h2 id="we-want-to-know-how-many-customers-have-one-two-and-three-or-more-addresses:0dc054d968169eec76f7161b9d98121b">We want to know how many customers have one, two and three or more addresses.</h2>
-Since the purpose of this article is to discuss subquery vs CTEs, excuse the somewhat contrived query.
+
+<pre><code>Since the purpose of this article is to discuss subquery vs CTEs, excuse the somewhat contrived query.
 At the end of this article I'll show  a simpler way to accomplish the tast at hand.
+</code></pre>
 
 <h2 id="sub-query-building-block:0dc054d968169eec76f7161b9d98121b">Sub query building block</h2>
 
 <p>We can establish that no BusinessEntity has more than two addresses by the empty result set returned by:</p>
-select ba.BusinessEntityId, count(ba.AddressId)
+
+<pre><code class="language-sql">select ba.BusinessEntityId, count(ba.AddressId)
 from person.BusinessEntity b
 join person.BusinessEntityAddress ba on ba.BusinessEntityId = b.BusinessEntityId
 group by ba.BusinessEntityId
-having count(ba.AddressId) > 2;
+having count(ba.AddressId) &gt; 2;
+</code></pre>
 
 <p>We&rsquo;ll assume for the remainder of this article that  this query is our best attempt, and that
 it is a &ldquo;black box&rdquo; with which we cannot tamper, save for adjusting the count in the HAVING clause.</p>
 
 <p>Note that technically we do not need the additional join:</p>
-join person.BusinessEntityAddress ba on ba.BusinessEntityId = b.BusinessEntityId
+
+<pre><code class="language-sql">join person.BusinessEntityAddress ba on ba.BusinessEntityId = b.BusinessEntityId
+</code></pre>
 
 <p>however this ensures we do not consider addresses in isolation - we ensure all addresses actually have an existing business tied to them.</p>
 
@@ -203,7 +209,8 @@ join person.BusinessEntityAddress ba on ba.BusinessEntityId = b.BusinessEntityId
 
 <p>Now we would like to improve this result a bit, by rather returning a count of zero instead of nothing.
 We do this by wrapping the above query in a super query:</p>
-select 
+
+<pre><code class="language-sql">select 
 count(businessEntitiesWithMoreThanTwoAddresses.BusinessEntityId) as NumberOfBusinessesWithMoreThanTwoAddresses
 from
 (select ba.BusinessEntityId, 
@@ -211,8 +218,9 @@ count(ba.AddressId) as NumberOfAddresses
 from person.BusinessEntity b
 join person.BusinessEntityAddress ba on ba.BusinessEntityId = b.BusinessEntityId
 group by ba.BusinessEntityId
-having count(ba.AddressId) > 2
+having count(ba.AddressId) &gt; 2
 ) as businessEntitiesWithMoreThanTwoAddresses;
+</code></pre>
 
 <p>Not too bad in terms of readability, and since we alias the sub query we always know where the result for the outer select column list comes from.
 But what if we would like to augment this query to also return the number of businesses with only one, and two addresses respectively?
@@ -220,7 +228,8 @@ Or to cover all possabilities, the number of businesses with one, two and three 
 Let&rsquo;s try with the sub query approach:</p>
 
 <h2 id="combined-sub-query-approach:0dc054d968169eec76f7161b9d98121b">Combined sub query approach</h2>
-select 
+
+<pre><code class="language-sql">select 
 count(businessEntitiesWithOneAddress.BusinessEntityId) as NumberOfBusinessesWithOneAddress,
 count(businessEntitiesWithTwoAddresses.BusinessEntityId) as NumberOfBusinessesWithTwoAddresses,
 count(businessEntitiesWithMoreThanTwoAddresses.BusinessEntityId) as NumberOfBusinessesWithMoreThanTwoAddresses
@@ -244,8 +253,9 @@ count(ba.AddressId) as NumberOfAddresses
 from person.BusinessEntity b
 join person.BusinessEntityAddress ba on ba.BusinessEntityId = b.BusinessEntityId
 group by ba.BusinessEntityId
-having count(ba.AddressId) > 2
+having count(ba.AddressId) &gt; 2
 ) as businessEntitiesWithMoreThanTwoAddresses;
+</code></pre>
 
 <p>Hmm&hellip; We get zero for everything. Something has gone wrong.
 Running each super/sub query pair separately we obtain a number for the one and two address scenario, but nothing for the three or more one.
@@ -260,7 +270,8 @@ worse, the last subquery returns zero rows, and anything multiplied by zero is o
 
 <p>Now, let&rsquo;s first remedy this situation by cross joining on only one row each time.
 Hold on, it is going to get a bit messy since in order to do this, we have to introduce yet another subquery.</p>
-select 
+
+<pre><code class="language-sql">select 
 A.NumberOfBusinessesWithOneAddress,
 B.NumberOfBusinessesWithTwoAddresses,
 C.NumberOfBusinessesWithMoreThanTwoAddresses
@@ -293,8 +304,9 @@ count(ba.AddressId) as NumberOfAddresses
 from person.BusinessEntity b
 join person.BusinessEntityAddress ba on ba.BusinessEntityId = b.BusinessEntityId
 group by ba.BusinessEntityId
-having count(ba.AddressId) > 2
+having count(ba.AddressId) &gt; 2
 ) as businessEntitiesWithMoreThanTwoAddresses) as C;
+</code></pre>
 
 <p>Success, but at quite a complexity and readability cost.</p>
 
@@ -309,7 +321,8 @@ having count(ba.AddressId) > 2
 <li>Next, the encapsulating super queries that reduce the sub queries to  single values are also stated as CTEs named A, B and C.</li>
 <li>Finally we simply select from the aggregation CTEs A, B and C.</li>
 </ol>
--- First, the three innermost sub queries are stated as CTEs named businessEntitiesWithOneAddress, businessEntitiesWithTwoAddresses and businessEntitiesWithMoreThanTwoAddresses.
+
+<pre><code class="language-sql">-- First, the three innermost sub queries are stated as CTEs named businessEntitiesWithOneAddress, businessEntitiesWithTwoAddresses and businessEntitiesWithMoreThanTwoAddresses.
 with  businessEntitiesWithOneAddress as
 (select ba.BusinessEntityId, 
 count(ba.AddressId) as NumberOfAddresses
@@ -330,7 +343,7 @@ count(ba.AddressId) as NumberOfAddresses
 from person.BusinessEntity b
 join person.BusinessEntityAddress ba on ba.BusinessEntityId = b.BusinessEntityId
 group by ba.BusinessEntityId
-having count(ba.AddressId) > 2
+having count(ba.AddressId) &gt; 2
 ), 
 
 -- Next, the encapsulating super queries that reduce the sub queries to  single values are also stated as CTEs named A, B and C.
@@ -351,6 +364,7 @@ A.NumberOfBusinessesWithOneAddress,
 B.NumberOfBusinessesWithTwoAddresses,
 C.NumberOfBusinessesWithMoreThanTwoAddresses
 from A, B, C;
+</code></pre>
 
 <h2 id="is-this-not-so-much-more-readable:0dc054d968169eec76f7161b9d98121b">Is this not so much more readable?</h2>
 
@@ -404,7 +418,8 @@ Is there not perhaps a way to join without throwing anything away?</p>
 <p>Did you know about the full join? I will admit that although I knew there had to be something like it, I did not know / forgotten all about it.</p>
 
 <h2 id="sub-query-approach-simplified-with-a-full-join:0dc054d968169eec76f7161b9d98121b">Sub query approach simplified with a FULL JOIN</h2>
-select 
+
+<pre><code class="language-sql">select 
 count(businessEntitiesWithOneAddress.BusinessEntityId) as NumberOfBusinessesWithOneAddress,
 count(businessEntitiesWithTwoAddresses.BusinessEntityId) as NumberOfBusinessesWithTwoAddresses,
 count(businessEntitiesWithMoreThanTwoAddresses.BusinessEntityId) as NumberOfBusinessesWithMoreThanTwoAddresses
@@ -433,16 +448,18 @@ count(ba.AddressId) as NumberOfAddresses
 from person.BusinessEntity b
 join person.BusinessEntityAddress ba on ba.BusinessEntityId = b.BusinessEntityId
 group by ba.BusinessEntityId
-having count(ba.AddressId) > 2
+having count(ba.AddressId) &gt; 2
 ) as businessEntitiesWithMoreThanTwoAddresses
 on
 businessEntitiesWithTwoAddresses.BusinessEntityId   = 
 businessEntitiesWithMoreThanTwoAddresses.BusinessEntityId;
+</code></pre>
 
 <p>Yes, we do away with one level of sub queries, but it&rsquo;s still not great.</p>
 
 <h2 id="cte-approach-simplified-with-full-join:0dc054d968169eec76f7161b9d98121b">CTE approach simplified with FULL JOIN</h2>
-with  businessEntitiesWithOneAddress as
+
+<pre><code class="language-sql">with  businessEntitiesWithOneAddress as
 (select ba.BusinessEntityId, 
 count(ba.AddressId) as NumberOfAddresses
 from person.BusinessEntity b
@@ -462,7 +479,7 @@ count(ba.AddressId) as NumberOfAddresses
 from person.BusinessEntity b
 join person.BusinessEntityAddress ba on ba.BusinessEntityId = b.BusinessEntityId
 group by ba.BusinessEntityId
-having count(ba.AddressId) > 2
+having count(ba.AddressId) &gt; 2
 )
 select 
 count(businessEntitiesWithOneAddress.BusinessEntityId) as NumberOfBusinessesWithOneAddress,
@@ -473,13 +490,15 @@ full join businessEntitiesWithTwoAddresses
 on businessEntitiesWithOneAddress.BusinessEntityId = businessEntitiesWithTwoAddresses.BusinessEntityId
 full join businessEntitiesWithMoreThanTwoAddresses
 on businessEntitiesWithTwoAddresses.BusinessEntityId = businessEntitiesWithMoreThanTwoAddresses.BusinessEntityId
+</code></pre>
 
 <h2 id="simplest-solution:0dc054d968169eec76f7161b9d98121b">Simplest solution</h2>
 
 <p>Finally, if we relax the requirement (which was self imposed in the first place) to have the results in one row,
 as well as not worrying about returning the count for the three or more scenario,
 we can simplify everything very nice like this:</p>
-with  businessEntitiesAddressCount as
+
+<pre><code class="language-sql">with  businessEntitiesAddressCount as
 (select ba.BusinessEntityId, 
 count(ba.AddressId) as NumberOfAddresses
 from person.BusinessEntity b
@@ -491,6 +510,7 @@ count(BusinessEntityId) as NumberOfBusinesses,
 NumberOfAddresses 
 from businessEntitiesAddressCount 
 group by NumberOfAddresses;
+</code></pre>
 
 <p>Best of all; we still get to use a wonderful CTE!</p>
 

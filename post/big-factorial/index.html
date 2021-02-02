@@ -85,16 +85,20 @@
   <section class="body" itemprop="articleBody">
     <p>What&rsquo;s the first five digits of 1,000,000! or 1 million factorial?
 Let&rsquo;s ask Haskell:</p>
-Prelude> take 5 $ show $ product [1..1000000] 
-"82639" 
+
+<pre><code class="language-haskell">Prelude&gt; take 5 $ show $ product [1..1000000] 
+&quot;82639&quot; 
 (1043.56 secs, 1,444,511,743,624 bytes) 
+</code></pre>
 
 <p>Neat!</p>
 
 <p>But you might ask, how many digits is this rather large number, of 1 bar factorial? Let&rsquo;s ask again:</p>
-Prelude> length $ show $ product [1..1000000] 
+
+<pre><code class="language-haskell">Prelude&gt; length $ show $ product [1..1000000] 
 5565709 
 (1103.04 secs, 1,444,845,773,000 bytes) 
+</code></pre>
 
 <p>Wow! 5.5 million digits! Way more than all the electrons in the universe.</p>
 

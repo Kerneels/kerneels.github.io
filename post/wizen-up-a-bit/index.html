@@ -139,51 +139,65 @@ For more details about the problem, visit the <a href="https://code.google.com/c
 <h2 id="bit-boards:d352b201a1938ed46d030d55323cc26d">Bit boards</h2>
 
 <p>We choose an integer, 4 bytes, to store a bit mask of the player O, player X, how a column looks, how each of the two diagonals look and so on. We could have used a 2-byte unsigned  short instead of an int, sadly we didn&rsquo;t. Well, got to leave something for next time.</p>
-        public static int column, diagonal1, diagonal2, fullboard;
+
+<pre><code class="language-C#">        public static int column, diagonal1, diagonal2, fullboard;
+</code></pre>
 
 <p>and</p>
-            int xboard = 0, oboard = 0, tboard = 0;
+
+<pre><code class="language-C#">            int xboard = 0, oboard = 0, tboard = 0;
+</code></pre>
 
 <p>We assign the static patterns we&rsquo;ll use for column, the two diagonals and the full board:</p>
-            column = Convert.ToInt32("1000100010001", 2);
-            diagonal1 = Convert.ToInt32("1000010000100001", 2);
-            diagonal2 = Convert.ToInt32("0001001001001000", 2);
-            fullboard = Convert.ToInt32("1111111111111111", 2);
+
+<pre><code class="language-C#">            column = Convert.ToInt32(&quot;1000100010001&quot;, 2);
+            diagonal1 = Convert.ToInt32(&quot;1000010000100001&quot;, 2);
+            diagonal2 = Convert.ToInt32(&quot;0001001001001000&quot;, 2);
+            fullboard = Convert.ToInt32(&quot;1111111111111111&quot;, 2);
+</code></pre>
 
 <p>I&rsquo;m not going to bother you with file IO, so we skip to where we set the X, O and T boards:</p>
-                        xboard = StringBoardToBitBoard(line, 'X');
+
+<pre><code class="language-C#">                        xboard = StringBoardToBitBoard(line, 'X');
                         oboard = StringBoardToBitBoard(line, 'O');
                         tboard = StringBoardToBitBoard(line, 'T');
+</code></pre>
 
 <p>Function StringBoardToBitBoard does exactly what  you would imagine - it assigns a &lsquo;1&rsquo; in the bit position if the char occurs and a &lsquo;0&rsquo; otherwise - see below for the full program.</p>
 
 <h2 id="decision-and-output:d352b201a1938ed46d030d55323cc26d">Decision and output</h2>
-                        if (Won(xboard, tboard))
-                            sw.WriteLine("Case #{0}: X won", i);
+
+<pre><code class="language-C#">                        if (Won(xboard, tboard))
+                            sw.WriteLine(&quot;Case #{0}: X won&quot;, i);
                         else if (Won(oboard, tboard))
-                            sw.WriteLine("Case #{0}: O won", i);
-                        else if (((xboard | oboard | tboard) & fullboard) == fullboard)
-                            sw.WriteLine("Case #{0}: Draw", i);
+                            sw.WriteLine(&quot;Case #{0}: O won&quot;, i);
+                        else if (((xboard | oboard | tboard) &amp; fullboard) == fullboard)
+                            sw.WriteLine(&quot;Case #{0}: Draw&quot;, i);
                         else
-                            sw.WriteLine("Case #{0}: Game has not completed", i);
+                            sw.WriteLine(&quot;Case #{0}: Game has not completed&quot;, i);
+</code></pre>
 
 <h2 id="the-real-magic-bitwise-operators-and-shifts:d352b201a1938ed46d030d55323cc26d">The real magic: bitwise operators and shifts</h2>
 
 <p>And finally, let&rsquo;s have a look at the elegant part; function Won and friends:</p>
-        public static bool Won(int board, int tboard)
+
+<pre><code class="language-C#">        public static bool Won(int board, int tboard)
         {
             board |= tboard;  // apply the T position
             return LinesMatch(board) || ColumnsMatch(board) || DiagonalsMatch(board);
         }
+</code></pre>
 
 <p>makes sense doesn&rsquo;t it; you win if you have a line, a column or a diagonal.</p>
-        public static bool LinesMatch(int board)
+
+<pre><code class="language-C#">        public static bool LinesMatch(int board)
         {
             return board == (board | 15)
-                || board == (board | (15 << 4))
-                || board == (board | (15 << 8))
-                || board == (board | (15 << 12));
+                || board == (board | (15 &lt;&lt; 4))
+                || board == (board | (15 &lt;&lt; 8))
+                || board == (board | (15 &lt;&lt; 12));
         }
+</code></pre>
 
 <p>You have a lines match if your board position
 is logical OR-ed (the &lsquo;|&rsquo; operator)  with any of the line representations, and still is equal to itself.
@@ -191,19 +205,21 @@ For the 4 line representations we could have used constants, to avoid the bit sh
 Also, the 15 magic number in there, for the first lines representation; should really live in a constant.</p>
 
 <p>In the same way, but slightly different, the columns and diagonals are checked:</p>
-        public static bool ColumnsMatch(int board)
+
+<pre><code class="language-C#">        public static bool ColumnsMatch(int board)
         {
             return
                 board == (board | column)
-                || board == (board | (column << 1))
-                || board == (board | (column << 2))
-                || board == (board | (column << 3));
+                || board == (board | (column &lt;&lt; 1))
+                || board == (board | (column &lt;&lt; 2))
+                || board == (board | (column &lt;&lt; 3));
         }
         public static bool DiagonalsMatch(int board)
         {
             return board == (board | diagonal1)
                 || board == (board | diagonal2);
         }
+</code></pre>
 
 <p>The diagonals checking could have happened all at once, why is this possible?</p>
 
@@ -221,7 +237,8 @@ The next week when I realized my mistake, I was upset. I just had to get one or 
 I like that. May it be that, when people survey our code and data representations, may it be that they would reflect upon how few bits was used, or how few lines of code were written&hellip;</p>
 
 <h2 id="full-program:d352b201a1938ed46d030d55323cc26d">Full program</h2>
-using System;
+
+<pre><code class="language-C#">using System;
 using System.IO;
 using System.Collections.Generic;
 using System.Linq;
@@ -236,22 +253,22 @@ namespace ConsoleApplication1
 
         static void Main(string[] args)
         {
-            column = Convert.ToInt32("1000100010001", 2);
-            diagonal1 = Convert.ToInt32("1000010000100001", 2);
-            diagonal2 = Convert.ToInt32("0001001001001000", 2);
-            fullboard = Convert.ToInt32("1111111111111111", 2);
+            column = Convert.ToInt32(&quot;1000100010001&quot;, 2);
+            diagonal1 = Convert.ToInt32(&quot;1000010000100001&quot;, 2);
+            diagonal2 = Convert.ToInt32(&quot;0001001001001000&quot;, 2);
+            fullboard = Convert.ToInt32(&quot;1111111111111111&quot;, 2);
 
             int xboard = 0, oboard = 0, tboard = 0;
 
             try
             {
-                string infile = "A-large.in", outfile = "A-large.out", line = "";
+                string infile = &quot;A-large.in&quot;, outfile = &quot;A-large.out&quot;, line = &quot;&quot;;
                 using (StreamReader sr = new StreamReader(infile))
                 {
                     using (StreamWriter sw = new StreamWriter(outfile))
                     {
                     int numberOfProblems = Int32.Parse(sr.ReadLine());
-                    for (int i = 1; i <= numberOfProblems; i++)
+                    for (int i = 1; i &lt;= numberOfProblems; i++)
                     {
                         line = sr.ReadLine();
                         line += sr.ReadLine();
@@ -262,13 +279,13 @@ namespace ConsoleApplication1
                         oboard = StringBoardToBitBoard(line, 'O');
                         tboard = StringBoardToBitBoard(line, 'T');
                         if (Won(xboard, tboard))
-                            sw.WriteLine("Case #{0}: X won", i);
+                            sw.WriteLine(&quot;Case #{0}: X won&quot;, i);
                         else if (Won(oboard, tboard))
-                            sw.WriteLine("Case #{0}: O won", i);
-                        else if (((xboard | oboard | tboard) & fullboard) == fullboard)
-                            sw.WriteLine("Case #{0}: Draw", i);
+                            sw.WriteLine(&quot;Case #{0}: O won&quot;, i);
+                        else if (((xboard | oboard | tboard) &amp; fullboard) == fullboard)
+                            sw.WriteLine(&quot;Case #{0}: Draw&quot;, i);
                         else
-                            sw.WriteLine("Case #{0}: Game has not completed", i);
+                            sw.WriteLine(&quot;Case #{0}: Game has not completed&quot;, i);
 
                         line = sr.ReadLine();
                     }
@@ -290,17 +307,17 @@ namespace ConsoleApplication1
         public static bool LinesMatch(int board)
         {
             return board == (board | 15)
-                || board == (board | (15 << 4))
-                || board == (board | (15 << 8))
-                || board == (board | (15 << 12));
+                || board == (board | (15 &lt;&lt; 4))
+                || board == (board | (15 &lt;&lt; 8))
+                || board == (board | (15 &lt;&lt; 12));
         }
         public static bool ColumnsMatch(int board)
         {
             return
                 board == (board | column)
-                || board == (board | (column << 1))
-                || board == (board | (column << 2))
-                || board == (board | (column << 3));
+                || board == (board | (column &lt;&lt; 1))
+                || board == (board | (column &lt;&lt; 2))
+                || board == (board | (column &lt;&lt; 3));
         }
         public static bool DiagonalsMatch(int board)
         {
@@ -311,13 +328,14 @@ namespace ConsoleApplication1
         public static int StringBoardToBitBoard(string stringBoard, char oneChar)
         {
             string bitBoard = new String(stringBoard.Select(
-                x => x == oneChar ? '1' : '0')
+                x =&gt; x == oneChar ? '1' : '0')
                 .ToArray());
             return Convert.ToInt32(bitBoard, 2);
         }
     }
 }
 
+</code></pre>
 
   </section>
 </article>

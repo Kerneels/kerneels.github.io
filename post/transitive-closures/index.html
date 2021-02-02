@@ -217,6 +217,7 @@ No more need for recursive CTE&rsquo;s each time you want path information, or w
 
 <h2 id="setup:594089c9c61d3c8bcdb4d6b1895da11a">Setup</h2>
 
+<pre><code class="language-SQL">
 -- create table node to represent the relations
 create table node (id int, parent_id int, label varchar(50));
 
@@ -232,6 +233,7 @@ insert into node values
 
 -- table to hold the transitive closure over nodes
 create table closure (parent_id int, child_id int, depth int, route varchar(100));
+</code></pre>
 
 <p>Table node is the standard self referencing structure, and table closure will contain the paths that node represent.
 Column node.label is only the label that applies to the particular node row, but column closure.route will contain a nice chain of all the labels from closure.parent_id to closure.child_id.
@@ -393,19 +395,21 @@ Later on it will become apparent why we require these.</p>
 
 <p>For either type of new node, table closure requires a new identity path.
 Furthermore, if the new node has a parent, we also need to add entries for all paths ending in the new node.</p>
-create proc closure_insert @parent_id int, @child_id int, @route varchar(50) as 
+
+<pre><code class="language-SQL">create proc closure_insert @parent_id int, @child_id int, @route varchar(50) as 
 begin
 -- always insert identity
 insert into closure (parent_id,child_id,depth,route) 
 values (@child_id,@child_id,0, @route);
-if  @parent_id <> @child_id and @parent_id is not null
+if  @parent_id &lt;&gt; @child_id and @parent_id is not null
 insert into closure (parent_id,child_id,depth, route) 
 select parent.parent_id, child.child_id,
 parent.depth + child.depth + 1, 
-parent.route + ' > ' + child.route 
+parent.route + ' &gt; ' + child.route 
 from closure as parent cross join closure as child 
 where parent.child_id = @parent_id and child.parent_id = @child_id;
 end;
+</code></pre>
 
 <h3 id="closure-delete:594089c9c61d3c8bcdb4d6b1895da11a">Closure delete</h3>
 
@@ -416,15 +420,17 @@ end;
 <li>end in @child_id,</li>
 <li>runs through @child_id, so any path that starts at any of @child_id&rsquo;s parents,and any path that ends in any of @child_id&rsquo;s children<br /></li>
 </ol>
-create proc closure_delete @child_id int as begin
+
+<pre><code class="language-SQL">create proc closure_delete @child_id int as begin
 delete from link  
 from closure as parent, closure as link, closure as child, closure as to_delete 
 where 
 parent.parent_id = link.parent_id and child.child_id = link.child_id
 and parent.child_id = to_delete.parent_id and child.parent_id = to_delete.child_id
 and (to_delete.child_id = @child_id or to_delete.parent_id = @child_id) 
-and to_delete.depth < 2;
+and to_delete.depth &lt; 2;
 end;
+</code></pre>
 
 <h3 id="closure-update:594089c9c61d3c8bcdb4d6b1895da11a">Closure update</h3>
 
@@ -439,7 +445,8 @@ Then we will do the delete, followed by successively calling the insert proc to 
 If you take a look at our insert proc you&rsquo;ll see very quickly that this will result in problems; we will not find the parent paths, and thus add too few actual paths.
 For this reason it is essential that we first insert all nodes without parents, then followed by the rest of the set that do have a parent, which will already be inserted.
 The insert proc will take care of adding all required paths, but only if we insert in the correct order.</p>
-create proc closure_update @child_id int as begin
+
+<pre><code class="language-SQL">create proc closure_update @child_id int as begin
 -- temp storage of nodes to insert after the deletion
 declare @t as table (id int primary key, parent_id int, label varchar(50));
 
@@ -480,6 +487,7 @@ while @@FETCH_STATUS = 0 begin
 fetch next from cur into @_p, @_c, @_l;
 end close cur deallocate cur;
 end;
+</code></pre>
 
 <p>The insertion cursor query follows the usual pattern for a recursive CTE:</p>
 
@@ -493,7 +501,8 @@ end;
 <h3 id="closure-refresh:594089c9c61d3c8bcdb4d6b1895da11a">Closure refresh</h3>
 
 <p>To do the initial load, and in case something goes wrong, we add one more proc; a full refresh proc, which is simply successive calls to the insert proc, but in the correct order as described in the previous section.</p>
-create proc closure_refresh as begin
+
+<pre><code class="language-SQL">create proc closure_refresh as begin
 truncate table closure;
 
 declare @p int, @c int, @l varchar(50);
@@ -519,11 +528,13 @@ while @@FETCH_STATUS = 0 begin
 fetch next from cur into @p, @c, @l;
 end close cur deallocate cur;
 end;
+</code></pre>
 
 <h2 id="testing:594089c9c61d3c8bcdb4d6b1895da11a">Testing</h2>
 
 <p>Here are some sample queries which you can use to test your solution. I&rsquo;ve done it, not going to paste 50 tables of output here, try all sorts and see what happens:</p>
--- start clean
+
+<pre><code class="language-SQL">-- start clean
 exec closure_refresh;
 -- check that everything is in order
 select * from closure;
@@ -544,6 +555,7 @@ update node set parent_id = 6 where id = 2;
 exec closure_update 2;
 -- node 2 should now be under node 6
 select * from closure;
+</code></pre>
 
 <h2 id="go-forth-and-conquer:594089c9c61d3c8bcdb4d6b1895da11a">Go forth and conquer!</h2>
 

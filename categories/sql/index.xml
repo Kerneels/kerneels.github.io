@@ -61,13 +61,16 @@ As a reminder, &lt;code&gt;UNION&lt;/code&gt; between two queries will produce t
 &lt;h3 id=&#34;intersect:b0fe8f0bcf3b6892f71d222f4dd92b20&#34;&gt;INTERSECT&lt;/h3&gt;
 
 &lt;p&gt;For obtaining a possible set intersection between two tables, we can use the &lt;code&gt;INTERSECT&lt;/code&gt; operator:&lt;/p&gt;
-select * from table_a
+
+&lt;pre&gt;&lt;code class=&#34;language-sql&#34;&gt;select * from table_a
 intersect
 select * from table_b
 ;
+&lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;As pointed out earlier, if the row count for the intersection is the same as the row counts for the two tables, we have set equivalence:&lt;/p&gt;
-select sum(row_count) = 0 as set_equivalence from (
+
+&lt;pre&gt;&lt;code class=&#34;language-sql&#34;&gt;select sum(row_count) = 0 as set_equivalence from (
 select count(1) as row_count from (
 select * from table_a
 intersect
@@ -78,20 +81,25 @@ select count(1) as row_count from table_a
 union all
 select -2 * count(1) as row_count from table_b
 );
+&lt;/code&gt;&lt;/pre&gt;
 
 &lt;h3 id=&#34;except:b0fe8f0bcf3b6892f71d222f4dd92b20&#34;&gt;EXCEPT&lt;/h3&gt;
 
 &lt;p&gt;When we use the &lt;code&gt;EXCEPT&lt;/code&gt; set operator, for example, &lt;code&gt;query_1 EXCEPT query_2&lt;/code&gt;, we are left with all rows from &lt;code&gt;query_1&lt;/code&gt; that do not occur in &lt;code&gt;query_2&lt;/code&gt;.
 Note that &lt;code&gt;query_2&lt;/code&gt; might contain rows that are not present in &lt;code&gt;query_1&lt;/code&gt;, but because &lt;code&gt;EXCEPT&lt;/code&gt; is not commutative, similar to how minus is not commutative, &lt;code&gt;query_1 EXCEPT query_2&lt;/code&gt; is not the same as &lt;code&gt;query_2 EXCEPT 
 query_1&lt;/code&gt;, and we are only left with non occurring rows in &lt;code&gt;query_1&lt;/code&gt;.&lt;/p&gt;
-select * from table_a
+
+&lt;pre&gt;&lt;code class=&#34;language-sql&#34;&gt;select * from table_a
 except
 select * from table_b;
+&lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;&amp;hellip;is not the same as:&lt;/p&gt;
-select * from table_b
+
+&lt;pre&gt;&lt;code class=&#34;language-sql&#34;&gt;select * from table_b
 except
 select * from table_a;
+&lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;Some points to note about &lt;code&gt;EXCEPT&lt;/code&gt;:&lt;/p&gt;
 
@@ -118,7 +126,8 @@ Persisting the result sets to actual tables is a better choice when the &lt;code
 
 &lt;p&gt;We want to find out what subset of columns cause &lt;code&gt;except_ab&lt;/code&gt; and &lt;code&gt;except_ba&lt;/code&gt; to differ.
 We start out by crafting a query of the form:&lt;/p&gt;
-select count(1) from (
+
+&lt;pre&gt;&lt;code class=&#34;language-sql&#34;&gt;select count(1) from (
 select
 column_001
 ,column_002
@@ -135,6 +144,7 @@ column_001
 ,column_100
 from except_ba
 );
+&lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;Of course, in practice, we  rarely have such clean column names, but rather have all sorts of interesting and creative names to deal with.
 When we execute this query, we get the number of different rows - no surprises.&lt;/p&gt;
@@ -142,7 +152,8 @@ When we execute this query, we get the number of different rows - no surprises.&
 &lt;h2 id=&#34;performing-a-binary-search-over-the-column-names:b0fe8f0bcf3b6892f71d222f4dd92b20&#34;&gt;Performing a binary search over the column names&lt;/h2&gt;
 
 &lt;p&gt;It is tempting at this point to start commenting out any column that appears suspicious&amp;hellip;. &amp;ldquo;That &lt;code&gt;column_066&lt;/code&gt; looks like a problem, let&amp;rsquo;s comment it out and run the query again&amp;rdquo; , you might reason:&lt;/p&gt;
-select count(1) from (
+
+&lt;pre&gt;&lt;code class=&#34;language-sql&#34;&gt;select count(1) from (
 select
 column_001
 ,column_002
@@ -163,6 +174,7 @@ column_001
 ,column_100
 from except_ba
 );
+&lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;Resist this urge in favor of a more systematic approach, which will lead you to the offending column(s) in the least amount of time.
 The basic idea of the systematic approach is not to try and identify individual columns, but rather finding regions of columns that contain differing column values, and then to shrink them one by one.
@@ -193,7 +205,8 @@ When we found the regions that cause the two result sets to differ, we reduce th
 &lt;/ol&gt;
 
 &lt;p&gt;Most databases provide the multi-line commenting so that you can comment  like this:&lt;/p&gt;
-select count(1) from (
+
+&lt;pre&gt;&lt;code class=&#34;language-sql&#34;&gt;select count(1) from (
 select
 /*column_001
 ,column_002
@@ -218,6 +231,7 @@ select
 ,column_100
 from except_ba
 );
+&lt;/code&gt;&lt;/pre&gt;
 
 &lt;h1 id=&#34;next-steps:b0fe8f0bcf3b6892f71d222f4dd92b20&#34;&gt;Next steps&lt;/h1&gt;
 
@@ -235,9 +249,11 @@ Such a manual approach is only applicable if the schema is relatively small;
 for larger schemas that would take too long to compare manually we can use diff tools.&lt;/p&gt;
 
 &lt;p&gt;When we know the schemas are equivalent, the next logical step would be to count rows - something as simple as:&lt;/p&gt;
-select count(1) from table_a
+
+&lt;pre&gt;&lt;code class=&#34;language-sql&#34;&gt;select count(1) from table_a
 union all
 select count(1) from table_b;
+&lt;/code&gt;&lt;/pre&gt;
 
 &lt;h1 id=&#34;conclusion:b0fe8f0bcf3b6892f71d222f4dd92b20&#34;&gt;Conclusion&lt;/h1&gt;
 
@@ -303,11 +319,13 @@ We place the data and header file in a &lt;code&gt;./gdelt&lt;/code&gt; director
 &lt;h4 id=&#34;nix-solution:7167d0e820c7576947c6f743fb434a0c&#34;&gt;*Nix Solution&lt;/h4&gt;
 
 &lt;p&gt;While already well away cooking  up a C language solution, I remembered AWK, and the wc program.&lt;/p&gt;
- $ wc -l gdelt/20190531.export.CSV
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt; $ wc -l gdelt/20190531.export.CSV
  176780
 
-  $ gawk &#39;{ if ($6 == &#34;AFR&#34;) sum += 1; } END { print sum; }&#39; gdelt/20190531.export.CSV
+  $ gawk &#39;{ if ($6 == &amp;quot;AFR&amp;quot;) sum += 1; } END { print sum; }&#39; gdelt/20190531.export.CSV
  1184
+&lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;Here I used the &lt;code&gt;wc&lt;/code&gt; or word count program, with the &lt;code&gt;-l&lt;/code&gt; flag to count lines.
 For the count of &amp;lsquo;AFR&amp;rsquo; valued actor codes I used the GNU version of &lt;code&gt;awk&lt;/code&gt;, together with a tiny awk program for a conditional incrementing of a counter.
@@ -359,14 +377,15 @@ Furthermore, we need to  verify our answer above,  by computing  the same in a f
 &lt;/ol&gt;
 
 &lt;p&gt;And here is the simplest first attempt C solution:&lt;/p&gt;
-#include &lt;stdio.h&gt;  // fopen, fclose, fgets
-#include &lt;string.h&gt;  // strtoc, strcmp
+
+&lt;pre&gt;&lt;code class=&#34;language-c&#34;&gt;#include &amp;lt;stdio.h&amp;gt;  // fopen, fclose, fgets
+#include &amp;lt;string.h&amp;gt;  // strtoc, strcmp
 
 int main() 
 {
-   const char FILE_PATH[] = &#34;../gdelt/20190531.export.CSV&#34;;
-   const char DELIMITER[] = &#34;\t&#34;;
-   const char MATCH_TEXT[] = &#34;AFR&#34;;
+   const char FILE_PATH[] = &amp;quot;../gdelt/20190531.export.CSV&amp;quot;;
+   const char DELIMITER[] = &amp;quot;\t&amp;quot;;
+   const char MATCH_TEXT[] = &amp;quot;AFR&amp;quot;;
    const int MATCH_COLUMN_POS = 5; 
 
    int match_count = 0;
@@ -375,7 +394,7 @@ int main()
    const int BUFF_SIZE = 2048;
    char buff[BUFF_SIZE];
 
-   fp = fopen(FILE_PATH, &#34;r&#34;); 
+   fp = fopen(FILE_PATH, &amp;quot;r&amp;quot;); 
    if (fp == NULL) return -1; 
    int lines_count = 0;
    while (fgets(buff, BUFF_SIZE, (FILE*)fp)) {
@@ -383,7 +402,7 @@ int main()
        char *ptr = strtok(buff, DELIMITER);
 
        // find the value of the ACTOR_CODE
-       for (int i=0; i&lt;MATCH_COLUMN_POS; i++)
+       for (int i=0; i&amp;lt;MATCH_COLUMN_POS; i++)
            ptr = strtok(NULL, DELIMITER);
 
 if (strcmp(ptr, MATCH_TEXT) == 0)
@@ -391,17 +410,20 @@ if (strcmp(ptr, MATCH_TEXT) == 0)
     match_count += 1;
 }
    }
-   printf(&#34;Total number of lines: %d\n&#34;, lines_count );
-   printf(&#34;Number of lines matching &#39;%s&#39; in column %d: %d\n&#34;, MATCH_TEXT, 
+   printf(&amp;quot;Total number of lines: %d\n&amp;quot;, lines_count );
+   printf(&amp;quot;Number of lines matching &#39;%s&#39; in column %d: %d\n&amp;quot;, MATCH_TEXT, 
            MATCH_COLUMN_POS,
            match_count );
    fclose(fp);
    return 0;
 }
+&lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;After compiling  with gcc ./query.c -o ./query, (gcc .\query.c -o .\query.exe on Windows) and running it, the output is:&lt;/p&gt;
-Total number of lines: 176780
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;Total number of lines: 176780
 Number of lines matching &#39;AFR&#39; in column 5: 1184
+&lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;Nice. This answer corresponds perfectly with the *nix solution,
 but  what a lot of work for answering such a trivial question!
@@ -414,14 +436,16 @@ Because of this, you cannot directly work with flat files, but have to  first lo
 For my SQL solution I&amp;rsquo;ll use &lt;a href=&#34;sqlite&#34;&gt;SQLite&lt;/a&gt; as the SQL query engine; the DBMS.&lt;/p&gt;
 
 &lt;p&gt;With the data and header file in the &lt;code&gt;./gdelt&lt;/code&gt; directory, we get them loaded like this:&lt;/p&gt;
-&gt; sqlite3 gdelt.md
+
+&lt;pre&gt;&lt;code class=&#34;language-sql&#34;&gt;&amp;gt; sqlite3 gdelt.md
 SQLite version 3.28.0 2019-04-16 19:49:53
-Enter &#34;.help&#34; for usage hints.
-sqlite&gt; .mode csv
-sqlite&gt; .timer on
-sqlite&gt; .separator &#34;\t&#34; &#34;\r\n&#34;
-sqlite&gt; .import ../gdelt/CSV.header.dailyupdates.txt oneday
-sqlite&gt; .import ../gdelt/20190531.export.CSV oneday
+Enter &amp;quot;.help&amp;quot; for usage hints.
+sqlite&amp;gt; .mode csv
+sqlite&amp;gt; .timer on
+sqlite&amp;gt; .separator &amp;quot;\t&amp;quot; &amp;quot;\r\n&amp;quot;
+sqlite&amp;gt; .import ../gdelt/CSV.header.dailyupdates.txt oneday
+sqlite&amp;gt; .import ../gdelt/20190531.export.CSV oneday
+&lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;Here is the breakdown:&lt;/p&gt;
 
@@ -436,13 +460,15 @@ sqlite&gt; .import ../gdelt/20190531.export.CSV oneday
 &lt;/ol&gt;
 
 &lt;p&gt;Now we are ready to answer our question using SQL!&lt;/p&gt;
-sqlite&gt; select count(1) from oneday;
+
+&lt;pre&gt;&lt;code class=&#34;language-sql&#34;&gt;sqlite&amp;gt; select count(1) from oneday;
 176780
 Run Time: real 0.163 user 0.031250 sys 0.125000
-sqlite&gt; select count(1) from oneday where actor1code = &#39;AFR&#39;;
+sqlite&amp;gt; select count(1) from oneday where actor1code = &#39;AFR&#39;;
 1056
 Run Time: real 0.181 user 0.046875 sys 0.140625
-sqlite&gt;
+sqlite&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;Hmm&amp;hellip; We arrive at the same total row or lines count, but the count for the matching actor 1 code values is very different.
 To figure out why this is the case is not trivial, but very instructive to illustrate even more the need for something like SQL and database systems, so stay with me.&lt;/p&gt;
@@ -471,21 +497,27 @@ Surely they would nnot use a broken thing!&lt;/p&gt;
 &lt;p&gt;Since we have everything setup in SQLite already, let&amp;rsquo;s query the data a bit more, in hope we find some clues to help us solve the dilemma.&lt;/p&gt;
 
 &lt;p&gt;How many values are there for column &lt;code&gt;actor1code&lt;/code&gt;?&lt;/p&gt;
-sqlite&gt; select count(distinct actor1code) from oneday;
+
+&lt;pre&gt;&lt;code class=&#34;language-sql&#34;&gt;sqlite&amp;gt; select count(distinct actor1code) from oneday;
 2148
+&lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;Is the count from before for the SQLite solution still the same?&lt;/p&gt;
-sqlite&gt; select count(1) from oneday where actor1code like &#39;AFR&#39;;
+
+&lt;pre&gt;&lt;code class=&#34;language-sql&#34;&gt;sqlite&amp;gt; select count(1) from oneday where actor1code like &#39;AFR&#39;;
 1056
+&lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;Perhaps the comparison predicate in the &lt;code&gt;where&lt;/code&gt; clause &lt;code&gt;actor1code = &#39;AFR&#39;&lt;/code&gt; has a problem.
 Let us try some &lt;code&gt;LIKE&lt;/code&gt; matching instead.&lt;/p&gt;
-sqlite&gt; select count(1) from oneday where actor1code like &#39;%AFR&#39;;
+
+&lt;pre&gt;&lt;code class=&#34;language-sql&#34;&gt;sqlite&amp;gt; select count(1) from oneday where actor1code like &#39;%AFR&#39;;
 1056
-sqlite&gt; select count(1) from oneday where actor1code like &#39;%AFR%&#39;;
+sqlite&amp;gt; select count(1) from oneday where actor1code like &#39;%AFR%&#39;;
 1241
-sqlite&gt; select count(1) from oneday where actor1code like &#39;AFR%&#39;;
+sqlite&amp;gt; select count(1) from oneday where actor1code like &#39;AFR%&#39;;
 1139
+&lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;Nope, this is not helping much, andsomething else is going on.&lt;/p&gt;
 
@@ -493,27 +525,33 @@ sqlite&gt; select count(1) from oneday where actor1code like &#39;AFR%&#39;;
 
 &lt;p&gt;It&amp;rsquo;s always a good idea to consider some edge cases in the data.
 One such edge case is blank values, so let&amp;rsquo;s check for them in the actor 1 column:&lt;/p&gt;
-sqlite&gt; select count(1) from oneday where actor1code = &#39;&#39;;
+
+&lt;pre&gt;&lt;code class=&#34;language-sql&#34;&gt;sqlite&amp;gt; select count(1) from oneday where actor1code = &#39;&#39;;
 16475
+&lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;We have seen that the SQLite solution under counts, or, &lt;strong&gt;gasp&lt;/strong&gt; BOTH the AWK *nix solution AND the C language one over counts, and do it the same.
 Since both the AWK and the C language solution produced the same result, let&amp;rsquo;s see if we can find the blanks count of above with AWK:&lt;/p&gt;
- $ gawk &#39;{ if ($6 == &#34;&#34;) sum += 1; } END { print sum; }&#39; ./gdelt/20190531.export.CSV
 
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt; $ gawk &#39;{ if ($6 == &amp;quot;&amp;quot;) sum += 1; } END { print sum; }&#39; ./gdelt/20190531.export.CSV
+
+&lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;Well, it produced no output, so gawk wasn&amp;rsquo;t able to count blanks&amp;hellip;.
 I bet the C language solution will do exactly the same!&lt;/p&gt;
 
 &lt;p&gt;Now the actor 1 code of &amp;lsquo;AFR&amp;rsquo; is quite special, but we know from the documentation of GDELT and also from the header columns, that there is also an actor 2 code column, and it follows right after all the actor 1 columns.
 How many rows are there where the column actor1code is blank, and the actor2code is &amp;lsquo;AFR&amp;rsquo;:&lt;/p&gt;
-sqlite&gt; select count(1) from oneday where actor1code = &#39;AFR&#39;;
+
+&lt;pre&gt;&lt;code class=&#34;language-sql&#34;&gt;sqlite&amp;gt; select count(1) from oneday where actor1code = &#39;AFR&#39;;
 1056
 
-sqlite&gt; select count(1) from oneday where actor1code = &#39;&#39; and actor2code = &#39;AFR&#39;;
+sqlite&amp;gt; select count(1) from oneday where actor1code = &#39;&#39; and actor2code = &#39;AFR&#39;;
 128
 
-sqlite&gt; select count(1) from oneday where actor1code = &#39;&#39; and actor2code = &#39;AFR&#39; or actor1code = &#39;AFR&#39;;
+sqlite&amp;gt; select count(1) from oneday where actor1code = &#39;&#39; and actor2code = &#39;AFR&#39; or actor1code = &#39;AFR&#39;;
 1184
+&lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;Now that is interesting.  The C and AWK solutions count, in column 6 where actor 1 code should live, the sum of the columns where actor 1 code is &amp;lsquo;AFR&amp;rsquo;, plus the number of
 rows where actor 1 code is blank AND actor 2 code is &amp;lsquo;AFR&amp;rsquo;.&lt;/p&gt;
@@ -524,8 +562,10 @@ rows where actor 1 code is blank AND actor 2 code is &amp;lsquo;AFR&amp;rsquo;.&
 
 &lt;p&gt;We could now proceed and fix up the C solution, but by now I&amp;rsquo;ve kind of lost interest, and I&amp;rsquo;m truely thankful I do not have to code C for a living - it must be very, very hard.
 None the less, perhaps for the love of Linux, let&amp;rsquo;s at least get AWK right.&lt;/p&gt;
-$ gawk &#39;BEGIN {FS = &#34;\t&#34;} { if ($6 == &#34;AFR&#34;) sum += 1; } END { print sum; }&#39; gdelt/20190531.export.CSV
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;$ gawk &#39;BEGIN {FS = &amp;quot;\t&amp;quot;} { if ($6 == &amp;quot;AFR&amp;quot;) sum += 1; } END { print sum; }&#39; gdelt/20190531.export.CSV
 1056
+&lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;Yay for AWK, yay for the Unix tradition, yay for Linux!
 We explicitly set the field seperator (FS), same as for the SQLite solution.&lt;/p&gt;
@@ -570,7 +610,9 @@ So, you cannot consider a view to be a type of stored procedure, and you can als
 &lt;p&gt;It is possible for the query planner to &amp;ldquo;reach into&amp;rdquo; a view, and discover which indexes to use in order to access information in the best way, but this quikcly breaks down once you perform any kind of complicated thing, such as a CTE, UNION statement, or anything else that breaks up the link from the source tables to the result set of the view.
 When exactly you break this ability of the query planner to use appropriate indexes is a great idea for a future post - I have not found anything that directly states this as of yet.
 Intuitivly  it makes sense that some kinds of data mangling will just make it impossible for the query planner to find indexes to use.&lt;/p&gt;
-Note that it&#39;s of course always best to first inspect the query plan before concluding that a fiew is or is not making use of a particular index. I have made the mistake before of making grand statements on how poor the query planner is at choosing an index when dealing with a view, only to be shown that it in fact can do a bit more than what you might expect!
+
+&lt;pre&gt;&lt;code&gt;Note that it&#39;s of course always best to first inspect the query plan before concluding that a fiew is or is not making use of a particular index. I have made the mistake before of making grand statements on how poor the query planner is at choosing an index when dealing with a view, only to be shown that it in fact can do a bit more than what you might expect!
+&lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;My goal in this post is simply to make you aware of the possability that complex views might be causing your database to perform sub optimally, and then to offer an in place, zero downtime solution to the problem.&lt;/p&gt;
 
@@ -708,23 +750,29 @@ The relation between customers and their addresses is maintained in the person.B
 for each address (Billing, Home, Main Office etc).&lt;/p&gt;
 
 &lt;h2 id=&#34;we-want-to-know-how-many-customers-have-one-two-and-three-or-more-addresses:0dc054d968169eec76f7161b9d98121b&#34;&gt;We want to know how many customers have one, two and three or more addresses.&lt;/h2&gt;
-Since the purpose of this article is to discuss subquery vs CTEs, excuse the somewhat contrived query.
+
+&lt;pre&gt;&lt;code&gt;Since the purpose of this article is to discuss subquery vs CTEs, excuse the somewhat contrived query.
 At the end of this article I&#39;ll show  a simpler way to accomplish the tast at hand.
+&lt;/code&gt;&lt;/pre&gt;
 
 &lt;h2 id=&#34;sub-query-building-block:0dc054d968169eec76f7161b9d98121b&#34;&gt;Sub query building block&lt;/h2&gt;
 
 &lt;p&gt;We can establish that no BusinessEntity has more than two addresses by the empty result set returned by:&lt;/p&gt;
-select ba.BusinessEntityId, count(ba.AddressId)
+
+&lt;pre&gt;&lt;code class=&#34;language-sql&#34;&gt;select ba.BusinessEntityId, count(ba.AddressId)
 from person.BusinessEntity b
 join person.BusinessEntityAddress ba on ba.BusinessEntityId = b.BusinessEntityId
 group by ba.BusinessEntityId
-having count(ba.AddressId) &gt; 2;
+having count(ba.AddressId) &amp;gt; 2;
+&lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;We&amp;rsquo;ll assume for the remainder of this article that  this query is our best attempt, and that
 it is a &amp;ldquo;black box&amp;rdquo; with which we cannot tamper, save for adjusting the count in the HAVING clause.&lt;/p&gt;
 
 &lt;p&gt;Note that technically we do not need the additional join:&lt;/p&gt;
-join person.BusinessEntityAddress ba on ba.BusinessEntityId = b.BusinessEntityId
+
+&lt;pre&gt;&lt;code class=&#34;language-sql&#34;&gt;join person.BusinessEntityAddress ba on ba.BusinessEntityId = b.BusinessEntityId
+&lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;however this ensures we do not consider addresses in isolation - we ensure all addresses actually have an existing business tied to them.&lt;/p&gt;
 
@@ -732,7 +780,8 @@ join person.BusinessEntityAddress ba on ba.BusinessEntityId = b.BusinessEntityId
 
 &lt;p&gt;Now we would like to improve this result a bit, by rather returning a count of zero instead of nothing.
 We do this by wrapping the above query in a super query:&lt;/p&gt;
-select 
+
+&lt;pre&gt;&lt;code class=&#34;language-sql&#34;&gt;select 
 count(businessEntitiesWithMoreThanTwoAddresses.BusinessEntityId) as NumberOfBusinessesWithMoreThanTwoAddresses
 from
 (select ba.BusinessEntityId, 
@@ -740,8 +789,9 @@ count(ba.AddressId) as NumberOfAddresses
 from person.BusinessEntity b
 join person.BusinessEntityAddress ba on ba.BusinessEntityId = b.BusinessEntityId
 group by ba.BusinessEntityId
-having count(ba.AddressId) &gt; 2
+having count(ba.AddressId) &amp;gt; 2
 ) as businessEntitiesWithMoreThanTwoAddresses;
+&lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;Not too bad in terms of readability, and since we alias the sub query we always know where the result for the outer select column list comes from.
 But what if we would like to augment this query to also return the number of businesses with only one, and two addresses respectively?
@@ -749,7 +799,8 @@ Or to cover all possabilities, the number of businesses with one, two and three 
 Let&amp;rsquo;s try with the sub query approach:&lt;/p&gt;
 
 &lt;h2 id=&#34;combined-sub-query-approach:0dc054d968169eec76f7161b9d98121b&#34;&gt;Combined sub query approach&lt;/h2&gt;
-select 
+
+&lt;pre&gt;&lt;code class=&#34;language-sql&#34;&gt;select 
 count(businessEntitiesWithOneAddress.BusinessEntityId) as NumberOfBusinessesWithOneAddress,
 count(businessEntitiesWithTwoAddresses.BusinessEntityId) as NumberOfBusinessesWithTwoAddresses,
 count(businessEntitiesWithMoreThanTwoAddresses.BusinessEntityId) as NumberOfBusinessesWithMoreThanTwoAddresses
@@ -773,8 +824,9 @@ count(ba.AddressId) as NumberOfAddresses
 from person.BusinessEntity b
 join person.BusinessEntityAddress ba on ba.BusinessEntityId = b.BusinessEntityId
 group by ba.BusinessEntityId
-having count(ba.AddressId) &gt; 2
+having count(ba.AddressId) &amp;gt; 2
 ) as businessEntitiesWithMoreThanTwoAddresses;
+&lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;Hmm&amp;hellip; We get zero for everything. Something has gone wrong.
 Running each super/sub query pair separately we obtain a number for the one and two address scenario, but nothing for the three or more one.
@@ -789,7 +841,8 @@ worse, the last subquery returns zero rows, and anything multiplied by zero is o
 
 &lt;p&gt;Now, let&amp;rsquo;s first remedy this situation by cross joining on only one row each time.
 Hold on, it is going to get a bit messy since in order to do this, we have to introduce yet another subquery.&lt;/p&gt;
-select 
+
+&lt;pre&gt;&lt;code class=&#34;language-sql&#34;&gt;select 
 A.NumberOfBusinessesWithOneAddress,
 B.NumberOfBusinessesWithTwoAddresses,
 C.NumberOfBusinessesWithMoreThanTwoAddresses
@@ -822,8 +875,9 @@ count(ba.AddressId) as NumberOfAddresses
 from person.BusinessEntity b
 join person.BusinessEntityAddress ba on ba.BusinessEntityId = b.BusinessEntityId
 group by ba.BusinessEntityId
-having count(ba.AddressId) &gt; 2
+having count(ba.AddressId) &amp;gt; 2
 ) as businessEntitiesWithMoreThanTwoAddresses) as C;
+&lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;Success, but at quite a complexity and readability cost.&lt;/p&gt;
 
@@ -838,7 +892,8 @@ having count(ba.AddressId) &gt; 2
 &lt;li&gt;Next, the encapsulating super queries that reduce the sub queries to  single values are also stated as CTEs named A, B and C.&lt;/li&gt;
 &lt;li&gt;Finally we simply select from the aggregation CTEs A, B and C.&lt;/li&gt;
 &lt;/ol&gt;
--- First, the three innermost sub queries are stated as CTEs named businessEntitiesWithOneAddress, businessEntitiesWithTwoAddresses and businessEntitiesWithMoreThanTwoAddresses.
+
+&lt;pre&gt;&lt;code class=&#34;language-sql&#34;&gt;-- First, the three innermost sub queries are stated as CTEs named businessEntitiesWithOneAddress, businessEntitiesWithTwoAddresses and businessEntitiesWithMoreThanTwoAddresses.
 with  businessEntitiesWithOneAddress as
 (select ba.BusinessEntityId, 
 count(ba.AddressId) as NumberOfAddresses
@@ -859,7 +914,7 @@ count(ba.AddressId) as NumberOfAddresses
 from person.BusinessEntity b
 join person.BusinessEntityAddress ba on ba.BusinessEntityId = b.BusinessEntityId
 group by ba.BusinessEntityId
-having count(ba.AddressId) &gt; 2
+having count(ba.AddressId) &amp;gt; 2
 ), 
 
 -- Next, the encapsulating super queries that reduce the sub queries to  single values are also stated as CTEs named A, B and C.
@@ -880,6 +935,7 @@ A.NumberOfBusinessesWithOneAddress,
 B.NumberOfBusinessesWithTwoAddresses,
 C.NumberOfBusinessesWithMoreThanTwoAddresses
 from A, B, C;
+&lt;/code&gt;&lt;/pre&gt;
 
 &lt;h2 id=&#34;is-this-not-so-much-more-readable:0dc054d968169eec76f7161b9d98121b&#34;&gt;Is this not so much more readable?&lt;/h2&gt;
 
@@ -933,7 +989,8 @@ Is there not perhaps a way to join without throwing anything away?&lt;/p&gt;
 &lt;p&gt;Did you know about the full join? I will admit that although I knew there had to be something like it, I did not know / forgotten all about it.&lt;/p&gt;
 
 &lt;h2 id=&#34;sub-query-approach-simplified-with-a-full-join:0dc054d968169eec76f7161b9d98121b&#34;&gt;Sub query approach simplified with a FULL JOIN&lt;/h2&gt;
-select 
+
+&lt;pre&gt;&lt;code class=&#34;language-sql&#34;&gt;select 
 count(businessEntitiesWithOneAddress.BusinessEntityId) as NumberOfBusinessesWithOneAddress,
 count(businessEntitiesWithTwoAddresses.BusinessEntityId) as NumberOfBusinessesWithTwoAddresses,
 count(businessEntitiesWithMoreThanTwoAddresses.BusinessEntityId) as NumberOfBusinessesWithMoreThanTwoAddresses
@@ -962,16 +1019,18 @@ count(ba.AddressId) as NumberOfAddresses
 from person.BusinessEntity b
 join person.BusinessEntityAddress ba on ba.BusinessEntityId = b.BusinessEntityId
 group by ba.BusinessEntityId
-having count(ba.AddressId) &gt; 2
+having count(ba.AddressId) &amp;gt; 2
 ) as businessEntitiesWithMoreThanTwoAddresses
 on
 businessEntitiesWithTwoAddresses.BusinessEntityId   = 
 businessEntitiesWithMoreThanTwoAddresses.BusinessEntityId;
+&lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;Yes, we do away with one level of sub queries, but it&amp;rsquo;s still not great.&lt;/p&gt;
 
 &lt;h2 id=&#34;cte-approach-simplified-with-full-join:0dc054d968169eec76f7161b9d98121b&#34;&gt;CTE approach simplified with FULL JOIN&lt;/h2&gt;
-with  businessEntitiesWithOneAddress as
+
+&lt;pre&gt;&lt;code class=&#34;language-sql&#34;&gt;with  businessEntitiesWithOneAddress as
 (select ba.BusinessEntityId, 
 count(ba.AddressId) as NumberOfAddresses
 from person.BusinessEntity b
@@ -991,7 +1050,7 @@ count(ba.AddressId) as NumberOfAddresses
 from person.BusinessEntity b
 join person.BusinessEntityAddress ba on ba.BusinessEntityId = b.BusinessEntityId
 group by ba.BusinessEntityId
-having count(ba.AddressId) &gt; 2
+having count(ba.AddressId) &amp;gt; 2
 )
 select 
 count(businessEntitiesWithOneAddress.BusinessEntityId) as NumberOfBusinessesWithOneAddress,
@@ -1002,13 +1061,15 @@ full join businessEntitiesWithTwoAddresses
 on businessEntitiesWithOneAddress.BusinessEntityId = businessEntitiesWithTwoAddresses.BusinessEntityId
 full join businessEntitiesWithMoreThanTwoAddresses
 on businessEntitiesWithTwoAddresses.BusinessEntityId = businessEntitiesWithMoreThanTwoAddresses.BusinessEntityId
+&lt;/code&gt;&lt;/pre&gt;
 
 &lt;h2 id=&#34;simplest-solution:0dc054d968169eec76f7161b9d98121b&#34;&gt;Simplest solution&lt;/h2&gt;
 
 &lt;p&gt;Finally, if we relax the requirement (which was self imposed in the first place) to have the results in one row,
 as well as not worrying about returning the count for the three or more scenario,
 we can simplify everything very nice like this:&lt;/p&gt;
-with  businessEntitiesAddressCount as
+
+&lt;pre&gt;&lt;code class=&#34;language-sql&#34;&gt;with  businessEntitiesAddressCount as
 (select ba.BusinessEntityId, 
 count(ba.AddressId) as NumberOfAddresses
 from person.BusinessEntity b
@@ -1020,6 +1081,7 @@ count(BusinessEntityId) as NumberOfBusinesses,
 NumberOfAddresses 
 from businessEntitiesAddressCount 
 group by NumberOfAddresses;
+&lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;Best of all; we still get to use a wonderful CTE!&lt;/p&gt;
 
@@ -1130,7 +1192,9 @@ practical purposes, unsorted.&lt;/p&gt;
 &lt;p&gt;You probably knew this already, but I needed that sentence
 because it contained the word &lt;em&gt;cloud&lt;/em&gt; so that I had an excuse to quote
 Stallman on cloud computing from 2008:&lt;/p&gt;
-&#34;It&#39;s stupidity. It&#39;s worse than stupidity: it&#39;s a marketing hype campaign,&#34;
+
+&lt;pre&gt;&lt;code&gt;&amp;quot;It&#39;s stupidity. It&#39;s worse than stupidity: it&#39;s a marketing hype campaign,&amp;quot;
+&lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;Back to tables&amp;hellip; It is probably because SQL Server&amp;rsquo;s default is to choose the
 physically sorted way of laying down the data, when you define a primary key on
@@ -1366,8 +1430,10 @@ Wienand&amp;rsquo;s fine article,
 Key&lt;/a&gt;.&lt;/p&gt;
 
 &lt;h2 id=&#34;summary-and-closing-thoughts-optimising-performance-is-an-interesting-and-very-relevant-problem:810306c57b772cfaef22459bbb55c3d7&#34;&gt;Summary and closing thoughts - Optimising performance is an  interesting and very relevant problem&lt;/h2&gt;
-&#34;Premature optimisation is the root of all evil&#34;
+
+&lt;pre&gt;&lt;code&gt;&amp;quot;Premature optimisation is the root of all evil&amp;quot;
  -- Donald E. Knuth
+&lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;As much as I concur with that statement, especially how it applies to code, I do think that a good understanding
 of the options available to you when turning a data model into an actual

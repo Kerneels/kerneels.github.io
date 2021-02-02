@@ -26,7 +26,9 @@ So, you cannot consider a view to be a type of stored procedure, and you can als
 &lt;p&gt;It is possible for the query planner to &amp;ldquo;reach into&amp;rdquo; a view, and discover which indexes to use in order to access information in the best way, but this quikcly breaks down once you perform any kind of complicated thing, such as a CTE, UNION statement, or anything else that breaks up the link from the source tables to the result set of the view.
 When exactly you break this ability of the query planner to use appropriate indexes is a great idea for a future post - I have not found anything that directly states this as of yet.
 Intuitivly  it makes sense that some kinds of data mangling will just make it impossible for the query planner to find indexes to use.&lt;/p&gt;
-Note that it&#39;s of course always best to first inspect the query plan before concluding that a fiew is or is not making use of a particular index. I have made the mistake before of making grand statements on how poor the query planner is at choosing an index when dealing with a view, only to be shown that it in fact can do a bit more than what you might expect!
+
+&lt;pre&gt;&lt;code&gt;Note that it&#39;s of course always best to first inspect the query plan before concluding that a fiew is or is not making use of a particular index. I have made the mistake before of making grand statements on how poor the query planner is at choosing an index when dealing with a view, only to be shown that it in fact can do a bit more than what you might expect!
+&lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;My goal in this post is simply to make you aware of the possability that complex views might be causing your database to perform sub optimally, and then to offer an in place, zero downtime solution to the problem.&lt;/p&gt;
 
@@ -164,23 +166,29 @@ The relation between customers and their addresses is maintained in the person.B
 for each address (Billing, Home, Main Office etc).&lt;/p&gt;
 
 &lt;h2 id=&#34;we-want-to-know-how-many-customers-have-one-two-and-three-or-more-addresses:0dc054d968169eec76f7161b9d98121b&#34;&gt;We want to know how many customers have one, two and three or more addresses.&lt;/h2&gt;
-Since the purpose of this article is to discuss subquery vs CTEs, excuse the somewhat contrived query.
+
+&lt;pre&gt;&lt;code&gt;Since the purpose of this article is to discuss subquery vs CTEs, excuse the somewhat contrived query.
 At the end of this article I&#39;ll show  a simpler way to accomplish the tast at hand.
+&lt;/code&gt;&lt;/pre&gt;
 
 &lt;h2 id=&#34;sub-query-building-block:0dc054d968169eec76f7161b9d98121b&#34;&gt;Sub query building block&lt;/h2&gt;
 
 &lt;p&gt;We can establish that no BusinessEntity has more than two addresses by the empty result set returned by:&lt;/p&gt;
-select ba.BusinessEntityId, count(ba.AddressId)
+
+&lt;pre&gt;&lt;code class=&#34;language-sql&#34;&gt;select ba.BusinessEntityId, count(ba.AddressId)
 from person.BusinessEntity b
 join person.BusinessEntityAddress ba on ba.BusinessEntityId = b.BusinessEntityId
 group by ba.BusinessEntityId
-having count(ba.AddressId) &gt; 2;
+having count(ba.AddressId) &amp;gt; 2;
+&lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;We&amp;rsquo;ll assume for the remainder of this article that  this query is our best attempt, and that
 it is a &amp;ldquo;black box&amp;rdquo; with which we cannot tamper, save for adjusting the count in the HAVING clause.&lt;/p&gt;
 
 &lt;p&gt;Note that technically we do not need the additional join:&lt;/p&gt;
-join person.BusinessEntityAddress ba on ba.BusinessEntityId = b.BusinessEntityId
+
+&lt;pre&gt;&lt;code class=&#34;language-sql&#34;&gt;join person.BusinessEntityAddress ba on ba.BusinessEntityId = b.BusinessEntityId
+&lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;however this ensures we do not consider addresses in isolation - we ensure all addresses actually have an existing business tied to them.&lt;/p&gt;
 
@@ -188,7 +196,8 @@ join person.BusinessEntityAddress ba on ba.BusinessEntityId = b.BusinessEntityId
 
 &lt;p&gt;Now we would like to improve this result a bit, by rather returning a count of zero instead of nothing.
 We do this by wrapping the above query in a super query:&lt;/p&gt;
-select 
+
+&lt;pre&gt;&lt;code class=&#34;language-sql&#34;&gt;select 
 count(businessEntitiesWithMoreThanTwoAddresses.BusinessEntityId) as NumberOfBusinessesWithMoreThanTwoAddresses
 from
 (select ba.BusinessEntityId, 
@@ -196,8 +205,9 @@ count(ba.AddressId) as NumberOfAddresses
 from person.BusinessEntity b
 join person.BusinessEntityAddress ba on ba.BusinessEntityId = b.BusinessEntityId
 group by ba.BusinessEntityId
-having count(ba.AddressId) &gt; 2
+having count(ba.AddressId) &amp;gt; 2
 ) as businessEntitiesWithMoreThanTwoAddresses;
+&lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;Not too bad in terms of readability, and since we alias the sub query we always know where the result for the outer select column list comes from.
 But what if we would like to augment this query to also return the number of businesses with only one, and two addresses respectively?
@@ -205,7 +215,8 @@ Or to cover all possabilities, the number of businesses with one, two and three 
 Let&amp;rsquo;s try with the sub query approach:&lt;/p&gt;
 
 &lt;h2 id=&#34;combined-sub-query-approach:0dc054d968169eec76f7161b9d98121b&#34;&gt;Combined sub query approach&lt;/h2&gt;
-select 
+
+&lt;pre&gt;&lt;code class=&#34;language-sql&#34;&gt;select 
 count(businessEntitiesWithOneAddress.BusinessEntityId) as NumberOfBusinessesWithOneAddress,
 count(businessEntitiesWithTwoAddresses.BusinessEntityId) as NumberOfBusinessesWithTwoAddresses,
 count(businessEntitiesWithMoreThanTwoAddresses.BusinessEntityId) as NumberOfBusinessesWithMoreThanTwoAddresses
@@ -229,8 +240,9 @@ count(ba.AddressId) as NumberOfAddresses
 from person.BusinessEntity b
 join person.BusinessEntityAddress ba on ba.BusinessEntityId = b.BusinessEntityId
 group by ba.BusinessEntityId
-having count(ba.AddressId) &gt; 2
+having count(ba.AddressId) &amp;gt; 2
 ) as businessEntitiesWithMoreThanTwoAddresses;
+&lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;Hmm&amp;hellip; We get zero for everything. Something has gone wrong.
 Running each super/sub query pair separately we obtain a number for the one and two address scenario, but nothing for the three or more one.
@@ -245,7 +257,8 @@ worse, the last subquery returns zero rows, and anything multiplied by zero is o
 
 &lt;p&gt;Now, let&amp;rsquo;s first remedy this situation by cross joining on only one row each time.
 Hold on, it is going to get a bit messy since in order to do this, we have to introduce yet another subquery.&lt;/p&gt;
-select 
+
+&lt;pre&gt;&lt;code class=&#34;language-sql&#34;&gt;select 
 A.NumberOfBusinessesWithOneAddress,
 B.NumberOfBusinessesWithTwoAddresses,
 C.NumberOfBusinessesWithMoreThanTwoAddresses
@@ -278,8 +291,9 @@ count(ba.AddressId) as NumberOfAddresses
 from person.BusinessEntity b
 join person.BusinessEntityAddress ba on ba.BusinessEntityId = b.BusinessEntityId
 group by ba.BusinessEntityId
-having count(ba.AddressId) &gt; 2
+having count(ba.AddressId) &amp;gt; 2
 ) as businessEntitiesWithMoreThanTwoAddresses) as C;
+&lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;Success, but at quite a complexity and readability cost.&lt;/p&gt;
 
@@ -294,7 +308,8 @@ having count(ba.AddressId) &gt; 2
 &lt;li&gt;Next, the encapsulating super queries that reduce the sub queries to  single values are also stated as CTEs named A, B and C.&lt;/li&gt;
 &lt;li&gt;Finally we simply select from the aggregation CTEs A, B and C.&lt;/li&gt;
 &lt;/ol&gt;
--- First, the three innermost sub queries are stated as CTEs named businessEntitiesWithOneAddress, businessEntitiesWithTwoAddresses and businessEntitiesWithMoreThanTwoAddresses.
+
+&lt;pre&gt;&lt;code class=&#34;language-sql&#34;&gt;-- First, the three innermost sub queries are stated as CTEs named businessEntitiesWithOneAddress, businessEntitiesWithTwoAddresses and businessEntitiesWithMoreThanTwoAddresses.
 with  businessEntitiesWithOneAddress as
 (select ba.BusinessEntityId, 
 count(ba.AddressId) as NumberOfAddresses
@@ -315,7 +330,7 @@ count(ba.AddressId) as NumberOfAddresses
 from person.BusinessEntity b
 join person.BusinessEntityAddress ba on ba.BusinessEntityId = b.BusinessEntityId
 group by ba.BusinessEntityId
-having count(ba.AddressId) &gt; 2
+having count(ba.AddressId) &amp;gt; 2
 ), 
 
 -- Next, the encapsulating super queries that reduce the sub queries to  single values are also stated as CTEs named A, B and C.
@@ -336,6 +351,7 @@ A.NumberOfBusinessesWithOneAddress,
 B.NumberOfBusinessesWithTwoAddresses,
 C.NumberOfBusinessesWithMoreThanTwoAddresses
 from A, B, C;
+&lt;/code&gt;&lt;/pre&gt;
 
 &lt;h2 id=&#34;is-this-not-so-much-more-readable:0dc054d968169eec76f7161b9d98121b&#34;&gt;Is this not so much more readable?&lt;/h2&gt;
 
@@ -389,7 +405,8 @@ Is there not perhaps a way to join without throwing anything away?&lt;/p&gt;
 &lt;p&gt;Did you know about the full join? I will admit that although I knew there had to be something like it, I did not know / forgotten all about it.&lt;/p&gt;
 
 &lt;h2 id=&#34;sub-query-approach-simplified-with-a-full-join:0dc054d968169eec76f7161b9d98121b&#34;&gt;Sub query approach simplified with a FULL JOIN&lt;/h2&gt;
-select 
+
+&lt;pre&gt;&lt;code class=&#34;language-sql&#34;&gt;select 
 count(businessEntitiesWithOneAddress.BusinessEntityId) as NumberOfBusinessesWithOneAddress,
 count(businessEntitiesWithTwoAddresses.BusinessEntityId) as NumberOfBusinessesWithTwoAddresses,
 count(businessEntitiesWithMoreThanTwoAddresses.BusinessEntityId) as NumberOfBusinessesWithMoreThanTwoAddresses
@@ -418,16 +435,18 @@ count(ba.AddressId) as NumberOfAddresses
 from person.BusinessEntity b
 join person.BusinessEntityAddress ba on ba.BusinessEntityId = b.BusinessEntityId
 group by ba.BusinessEntityId
-having count(ba.AddressId) &gt; 2
+having count(ba.AddressId) &amp;gt; 2
 ) as businessEntitiesWithMoreThanTwoAddresses
 on
 businessEntitiesWithTwoAddresses.BusinessEntityId   = 
 businessEntitiesWithMoreThanTwoAddresses.BusinessEntityId;
+&lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;Yes, we do away with one level of sub queries, but it&amp;rsquo;s still not great.&lt;/p&gt;
 
 &lt;h2 id=&#34;cte-approach-simplified-with-full-join:0dc054d968169eec76f7161b9d98121b&#34;&gt;CTE approach simplified with FULL JOIN&lt;/h2&gt;
-with  businessEntitiesWithOneAddress as
+
+&lt;pre&gt;&lt;code class=&#34;language-sql&#34;&gt;with  businessEntitiesWithOneAddress as
 (select ba.BusinessEntityId, 
 count(ba.AddressId) as NumberOfAddresses
 from person.BusinessEntity b
@@ -447,7 +466,7 @@ count(ba.AddressId) as NumberOfAddresses
 from person.BusinessEntity b
 join person.BusinessEntityAddress ba on ba.BusinessEntityId = b.BusinessEntityId
 group by ba.BusinessEntityId
-having count(ba.AddressId) &gt; 2
+having count(ba.AddressId) &amp;gt; 2
 )
 select 
 count(businessEntitiesWithOneAddress.BusinessEntityId) as NumberOfBusinessesWithOneAddress,
@@ -458,13 +477,15 @@ full join businessEntitiesWithTwoAddresses
 on businessEntitiesWithOneAddress.BusinessEntityId = businessEntitiesWithTwoAddresses.BusinessEntityId
 full join businessEntitiesWithMoreThanTwoAddresses
 on businessEntitiesWithTwoAddresses.BusinessEntityId = businessEntitiesWithMoreThanTwoAddresses.BusinessEntityId
+&lt;/code&gt;&lt;/pre&gt;
 
 &lt;h2 id=&#34;simplest-solution:0dc054d968169eec76f7161b9d98121b&#34;&gt;Simplest solution&lt;/h2&gt;
 
 &lt;p&gt;Finally, if we relax the requirement (which was self imposed in the first place) to have the results in one row,
 as well as not worrying about returning the count for the three or more scenario,
 we can simplify everything very nice like this:&lt;/p&gt;
-with  businessEntitiesAddressCount as
+
+&lt;pre&gt;&lt;code class=&#34;language-sql&#34;&gt;with  businessEntitiesAddressCount as
 (select ba.BusinessEntityId, 
 count(ba.AddressId) as NumberOfAddresses
 from person.BusinessEntity b
@@ -476,6 +497,7 @@ count(BusinessEntityId) as NumberOfBusinesses,
 NumberOfAddresses 
 from businessEntitiesAddressCount 
 group by NumberOfAddresses;
+&lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;Best of all; we still get to use a wonderful CTE!&lt;/p&gt;
 

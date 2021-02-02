@@ -38,9 +38,11 @@ He started me on a nice set of aliases and I&amp;rsquo;ve been tweaking them eve
 &lt;p&gt;If you want to gain the most out of this article I recommend you install git bash and open up (or create) the file  ~/.bash_aliases which will become your secret weapon towards git guru status.
 In your ~/.bash_aliases file you will define short commands for  lengthy git command sequences.
 To ensure that your ~/.bash_aliases file is sourced on bash startup, put this in your ~/.bashrc file:&lt;/p&gt;
-if [ -f ~/.bash_aliases ]; then
+
+&lt;pre&gt;&lt;code&gt;if [ -f ~/.bash_aliases ]; then
     . ~/.bash_aliases
 fi
+&lt;/code&gt;&lt;/pre&gt;
 
 &lt;h2 id=&#34;learn-how-to-jump-to-git-bash-quickly-you-will-need-to-do-this-often:43ce4f2c703a95a3e073d309189c3a90&#34;&gt;Learn how to jump to git bash quickly: you will need to do this often&lt;/h2&gt;
 
@@ -75,9 +77,11 @@ When you suspect that confusion might arise over which branch your feature branc
 If you can see this feature branch being worked on by others also, and you want to make everyone know you are the original owner / creator you can prepend your initials: &amp;ldquo;kr/BANK-123&amp;rdquo;.&lt;/p&gt;
 
 &lt;p&gt;Here is your first three commands and aliases to make working with short lived feature branches a breeze:&lt;/p&gt;
-alias +=&#39;git checkout -b&#39;
+
+&lt;pre&gt;&lt;code&gt;alias +=&#39;git checkout -b&#39;
 alias D=&#39;git branch -D&#39;
 alias C=&#39;git checkout&#39;
+&lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;With those you can quickly:&lt;/p&gt;
 
@@ -97,21 +101,25 @@ Now everything up to 5 minutes earlier was great work, yet it seems impossible t
 We&amp;rsquo;ve all experienced this. It use to be a big deal in computer gaming, but I believe that these days the games saves for you.&lt;/p&gt;
 
 &lt;p&gt;Here is your commands and aliases  so you have no more excuses - they make committing regularly totally painless:&lt;/p&gt;
-# git add &amp; commit
+
+&lt;pre&gt;&lt;code&gt;# git add &amp;amp; commit
 	# git add
 	alias ga=&#39;git add -A&#39;
 
-	#git commit (usage: gc &#34;&lt;message&gt;&#34;)
+	#git commit (usage: gc &amp;quot;&amp;lt;message&amp;gt;&amp;quot;)
 	alias gc=&#39;git commit -m&#39;
 	
-	#git commit (usage: gac &#34;&lt;message&gt;&#34;
-	alias gac=&#39;git add -A &amp;&amp; git commit&#39;
+	#git commit (usage: gac &amp;quot;&amp;lt;message&amp;gt;&amp;quot;
+	alias gac=&#39;git add -A &amp;amp;&amp;amp; git commit&#39;
+&lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;Of these I tend to only use gac, and should probably change it to c only, but hey who&amp;rsquo;s perfect now?&lt;/p&gt;
 
 &lt;p&gt;Here are some aliases for rebasing on the remote branch, or local parent branch:&lt;/p&gt;
-	# rebase this branch of its tracked remote branch
+
+&lt;pre&gt;&lt;code&gt;	# rebase this branch of its tracked remote branch
 	alias gpr=&#39;git pull --rebase&#39;
+&lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;However, if your local feature branch  (call it BANK-123) came from a local branch (call it master) which in turn is tracking the remote branch origin/master, then the following command will:&lt;/p&gt;
 
@@ -119,11 +127,15 @@ We&amp;rsquo;ve all experienced this. It use to be a big deal in computer gaming
 &lt;li&gt;pull the remotely tracked master right from within your feature branch&lt;/li&gt;
 &lt;li&gt;rebase your local feature branch on the remote master&lt;/li&gt;
 &lt;/ol&gt;
-	# rebase this branch off its original parent tracked remote branch named master
+
+&lt;pre&gt;&lt;code&gt;	# rebase this branch off its original parent tracked remote branch named master
 	alias gprm=&#39;git pull --rebase origin master&#39;
+&lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;You can achieve the same effect with more steps:&lt;/p&gt;
-	$ C master &amp;&amp; gpr &amp;&amp; C BANK-123 &amp;&amp; gpr master
+
+&lt;pre&gt;&lt;code&gt;	$ C master &amp;amp;&amp;amp; gpr &amp;amp;&amp;amp; C BANK-123 &amp;amp;&amp;amp; gpr master
+&lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;Notice the &amp;amp;&amp;amp; logical combinators. It&amp;rsquo;s a bash feature that will shortcut as expected - i.e. if you have unstaged changes in your current branch, the &amp;lsquo;C master&amp;rsquo; will fail and hence the whole command line.
 This combining commands on the fly is very useful if you want to fire and forget and only come back later to check if everything went according to plan.
@@ -134,11 +146,15 @@ Notice that the above will also bring your local master up to date, while the &a
 &lt;p&gt;When you are sure you want to add your changes to your parent branch, we call it master for argument&amp;rsquo;s sake, you need to merge.
 Note that this is after you have successfully rebased on master, ran all relevant testing, pushed to your remote tracked feature branch (if applicable).
 You need one more alias:&lt;/p&gt;
-	alias gm=&#39;git merge&#39;
+
+&lt;pre&gt;&lt;code&gt;	alias gm=&#39;git merge&#39;
+&lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;You will now want to change to master, get the latest, merge in your feature branch and push to master.
 You can do this with the following:&lt;/p&gt;
-  $ C master &amp;&amp; gpr &amp;&amp; gm BANK-123 &amp;&amp; gh
+
+&lt;pre&gt;&lt;code&gt;  $ C master &amp;amp;&amp;amp; gpr &amp;amp;&amp;amp; gm BANK-123 &amp;amp;&amp;amp; gh
+&lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;where BANK-123 is the name of your feature branch.
 Of course you can make an alias out of this too, but personally I like to retain a little bit of control / do some things explicitly :-) else it gets a little bit scary ($ rm -R / # anyone perhaps?).&lt;/p&gt;
@@ -149,7 +165,9 @@ Of course you can make an alias out of this too, but personally I like to retain
 If you apply TDD properly, and hide more involved not yet completed features behind toggles this is very possible, however there might be times when you are not confident your code is ready for production yet you need to commit and push remotely.&lt;/p&gt;
 
 &lt;p&gt;Here is an alias for setting a remote branch upstream to track your local branch and push there in one go:&lt;/p&gt;
-	alias ghr=&#39;git push --set-upstream origin &#39;
+
+&lt;pre&gt;&lt;code&gt;	alias ghr=&#39;git push --set-upstream origin &#39;
+&lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;After issuing this command you can use the &amp;lsquo;gh&amp;rsquo; alias for subsequent pushes.&lt;/p&gt;
 
@@ -161,10 +179,14 @@ Example: &amp;ldquo;When this commit is applied it will add feature X which was 
 
 &lt;p&gt;In addition, it is helpful to prepend the issue number to the message.
 If your branch name is the same as your issue number you can use the following command to do this automatically for you:&lt;/p&gt;
-	alias gab=&#39;git add -A &amp;&amp; git commit -m &#34;`git rev-parse --abbrev-ref HEAD` - &#39;
+
+&lt;pre&gt;&lt;code&gt;	alias gab=&#39;git add -A &amp;amp;&amp;amp; git commit -m &amp;quot;`git rev-parse --abbrev-ref HEAD` - &#39;
+&lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;So if you are on branch BANK-123 you can issue:&lt;/p&gt;
-	$ gab proove P = NP and solve everything&#34;
+
+&lt;pre&gt;&lt;code&gt;	$ gab proove P = NP and solve everything&amp;quot;
+&lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;and the commit message would read: &amp;ldquo;BANK-123 - proove P = NP and solve everything&amp;rdquo;&lt;/p&gt;
 

@@ -124,6 +124,7 @@ No more need for recursive CTE&amp;rsquo;s each time you want path information, 
 
 &lt;h2 id=&#34;setup:594089c9c61d3c8bcdb4d6b1895da11a&#34;&gt;Setup&lt;/h2&gt;
 
+&lt;pre&gt;&lt;code class=&#34;language-SQL&#34;&gt;
 -- create table node to represent the relations
 create table node (id int, parent_id int, label varchar(50));
 
@@ -139,6 +140,7 @@ insert into node values
 
 -- table to hold the transitive closure over nodes
 create table closure (parent_id int, child_id int, depth int, route varchar(100));
+&lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;Table node is the standard self referencing structure, and table closure will contain the paths that node represent.
 Column node.label is only the label that applies to the particular node row, but column closure.route will contain a nice chain of all the labels from closure.parent_id to closure.child_id.
@@ -300,19 +302,21 @@ Later on it will become apparent why we require these.&lt;/p&gt;
 
 &lt;p&gt;For either type of new node, table closure requires a new identity path.
 Furthermore, if the new node has a parent, we also need to add entries for all paths ending in the new node.&lt;/p&gt;
-create proc closure_insert @parent_id int, @child_id int, @route varchar(50) as 
+
+&lt;pre&gt;&lt;code class=&#34;language-SQL&#34;&gt;create proc closure_insert @parent_id int, @child_id int, @route varchar(50) as 
 begin
 -- always insert identity
 insert into closure (parent_id,child_id,depth,route) 
 values (@child_id,@child_id,0, @route);
-if  @parent_id &lt;&gt; @child_id and @parent_id is not null
+if  @parent_id &amp;lt;&amp;gt; @child_id and @parent_id is not null
 insert into closure (parent_id,child_id,depth, route) 
 select parent.parent_id, child.child_id,
 parent.depth + child.depth + 1, 
-parent.route + &#39; &gt; &#39; + child.route 
+parent.route + &#39; &amp;gt; &#39; + child.route 
 from closure as parent cross join closure as child 
 where parent.child_id = @parent_id and child.parent_id = @child_id;
 end;
+&lt;/code&gt;&lt;/pre&gt;
 
 &lt;h3 id=&#34;closure-delete:594089c9c61d3c8bcdb4d6b1895da11a&#34;&gt;Closure delete&lt;/h3&gt;
 
@@ -323,15 +327,17 @@ end;
 &lt;li&gt;end in @child_id,&lt;/li&gt;
 &lt;li&gt;runs through @child_id, so any path that starts at any of @child_id&amp;rsquo;s parents,and any path that ends in any of @child_id&amp;rsquo;s children&lt;br /&gt;&lt;/li&gt;
 &lt;/ol&gt;
-create proc closure_delete @child_id int as begin
+
+&lt;pre&gt;&lt;code class=&#34;language-SQL&#34;&gt;create proc closure_delete @child_id int as begin
 delete from link  
 from closure as parent, closure as link, closure as child, closure as to_delete 
 where 
 parent.parent_id = link.parent_id and child.child_id = link.child_id
 and parent.child_id = to_delete.parent_id and child.parent_id = to_delete.child_id
 and (to_delete.child_id = @child_id or to_delete.parent_id = @child_id) 
-and to_delete.depth &lt; 2;
+and to_delete.depth &amp;lt; 2;
 end;
+&lt;/code&gt;&lt;/pre&gt;
 
 &lt;h3 id=&#34;closure-update:594089c9c61d3c8bcdb4d6b1895da11a&#34;&gt;Closure update&lt;/h3&gt;
 
@@ -346,7 +352,8 @@ Then we will do the delete, followed by successively calling the insert proc to 
 If you take a look at our insert proc you&amp;rsquo;ll see very quickly that this will result in problems; we will not find the parent paths, and thus add too few actual paths.
 For this reason it is essential that we first insert all nodes without parents, then followed by the rest of the set that do have a parent, which will already be inserted.
 The insert proc will take care of adding all required paths, but only if we insert in the correct order.&lt;/p&gt;
-create proc closure_update @child_id int as begin
+
+&lt;pre&gt;&lt;code class=&#34;language-SQL&#34;&gt;create proc closure_update @child_id int as begin
 -- temp storage of nodes to insert after the deletion
 declare @t as table (id int primary key, parent_id int, label varchar(50));
 
@@ -387,6 +394,7 @@ while @@FETCH_STATUS = 0 begin
 fetch next from cur into @_p, @_c, @_l;
 end close cur deallocate cur;
 end;
+&lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;The insertion cursor query follows the usual pattern for a recursive CTE:&lt;/p&gt;
 
@@ -400,7 +408,8 @@ end;
 &lt;h3 id=&#34;closure-refresh:594089c9c61d3c8bcdb4d6b1895da11a&#34;&gt;Closure refresh&lt;/h3&gt;
 
 &lt;p&gt;To do the initial load, and in case something goes wrong, we add one more proc; a full refresh proc, which is simply successive calls to the insert proc, but in the correct order as described in the previous section.&lt;/p&gt;
-create proc closure_refresh as begin
+
+&lt;pre&gt;&lt;code class=&#34;language-SQL&#34;&gt;create proc closure_refresh as begin
 truncate table closure;
 
 declare @p int, @c int, @l varchar(50);
@@ -426,11 +435,13 @@ while @@FETCH_STATUS = 0 begin
 fetch next from cur into @p, @c, @l;
 end close cur deallocate cur;
 end;
+&lt;/code&gt;&lt;/pre&gt;
 
 &lt;h2 id=&#34;testing:594089c9c61d3c8bcdb4d6b1895da11a&#34;&gt;Testing&lt;/h2&gt;
 
 &lt;p&gt;Here are some sample queries which you can use to test your solution. I&amp;rsquo;ve done it, not going to paste 50 tables of output here, try all sorts and see what happens:&lt;/p&gt;
--- start clean
+
+&lt;pre&gt;&lt;code class=&#34;language-SQL&#34;&gt;-- start clean
 exec closure_refresh;
 -- check that everything is in order
 select * from closure;
@@ -451,6 +462,7 @@ update node set parent_id = 6 where id = 2;
 exec closure_update 2;
 -- node 2 should now be under node 6
 select * from closure;
+&lt;/code&gt;&lt;/pre&gt;
 
 &lt;h2 id=&#34;go-forth-and-conquer:594089c9c61d3c8bcdb4d6b1895da11a&#34;&gt;Go forth and conquer!&lt;/h2&gt;
 
@@ -487,7 +499,9 @@ So, you cannot consider a view to be a type of stored procedure, and you can als
 &lt;p&gt;It is possible for the query planner to &amp;ldquo;reach into&amp;rdquo; a view, and discover which indexes to use in order to access information in the best way, but this quikcly breaks down once you perform any kind of complicated thing, such as a CTE, UNION statement, or anything else that breaks up the link from the source tables to the result set of the view.
 When exactly you break this ability of the query planner to use appropriate indexes is a great idea for a future post - I have not found anything that directly states this as of yet.
 Intuitivly  it makes sense that some kinds of data mangling will just make it impossible for the query planner to find indexes to use.&lt;/p&gt;
-Note that it&#39;s of course always best to first inspect the query plan before concluding that a fiew is or is not making use of a particular index. I have made the mistake before of making grand statements on how poor the query planner is at choosing an index when dealing with a view, only to be shown that it in fact can do a bit more than what you might expect!
+
+&lt;pre&gt;&lt;code&gt;Note that it&#39;s of course always best to first inspect the query plan before concluding that a fiew is or is not making use of a particular index. I have made the mistake before of making grand statements on how poor the query planner is at choosing an index when dealing with a view, only to be shown that it in fact can do a bit more than what you might expect!
+&lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;My goal in this post is simply to make you aware of the possability that complex views might be causing your database to perform sub optimally, and then to offer an in place, zero downtime solution to the problem.&lt;/p&gt;
 
@@ -625,23 +639,29 @@ The relation between customers and their addresses is maintained in the person.B
 for each address (Billing, Home, Main Office etc).&lt;/p&gt;
 
 &lt;h2 id=&#34;we-want-to-know-how-many-customers-have-one-two-and-three-or-more-addresses:0dc054d968169eec76f7161b9d98121b&#34;&gt;We want to know how many customers have one, two and three or more addresses.&lt;/h2&gt;
-Since the purpose of this article is to discuss subquery vs CTEs, excuse the somewhat contrived query.
+
+&lt;pre&gt;&lt;code&gt;Since the purpose of this article is to discuss subquery vs CTEs, excuse the somewhat contrived query.
 At the end of this article I&#39;ll show  a simpler way to accomplish the tast at hand.
+&lt;/code&gt;&lt;/pre&gt;
 
 &lt;h2 id=&#34;sub-query-building-block:0dc054d968169eec76f7161b9d98121b&#34;&gt;Sub query building block&lt;/h2&gt;
 
 &lt;p&gt;We can establish that no BusinessEntity has more than two addresses by the empty result set returned by:&lt;/p&gt;
-select ba.BusinessEntityId, count(ba.AddressId)
+
+&lt;pre&gt;&lt;code class=&#34;language-sql&#34;&gt;select ba.BusinessEntityId, count(ba.AddressId)
 from person.BusinessEntity b
 join person.BusinessEntityAddress ba on ba.BusinessEntityId = b.BusinessEntityId
 group by ba.BusinessEntityId
-having count(ba.AddressId) &gt; 2;
+having count(ba.AddressId) &amp;gt; 2;
+&lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;We&amp;rsquo;ll assume for the remainder of this article that  this query is our best attempt, and that
 it is a &amp;ldquo;black box&amp;rdquo; with which we cannot tamper, save for adjusting the count in the HAVING clause.&lt;/p&gt;
 
 &lt;p&gt;Note that technically we do not need the additional join:&lt;/p&gt;
-join person.BusinessEntityAddress ba on ba.BusinessEntityId = b.BusinessEntityId
+
+&lt;pre&gt;&lt;code class=&#34;language-sql&#34;&gt;join person.BusinessEntityAddress ba on ba.BusinessEntityId = b.BusinessEntityId
+&lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;however this ensures we do not consider addresses in isolation - we ensure all addresses actually have an existing business tied to them.&lt;/p&gt;
 
@@ -649,7 +669,8 @@ join person.BusinessEntityAddress ba on ba.BusinessEntityId = b.BusinessEntityId
 
 &lt;p&gt;Now we would like to improve this result a bit, by rather returning a count of zero instead of nothing.
 We do this by wrapping the above query in a super query:&lt;/p&gt;
-select 
+
+&lt;pre&gt;&lt;code class=&#34;language-sql&#34;&gt;select 
 count(businessEntitiesWithMoreThanTwoAddresses.BusinessEntityId) as NumberOfBusinessesWithMoreThanTwoAddresses
 from
 (select ba.BusinessEntityId, 
@@ -657,8 +678,9 @@ count(ba.AddressId) as NumberOfAddresses
 from person.BusinessEntity b
 join person.BusinessEntityAddress ba on ba.BusinessEntityId = b.BusinessEntityId
 group by ba.BusinessEntityId
-having count(ba.AddressId) &gt; 2
+having count(ba.AddressId) &amp;gt; 2
 ) as businessEntitiesWithMoreThanTwoAddresses;
+&lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;Not too bad in terms of readability, and since we alias the sub query we always know where the result for the outer select column list comes from.
 But what if we would like to augment this query to also return the number of businesses with only one, and two addresses respectively?
@@ -666,7 +688,8 @@ Or to cover all possabilities, the number of businesses with one, two and three 
 Let&amp;rsquo;s try with the sub query approach:&lt;/p&gt;
 
 &lt;h2 id=&#34;combined-sub-query-approach:0dc054d968169eec76f7161b9d98121b&#34;&gt;Combined sub query approach&lt;/h2&gt;
-select 
+
+&lt;pre&gt;&lt;code class=&#34;language-sql&#34;&gt;select 
 count(businessEntitiesWithOneAddress.BusinessEntityId) as NumberOfBusinessesWithOneAddress,
 count(businessEntitiesWithTwoAddresses.BusinessEntityId) as NumberOfBusinessesWithTwoAddresses,
 count(businessEntitiesWithMoreThanTwoAddresses.BusinessEntityId) as NumberOfBusinessesWithMoreThanTwoAddresses
@@ -690,8 +713,9 @@ count(ba.AddressId) as NumberOfAddresses
 from person.BusinessEntity b
 join person.BusinessEntityAddress ba on ba.BusinessEntityId = b.BusinessEntityId
 group by ba.BusinessEntityId
-having count(ba.AddressId) &gt; 2
+having count(ba.AddressId) &amp;gt; 2
 ) as businessEntitiesWithMoreThanTwoAddresses;
+&lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;Hmm&amp;hellip; We get zero for everything. Something has gone wrong.
 Running each super/sub query pair separately we obtain a number for the one and two address scenario, but nothing for the three or more one.
@@ -706,7 +730,8 @@ worse, the last subquery returns zero rows, and anything multiplied by zero is o
 
 &lt;p&gt;Now, let&amp;rsquo;s first remedy this situation by cross joining on only one row each time.
 Hold on, it is going to get a bit messy since in order to do this, we have to introduce yet another subquery.&lt;/p&gt;
-select 
+
+&lt;pre&gt;&lt;code class=&#34;language-sql&#34;&gt;select 
 A.NumberOfBusinessesWithOneAddress,
 B.NumberOfBusinessesWithTwoAddresses,
 C.NumberOfBusinessesWithMoreThanTwoAddresses
@@ -739,8 +764,9 @@ count(ba.AddressId) as NumberOfAddresses
 from person.BusinessEntity b
 join person.BusinessEntityAddress ba on ba.BusinessEntityId = b.BusinessEntityId
 group by ba.BusinessEntityId
-having count(ba.AddressId) &gt; 2
+having count(ba.AddressId) &amp;gt; 2
 ) as businessEntitiesWithMoreThanTwoAddresses) as C;
+&lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;Success, but at quite a complexity and readability cost.&lt;/p&gt;
 
@@ -755,7 +781,8 @@ having count(ba.AddressId) &gt; 2
 &lt;li&gt;Next, the encapsulating super queries that reduce the sub queries to  single values are also stated as CTEs named A, B and C.&lt;/li&gt;
 &lt;li&gt;Finally we simply select from the aggregation CTEs A, B and C.&lt;/li&gt;
 &lt;/ol&gt;
--- First, the three innermost sub queries are stated as CTEs named businessEntitiesWithOneAddress, businessEntitiesWithTwoAddresses and businessEntitiesWithMoreThanTwoAddresses.
+
+&lt;pre&gt;&lt;code class=&#34;language-sql&#34;&gt;-- First, the three innermost sub queries are stated as CTEs named businessEntitiesWithOneAddress, businessEntitiesWithTwoAddresses and businessEntitiesWithMoreThanTwoAddresses.
 with  businessEntitiesWithOneAddress as
 (select ba.BusinessEntityId, 
 count(ba.AddressId) as NumberOfAddresses
@@ -776,7 +803,7 @@ count(ba.AddressId) as NumberOfAddresses
 from person.BusinessEntity b
 join person.BusinessEntityAddress ba on ba.BusinessEntityId = b.BusinessEntityId
 group by ba.BusinessEntityId
-having count(ba.AddressId) &gt; 2
+having count(ba.AddressId) &amp;gt; 2
 ), 
 
 -- Next, the encapsulating super queries that reduce the sub queries to  single values are also stated as CTEs named A, B and C.
@@ -797,6 +824,7 @@ A.NumberOfBusinessesWithOneAddress,
 B.NumberOfBusinessesWithTwoAddresses,
 C.NumberOfBusinessesWithMoreThanTwoAddresses
 from A, B, C;
+&lt;/code&gt;&lt;/pre&gt;
 
 &lt;h2 id=&#34;is-this-not-so-much-more-readable:0dc054d968169eec76f7161b9d98121b&#34;&gt;Is this not so much more readable?&lt;/h2&gt;
 
@@ -850,7 +878,8 @@ Is there not perhaps a way to join without throwing anything away?&lt;/p&gt;
 &lt;p&gt;Did you know about the full join? I will admit that although I knew there had to be something like it, I did not know / forgotten all about it.&lt;/p&gt;
 
 &lt;h2 id=&#34;sub-query-approach-simplified-with-a-full-join:0dc054d968169eec76f7161b9d98121b&#34;&gt;Sub query approach simplified with a FULL JOIN&lt;/h2&gt;
-select 
+
+&lt;pre&gt;&lt;code class=&#34;language-sql&#34;&gt;select 
 count(businessEntitiesWithOneAddress.BusinessEntityId) as NumberOfBusinessesWithOneAddress,
 count(businessEntitiesWithTwoAddresses.BusinessEntityId) as NumberOfBusinessesWithTwoAddresses,
 count(businessEntitiesWithMoreThanTwoAddresses.BusinessEntityId) as NumberOfBusinessesWithMoreThanTwoAddresses
@@ -879,16 +908,18 @@ count(ba.AddressId) as NumberOfAddresses
 from person.BusinessEntity b
 join person.BusinessEntityAddress ba on ba.BusinessEntityId = b.BusinessEntityId
 group by ba.BusinessEntityId
-having count(ba.AddressId) &gt; 2
+having count(ba.AddressId) &amp;gt; 2
 ) as businessEntitiesWithMoreThanTwoAddresses
 on
 businessEntitiesWithTwoAddresses.BusinessEntityId   = 
 businessEntitiesWithMoreThanTwoAddresses.BusinessEntityId;
+&lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;Yes, we do away with one level of sub queries, but it&amp;rsquo;s still not great.&lt;/p&gt;
 
 &lt;h2 id=&#34;cte-approach-simplified-with-full-join:0dc054d968169eec76f7161b9d98121b&#34;&gt;CTE approach simplified with FULL JOIN&lt;/h2&gt;
-with  businessEntitiesWithOneAddress as
+
+&lt;pre&gt;&lt;code class=&#34;language-sql&#34;&gt;with  businessEntitiesWithOneAddress as
 (select ba.BusinessEntityId, 
 count(ba.AddressId) as NumberOfAddresses
 from person.BusinessEntity b
@@ -908,7 +939,7 @@ count(ba.AddressId) as NumberOfAddresses
 from person.BusinessEntity b
 join person.BusinessEntityAddress ba on ba.BusinessEntityId = b.BusinessEntityId
 group by ba.BusinessEntityId
-having count(ba.AddressId) &gt; 2
+having count(ba.AddressId) &amp;gt; 2
 )
 select 
 count(businessEntitiesWithOneAddress.BusinessEntityId) as NumberOfBusinessesWithOneAddress,
@@ -919,13 +950,15 @@ full join businessEntitiesWithTwoAddresses
 on businessEntitiesWithOneAddress.BusinessEntityId = businessEntitiesWithTwoAddresses.BusinessEntityId
 full join businessEntitiesWithMoreThanTwoAddresses
 on businessEntitiesWithTwoAddresses.BusinessEntityId = businessEntitiesWithMoreThanTwoAddresses.BusinessEntityId
+&lt;/code&gt;&lt;/pre&gt;
 
 &lt;h2 id=&#34;simplest-solution:0dc054d968169eec76f7161b9d98121b&#34;&gt;Simplest solution&lt;/h2&gt;
 
 &lt;p&gt;Finally, if we relax the requirement (which was self imposed in the first place) to have the results in one row,
 as well as not worrying about returning the count for the three or more scenario,
 we can simplify everything very nice like this:&lt;/p&gt;
-with  businessEntitiesAddressCount as
+
+&lt;pre&gt;&lt;code class=&#34;language-sql&#34;&gt;with  businessEntitiesAddressCount as
 (select ba.BusinessEntityId, 
 count(ba.AddressId) as NumberOfAddresses
 from person.BusinessEntity b
@@ -937,6 +970,7 @@ count(BusinessEntityId) as NumberOfBusinesses,
 NumberOfAddresses 
 from businessEntitiesAddressCount 
 group by NumberOfAddresses;
+&lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;Best of all; we still get to use a wonderful CTE!&lt;/p&gt;
 
@@ -1047,7 +1081,9 @@ practical purposes, unsorted.&lt;/p&gt;
 &lt;p&gt;You probably knew this already, but I needed that sentence
 because it contained the word &lt;em&gt;cloud&lt;/em&gt; so that I had an excuse to quote
 Stallman on cloud computing from 2008:&lt;/p&gt;
-&#34;It&#39;s stupidity. It&#39;s worse than stupidity: it&#39;s a marketing hype campaign,&#34;
+
+&lt;pre&gt;&lt;code&gt;&amp;quot;It&#39;s stupidity. It&#39;s worse than stupidity: it&#39;s a marketing hype campaign,&amp;quot;
+&lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;Back to tables&amp;hellip; It is probably because SQL Server&amp;rsquo;s default is to choose the
 physically sorted way of laying down the data, when you define a primary key on
@@ -1283,8 +1319,10 @@ Wienand&amp;rsquo;s fine article,
 Key&lt;/a&gt;.&lt;/p&gt;
 
 &lt;h2 id=&#34;summary-and-closing-thoughts-optimising-performance-is-an-interesting-and-very-relevant-problem:810306c57b772cfaef22459bbb55c3d7&#34;&gt;Summary and closing thoughts - Optimising performance is an  interesting and very relevant problem&lt;/h2&gt;
-&#34;Premature optimisation is the root of all evil&#34;
+
+&lt;pre&gt;&lt;code&gt;&amp;quot;Premature optimisation is the root of all evil&amp;quot;
  -- Donald E. Knuth
+&lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;As much as I concur with that statement, especially how it applies to code, I do think that a good understanding
 of the options available to you when turning a data model into an actual

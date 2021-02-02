@@ -61,13 +61,16 @@ As a reminder, &lt;code&gt;UNION&lt;/code&gt; between two queries will produce t
 &lt;h3 id=&#34;intersect:b0fe8f0bcf3b6892f71d222f4dd92b20&#34;&gt;INTERSECT&lt;/h3&gt;
 
 &lt;p&gt;For obtaining a possible set intersection between two tables, we can use the &lt;code&gt;INTERSECT&lt;/code&gt; operator:&lt;/p&gt;
-select * from table_a
+
+&lt;pre&gt;&lt;code class=&#34;language-sql&#34;&gt;select * from table_a
 intersect
 select * from table_b
 ;
+&lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;As pointed out earlier, if the row count for the intersection is the same as the row counts for the two tables, we have set equivalence:&lt;/p&gt;
-select sum(row_count) = 0 as set_equivalence from (
+
+&lt;pre&gt;&lt;code class=&#34;language-sql&#34;&gt;select sum(row_count) = 0 as set_equivalence from (
 select count(1) as row_count from (
 select * from table_a
 intersect
@@ -78,20 +81,25 @@ select count(1) as row_count from table_a
 union all
 select -2 * count(1) as row_count from table_b
 );
+&lt;/code&gt;&lt;/pre&gt;
 
 &lt;h3 id=&#34;except:b0fe8f0bcf3b6892f71d222f4dd92b20&#34;&gt;EXCEPT&lt;/h3&gt;
 
 &lt;p&gt;When we use the &lt;code&gt;EXCEPT&lt;/code&gt; set operator, for example, &lt;code&gt;query_1 EXCEPT query_2&lt;/code&gt;, we are left with all rows from &lt;code&gt;query_1&lt;/code&gt; that do not occur in &lt;code&gt;query_2&lt;/code&gt;.
 Note that &lt;code&gt;query_2&lt;/code&gt; might contain rows that are not present in &lt;code&gt;query_1&lt;/code&gt;, but because &lt;code&gt;EXCEPT&lt;/code&gt; is not commutative, similar to how minus is not commutative, &lt;code&gt;query_1 EXCEPT query_2&lt;/code&gt; is not the same as &lt;code&gt;query_2 EXCEPT 
 query_1&lt;/code&gt;, and we are only left with non occurring rows in &lt;code&gt;query_1&lt;/code&gt;.&lt;/p&gt;
-select * from table_a
+
+&lt;pre&gt;&lt;code class=&#34;language-sql&#34;&gt;select * from table_a
 except
 select * from table_b;
+&lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;&amp;hellip;is not the same as:&lt;/p&gt;
-select * from table_b
+
+&lt;pre&gt;&lt;code class=&#34;language-sql&#34;&gt;select * from table_b
 except
 select * from table_a;
+&lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;Some points to note about &lt;code&gt;EXCEPT&lt;/code&gt;:&lt;/p&gt;
 
@@ -118,7 +126,8 @@ Persisting the result sets to actual tables is a better choice when the &lt;code
 
 &lt;p&gt;We want to find out what subset of columns cause &lt;code&gt;except_ab&lt;/code&gt; and &lt;code&gt;except_ba&lt;/code&gt; to differ.
 We start out by crafting a query of the form:&lt;/p&gt;
-select count(1) from (
+
+&lt;pre&gt;&lt;code class=&#34;language-sql&#34;&gt;select count(1) from (
 select
 column_001
 ,column_002
@@ -135,6 +144,7 @@ column_001
 ,column_100
 from except_ba
 );
+&lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;Of course, in practice, we  rarely have such clean column names, but rather have all sorts of interesting and creative names to deal with.
 When we execute this query, we get the number of different rows - no surprises.&lt;/p&gt;
@@ -142,7 +152,8 @@ When we execute this query, we get the number of different rows - no surprises.&
 &lt;h2 id=&#34;performing-a-binary-search-over-the-column-names:b0fe8f0bcf3b6892f71d222f4dd92b20&#34;&gt;Performing a binary search over the column names&lt;/h2&gt;
 
 &lt;p&gt;It is tempting at this point to start commenting out any column that appears suspicious&amp;hellip;. &amp;ldquo;That &lt;code&gt;column_066&lt;/code&gt; looks like a problem, let&amp;rsquo;s comment it out and run the query again&amp;rdquo; , you might reason:&lt;/p&gt;
-select count(1) from (
+
+&lt;pre&gt;&lt;code class=&#34;language-sql&#34;&gt;select count(1) from (
 select
 column_001
 ,column_002
@@ -163,6 +174,7 @@ column_001
 ,column_100
 from except_ba
 );
+&lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;Resist this urge in favor of a more systematic approach, which will lead you to the offending column(s) in the least amount of time.
 The basic idea of the systematic approach is not to try and identify individual columns, but rather finding regions of columns that contain differing column values, and then to shrink them one by one.
@@ -193,7 +205,8 @@ When we found the regions that cause the two result sets to differ, we reduce th
 &lt;/ol&gt;
 
 &lt;p&gt;Most databases provide the multi-line commenting so that you can comment  like this:&lt;/p&gt;
-select count(1) from (
+
+&lt;pre&gt;&lt;code class=&#34;language-sql&#34;&gt;select count(1) from (
 select
 /*column_001
 ,column_002
@@ -218,6 +231,7 @@ select
 ,column_100
 from except_ba
 );
+&lt;/code&gt;&lt;/pre&gt;
 
 &lt;h1 id=&#34;next-steps:b0fe8f0bcf3b6892f71d222f4dd92b20&#34;&gt;Next steps&lt;/h1&gt;
 
@@ -235,9 +249,11 @@ Such a manual approach is only applicable if the schema is relatively small;
 for larger schemas that would take too long to compare manually we can use diff tools.&lt;/p&gt;
 
 &lt;p&gt;When we know the schemas are equivalent, the next logical step would be to count rows - something as simple as:&lt;/p&gt;
-select count(1) from table_a
+
+&lt;pre&gt;&lt;code class=&#34;language-sql&#34;&gt;select count(1) from table_a
 union all
 select count(1) from table_b;
+&lt;/code&gt;&lt;/pre&gt;
 
 &lt;h1 id=&#34;conclusion:b0fe8f0bcf3b6892f71d222f4dd92b20&#34;&gt;Conclusion&lt;/h1&gt;
 
@@ -303,11 +319,13 @@ We place the data and header file in a &lt;code&gt;./gdelt&lt;/code&gt; director
 &lt;h4 id=&#34;nix-solution:7167d0e820c7576947c6f743fb434a0c&#34;&gt;*Nix Solution&lt;/h4&gt;
 
 &lt;p&gt;While already well away cooking  up a C language solution, I remembered AWK, and the wc program.&lt;/p&gt;
- $ wc -l gdelt/20190531.export.CSV
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt; $ wc -l gdelt/20190531.export.CSV
  176780
 
-  $ gawk &#39;{ if ($6 == &#34;AFR&#34;) sum += 1; } END { print sum; }&#39; gdelt/20190531.export.CSV
+  $ gawk &#39;{ if ($6 == &amp;quot;AFR&amp;quot;) sum += 1; } END { print sum; }&#39; gdelt/20190531.export.CSV
  1184
+&lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;Here I used the &lt;code&gt;wc&lt;/code&gt; or word count program, with the &lt;code&gt;-l&lt;/code&gt; flag to count lines.
 For the count of &amp;lsquo;AFR&amp;rsquo; valued actor codes I used the GNU version of &lt;code&gt;awk&lt;/code&gt;, together with a tiny awk program for a conditional incrementing of a counter.
@@ -359,14 +377,15 @@ Furthermore, we need to  verify our answer above,  by computing  the same in a f
 &lt;/ol&gt;
 
 &lt;p&gt;And here is the simplest first attempt C solution:&lt;/p&gt;
-#include &lt;stdio.h&gt;  // fopen, fclose, fgets
-#include &lt;string.h&gt;  // strtoc, strcmp
+
+&lt;pre&gt;&lt;code class=&#34;language-c&#34;&gt;#include &amp;lt;stdio.h&amp;gt;  // fopen, fclose, fgets
+#include &amp;lt;string.h&amp;gt;  // strtoc, strcmp
 
 int main() 
 {
-   const char FILE_PATH[] = &#34;../gdelt/20190531.export.CSV&#34;;
-   const char DELIMITER[] = &#34;\t&#34;;
-   const char MATCH_TEXT[] = &#34;AFR&#34;;
+   const char FILE_PATH[] = &amp;quot;../gdelt/20190531.export.CSV&amp;quot;;
+   const char DELIMITER[] = &amp;quot;\t&amp;quot;;
+   const char MATCH_TEXT[] = &amp;quot;AFR&amp;quot;;
    const int MATCH_COLUMN_POS = 5; 
 
    int match_count = 0;
@@ -375,7 +394,7 @@ int main()
    const int BUFF_SIZE = 2048;
    char buff[BUFF_SIZE];
 
-   fp = fopen(FILE_PATH, &#34;r&#34;); 
+   fp = fopen(FILE_PATH, &amp;quot;r&amp;quot;); 
    if (fp == NULL) return -1; 
    int lines_count = 0;
    while (fgets(buff, BUFF_SIZE, (FILE*)fp)) {
@@ -383,7 +402,7 @@ int main()
        char *ptr = strtok(buff, DELIMITER);
 
        // find the value of the ACTOR_CODE
-       for (int i=0; i&lt;MATCH_COLUMN_POS; i++)
+       for (int i=0; i&amp;lt;MATCH_COLUMN_POS; i++)
            ptr = strtok(NULL, DELIMITER);
 
 if (strcmp(ptr, MATCH_TEXT) == 0)
@@ -391,17 +410,20 @@ if (strcmp(ptr, MATCH_TEXT) == 0)
     match_count += 1;
 }
    }
-   printf(&#34;Total number of lines: %d\n&#34;, lines_count );
-   printf(&#34;Number of lines matching &#39;%s&#39; in column %d: %d\n&#34;, MATCH_TEXT, 
+   printf(&amp;quot;Total number of lines: %d\n&amp;quot;, lines_count );
+   printf(&amp;quot;Number of lines matching &#39;%s&#39; in column %d: %d\n&amp;quot;, MATCH_TEXT, 
            MATCH_COLUMN_POS,
            match_count );
    fclose(fp);
    return 0;
 }
+&lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;After compiling  with gcc ./query.c -o ./query, (gcc .\query.c -o .\query.exe on Windows) and running it, the output is:&lt;/p&gt;
-Total number of lines: 176780
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;Total number of lines: 176780
 Number of lines matching &#39;AFR&#39; in column 5: 1184
+&lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;Nice. This answer corresponds perfectly with the *nix solution,
 but  what a lot of work for answering such a trivial question!
@@ -414,14 +436,16 @@ Because of this, you cannot directly work with flat files, but have to  first lo
 For my SQL solution I&amp;rsquo;ll use &lt;a href=&#34;sqlite&#34;&gt;SQLite&lt;/a&gt; as the SQL query engine; the DBMS.&lt;/p&gt;
 
 &lt;p&gt;With the data and header file in the &lt;code&gt;./gdelt&lt;/code&gt; directory, we get them loaded like this:&lt;/p&gt;
-&gt; sqlite3 gdelt.md
+
+&lt;pre&gt;&lt;code class=&#34;language-sql&#34;&gt;&amp;gt; sqlite3 gdelt.md
 SQLite version 3.28.0 2019-04-16 19:49:53
-Enter &#34;.help&#34; for usage hints.
-sqlite&gt; .mode csv
-sqlite&gt; .timer on
-sqlite&gt; .separator &#34;\t&#34; &#34;\r\n&#34;
-sqlite&gt; .import ../gdelt/CSV.header.dailyupdates.txt oneday
-sqlite&gt; .import ../gdelt/20190531.export.CSV oneday
+Enter &amp;quot;.help&amp;quot; for usage hints.
+sqlite&amp;gt; .mode csv
+sqlite&amp;gt; .timer on
+sqlite&amp;gt; .separator &amp;quot;\t&amp;quot; &amp;quot;\r\n&amp;quot;
+sqlite&amp;gt; .import ../gdelt/CSV.header.dailyupdates.txt oneday
+sqlite&amp;gt; .import ../gdelt/20190531.export.CSV oneday
+&lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;Here is the breakdown:&lt;/p&gt;
 
@@ -436,13 +460,15 @@ sqlite&gt; .import ../gdelt/20190531.export.CSV oneday
 &lt;/ol&gt;
 
 &lt;p&gt;Now we are ready to answer our question using SQL!&lt;/p&gt;
-sqlite&gt; select count(1) from oneday;
+
+&lt;pre&gt;&lt;code class=&#34;language-sql&#34;&gt;sqlite&amp;gt; select count(1) from oneday;
 176780
 Run Time: real 0.163 user 0.031250 sys 0.125000
-sqlite&gt; select count(1) from oneday where actor1code = &#39;AFR&#39;;
+sqlite&amp;gt; select count(1) from oneday where actor1code = &#39;AFR&#39;;
 1056
 Run Time: real 0.181 user 0.046875 sys 0.140625
-sqlite&gt;
+sqlite&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;Hmm&amp;hellip; We arrive at the same total row or lines count, but the count for the matching actor 1 code values is very different.
 To figure out why this is the case is not trivial, but very instructive to illustrate even more the need for something like SQL and database systems, so stay with me.&lt;/p&gt;
@@ -471,21 +497,27 @@ Surely they would nnot use a broken thing!&lt;/p&gt;
 &lt;p&gt;Since we have everything setup in SQLite already, let&amp;rsquo;s query the data a bit more, in hope we find some clues to help us solve the dilemma.&lt;/p&gt;
 
 &lt;p&gt;How many values are there for column &lt;code&gt;actor1code&lt;/code&gt;?&lt;/p&gt;
-sqlite&gt; select count(distinct actor1code) from oneday;
+
+&lt;pre&gt;&lt;code class=&#34;language-sql&#34;&gt;sqlite&amp;gt; select count(distinct actor1code) from oneday;
 2148
+&lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;Is the count from before for the SQLite solution still the same?&lt;/p&gt;
-sqlite&gt; select count(1) from oneday where actor1code like &#39;AFR&#39;;
+
+&lt;pre&gt;&lt;code class=&#34;language-sql&#34;&gt;sqlite&amp;gt; select count(1) from oneday where actor1code like &#39;AFR&#39;;
 1056
+&lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;Perhaps the comparison predicate in the &lt;code&gt;where&lt;/code&gt; clause &lt;code&gt;actor1code = &#39;AFR&#39;&lt;/code&gt; has a problem.
 Let us try some &lt;code&gt;LIKE&lt;/code&gt; matching instead.&lt;/p&gt;
-sqlite&gt; select count(1) from oneday where actor1code like &#39;%AFR&#39;;
+
+&lt;pre&gt;&lt;code class=&#34;language-sql&#34;&gt;sqlite&amp;gt; select count(1) from oneday where actor1code like &#39;%AFR&#39;;
 1056
-sqlite&gt; select count(1) from oneday where actor1code like &#39;%AFR%&#39;;
+sqlite&amp;gt; select count(1) from oneday where actor1code like &#39;%AFR%&#39;;
 1241
-sqlite&gt; select count(1) from oneday where actor1code like &#39;AFR%&#39;;
+sqlite&amp;gt; select count(1) from oneday where actor1code like &#39;AFR%&#39;;
 1139
+&lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;Nope, this is not helping much, andsomething else is going on.&lt;/p&gt;
 
@@ -493,27 +525,33 @@ sqlite&gt; select count(1) from oneday where actor1code like &#39;AFR%&#39;;
 
 &lt;p&gt;It&amp;rsquo;s always a good idea to consider some edge cases in the data.
 One such edge case is blank values, so let&amp;rsquo;s check for them in the actor 1 column:&lt;/p&gt;
-sqlite&gt; select count(1) from oneday where actor1code = &#39;&#39;;
+
+&lt;pre&gt;&lt;code class=&#34;language-sql&#34;&gt;sqlite&amp;gt; select count(1) from oneday where actor1code = &#39;&#39;;
 16475
+&lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;We have seen that the SQLite solution under counts, or, &lt;strong&gt;gasp&lt;/strong&gt; BOTH the AWK *nix solution AND the C language one over counts, and do it the same.
 Since both the AWK and the C language solution produced the same result, let&amp;rsquo;s see if we can find the blanks count of above with AWK:&lt;/p&gt;
- $ gawk &#39;{ if ($6 == &#34;&#34;) sum += 1; } END { print sum; }&#39; ./gdelt/20190531.export.CSV
 
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt; $ gawk &#39;{ if ($6 == &amp;quot;&amp;quot;) sum += 1; } END { print sum; }&#39; ./gdelt/20190531.export.CSV
+
+&lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;Well, it produced no output, so gawk wasn&amp;rsquo;t able to count blanks&amp;hellip;.
 I bet the C language solution will do exactly the same!&lt;/p&gt;
 
 &lt;p&gt;Now the actor 1 code of &amp;lsquo;AFR&amp;rsquo; is quite special, but we know from the documentation of GDELT and also from the header columns, that there is also an actor 2 code column, and it follows right after all the actor 1 columns.
 How many rows are there where the column actor1code is blank, and the actor2code is &amp;lsquo;AFR&amp;rsquo;:&lt;/p&gt;
-sqlite&gt; select count(1) from oneday where actor1code = &#39;AFR&#39;;
+
+&lt;pre&gt;&lt;code class=&#34;language-sql&#34;&gt;sqlite&amp;gt; select count(1) from oneday where actor1code = &#39;AFR&#39;;
 1056
 
-sqlite&gt; select count(1) from oneday where actor1code = &#39;&#39; and actor2code = &#39;AFR&#39;;
+sqlite&amp;gt; select count(1) from oneday where actor1code = &#39;&#39; and actor2code = &#39;AFR&#39;;
 128
 
-sqlite&gt; select count(1) from oneday where actor1code = &#39;&#39; and actor2code = &#39;AFR&#39; or actor1code = &#39;AFR&#39;;
+sqlite&amp;gt; select count(1) from oneday where actor1code = &#39;&#39; and actor2code = &#39;AFR&#39; or actor1code = &#39;AFR&#39;;
 1184
+&lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;Now that is interesting.  The C and AWK solutions count, in column 6 where actor 1 code should live, the sum of the columns where actor 1 code is &amp;lsquo;AFR&amp;rsquo;, plus the number of
 rows where actor 1 code is blank AND actor 2 code is &amp;lsquo;AFR&amp;rsquo;.&lt;/p&gt;
@@ -524,8 +562,10 @@ rows where actor 1 code is blank AND actor 2 code is &amp;lsquo;AFR&amp;rsquo;.&
 
 &lt;p&gt;We could now proceed and fix up the C solution, but by now I&amp;rsquo;ve kind of lost interest, and I&amp;rsquo;m truely thankful I do not have to code C for a living - it must be very, very hard.
 None the less, perhaps for the love of Linux, let&amp;rsquo;s at least get AWK right.&lt;/p&gt;
-$ gawk &#39;BEGIN {FS = &#34;\t&#34;} { if ($6 == &#34;AFR&#34;) sum += 1; } END { print sum; }&#39; gdelt/20190531.export.CSV
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;$ gawk &#39;BEGIN {FS = &amp;quot;\t&amp;quot;} { if ($6 == &amp;quot;AFR&amp;quot;) sum += 1; } END { print sum; }&#39; gdelt/20190531.export.CSV
 1056
+&lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;Yay for AWK, yay for the Unix tradition, yay for Linux!
 We explicitly set the field seperator (FS), same as for the SQLite solution.&lt;/p&gt;
@@ -561,16 +601,20 @@ For SQLite examples of these more admin-type keywords and functions are the ones
       <guid>https://blog.goodfast.info/post/big-factorial/</guid>
       <description>&lt;p&gt;What&amp;rsquo;s the first five digits of 1,000,000! or 1 million factorial?
 Let&amp;rsquo;s ask Haskell:&lt;/p&gt;
-Prelude&gt; take 5 $ show $ product [1..1000000] 
-&#34;82639&#34; 
+
+&lt;pre&gt;&lt;code class=&#34;language-haskell&#34;&gt;Prelude&amp;gt; take 5 $ show $ product [1..1000000] 
+&amp;quot;82639&amp;quot; 
 (1043.56 secs, 1,444,511,743,624 bytes) 
+&lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;Neat!&lt;/p&gt;
 
 &lt;p&gt;But you might ask, how many digits is this rather large number, of 1 bar factorial? Let&amp;rsquo;s ask again:&lt;/p&gt;
-Prelude&gt; length $ show $ product [1..1000000] 
+
+&lt;pre&gt;&lt;code class=&#34;language-haskell&#34;&gt;Prelude&amp;gt; length $ show $ product [1..1000000] 
 5565709 
 (1103.04 secs, 1,444,845,773,000 bytes) 
+&lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;Wow! 5.5 million digits! Way more than all the electrons in the universe.&lt;/p&gt;
 
@@ -620,8 +664,10 @@ Away with maths terminology! OK, only until the end of this post.&lt;/p&gt;
 &lt;/ul&gt;
 
 &lt;p&gt;So we end up with this:&lt;/p&gt;
-NumberOfPowerBallDraws = 50 * 49 * 48 * 47 * 46 * 20 
+
+&lt;pre&gt;&lt;code&gt;NumberOfPowerBallDraws = 50 * 49 * 48 * 47 * 46 * 20 
 NumberOfPowerBallDraws  = 5085024000 
+&lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;Hmm, that is very big, too big  wouldn&amp;rsquo;t you say?
 At those odds, jackpots would be very seldom.&lt;/p&gt;
@@ -631,15 +677,19 @@ Well, suppose we chose option 1 for our first choice, and then option 2 for our 
 In our equation above, both those would be valid start choices, but in actual fact, since order does not matter, those are the same choices according to the definition of the game: we are double counting.
 So how badly are we double counting?
 Well, as badly as you can choose to order five numbers in a row, so that order matters, and that is kind of what we figured out in our mistake above, giving:&lt;/p&gt;
-WaysToOrderFiveNumbers = 1 * 2 * 3 * 4 * 5 
+
+&lt;pre&gt;&lt;code&gt;WaysToOrderFiveNumbers = 1 * 2 * 3 * 4 * 5 
 WaysToOrderFiveNumbers = 120 
+&lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;Finally,  to fix our error, we reduce our previous answer by this factor, to get:&lt;/p&gt;
-CorrectNumberOfPowerBallDraws = NumberOfPowerBallDraws / WaysToOrderFiveNumbers 
+
+&lt;pre&gt;&lt;code&gt;CorrectNumberOfPowerBallDraws = NumberOfPowerBallDraws / WaysToOrderFiveNumbers 
 
 CorrectNumberOfPowerBallDraws = 5085024000 / 120 
 
 CorrectNumberOfPowerBallDraws = 42375200 
+&lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;Is this correct now? Yeah, go ahead and Google it!&lt;/p&gt;
 
@@ -667,9 +717,10 @@ $$&lt;/p&gt;
 &lt;h3 id=&#34;python:b6bf697cd8bd4495824c64b2e031761c&#34;&gt;Python&lt;/h3&gt;
 
 &lt;p&gt;Using the names from the analysis above, we get a rather long solution:&lt;/p&gt;
-import functools as ft # for reduce
 
-# n: the number of options, p: how many &#34;power ball&#34; options there are, k: the number of allowed numbers that can be chosen
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;import functools as ft # for reduce
+
+# n: the number of options, p: how many &amp;quot;power ball&amp;quot; options there are, k: the number of allowed numbers that can be chosen
 def numberOfPowerBallDraws(n,p,k):
     return ft.reduce(lambda a,b: a*b, range(n-k+1,n+1)) * p
 
@@ -682,6 +733,7 @@ def correctNumberOfPowerBallDraws(n,p,k):
 p, n, k = 20, 50, 5
 print(correctNumberOfPowerBallDraws(n,p,k))
 # output 42375200.0
+&lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;Some points to note:&lt;/p&gt;
 
@@ -691,26 +743,32 @@ print(correctNumberOfPowerBallDraws(n,p,k))
 &lt;/ol&gt;
 
 &lt;p&gt;We can simplify the code into one line, which is less readable but more concise:&lt;/p&gt;
-import functools as ft
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;import functools as ft
 p, n, k = 20, 50, 5
 ft.reduce(lambda a,b: a*b, range(n-k+1,n+1)) * p / ft.reduce(lambda a,b: a*b, range(1,k+1))
 # output 42375200.0
+&lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;Noticing that we multiply lists in two places, we can simplify even more by adding a &lt;code&gt;mul(r)&lt;/code&gt; product function like this.&lt;/p&gt;
-import functools as ft
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;import functools as ft
 
 def mul(r): return ft.reduce(lambda a,b: a*b, r)
 
 p, n, k = 20, 50, 5
 mul(range(n-k+1,n+1)) * p / mul(range(1,k+1))
 # output 42375200.0
+&lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;Much better, but still to me at least, not as clean as it could be.&lt;/p&gt;
 
 &lt;h3 id=&#34;haskell:b6bf697cd8bd4495824c64b2e031761c&#34;&gt;Haskell&lt;/h3&gt;
-Prelude&gt; let draws n p k = product [n, (n-1) .. (n-k+1)] * p / product [1 .. k]
-Prelude&gt; draws 50 20 5
+
+&lt;pre&gt;&lt;code class=&#34;language-haskell&#34;&gt;Prelude&amp;gt; let draws n p k = product [n, (n-1) .. (n-k+1)] * p / product [1 .. k]
+Prelude&amp;gt; draws 50 20 5
 -- outputs 4.23752e7
+&lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;In my opinion, the simplest, most straightforward, most beautiful code.&lt;/p&gt;
 </description>
@@ -831,6 +889,7 @@ No more need for recursive CTE&amp;rsquo;s each time you want path information, 
 
 &lt;h2 id=&#34;setup:594089c9c61d3c8bcdb4d6b1895da11a&#34;&gt;Setup&lt;/h2&gt;
 
+&lt;pre&gt;&lt;code class=&#34;language-SQL&#34;&gt;
 -- create table node to represent the relations
 create table node (id int, parent_id int, label varchar(50));
 
@@ -846,6 +905,7 @@ insert into node values
 
 -- table to hold the transitive closure over nodes
 create table closure (parent_id int, child_id int, depth int, route varchar(100));
+&lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;Table node is the standard self referencing structure, and table closure will contain the paths that node represent.
 Column node.label is only the label that applies to the particular node row, but column closure.route will contain a nice chain of all the labels from closure.parent_id to closure.child_id.
@@ -1007,19 +1067,21 @@ Later on it will become apparent why we require these.&lt;/p&gt;
 
 &lt;p&gt;For either type of new node, table closure requires a new identity path.
 Furthermore, if the new node has a parent, we also need to add entries for all paths ending in the new node.&lt;/p&gt;
-create proc closure_insert @parent_id int, @child_id int, @route varchar(50) as 
+
+&lt;pre&gt;&lt;code class=&#34;language-SQL&#34;&gt;create proc closure_insert @parent_id int, @child_id int, @route varchar(50) as 
 begin
 -- always insert identity
 insert into closure (parent_id,child_id,depth,route) 
 values (@child_id,@child_id,0, @route);
-if  @parent_id &lt;&gt; @child_id and @parent_id is not null
+if  @parent_id &amp;lt;&amp;gt; @child_id and @parent_id is not null
 insert into closure (parent_id,child_id,depth, route) 
 select parent.parent_id, child.child_id,
 parent.depth + child.depth + 1, 
-parent.route + &#39; &gt; &#39; + child.route 
+parent.route + &#39; &amp;gt; &#39; + child.route 
 from closure as parent cross join closure as child 
 where parent.child_id = @parent_id and child.parent_id = @child_id;
 end;
+&lt;/code&gt;&lt;/pre&gt;
 
 &lt;h3 id=&#34;closure-delete:594089c9c61d3c8bcdb4d6b1895da11a&#34;&gt;Closure delete&lt;/h3&gt;
 
@@ -1030,15 +1092,17 @@ end;
 &lt;li&gt;end in @child_id,&lt;/li&gt;
 &lt;li&gt;runs through @child_id, so any path that starts at any of @child_id&amp;rsquo;s parents,and any path that ends in any of @child_id&amp;rsquo;s children&lt;br /&gt;&lt;/li&gt;
 &lt;/ol&gt;
-create proc closure_delete @child_id int as begin
+
+&lt;pre&gt;&lt;code class=&#34;language-SQL&#34;&gt;create proc closure_delete @child_id int as begin
 delete from link  
 from closure as parent, closure as link, closure as child, closure as to_delete 
 where 
 parent.parent_id = link.parent_id and child.child_id = link.child_id
 and parent.child_id = to_delete.parent_id and child.parent_id = to_delete.child_id
 and (to_delete.child_id = @child_id or to_delete.parent_id = @child_id) 
-and to_delete.depth &lt; 2;
+and to_delete.depth &amp;lt; 2;
 end;
+&lt;/code&gt;&lt;/pre&gt;
 
 &lt;h3 id=&#34;closure-update:594089c9c61d3c8bcdb4d6b1895da11a&#34;&gt;Closure update&lt;/h3&gt;
 
@@ -1053,7 +1117,8 @@ Then we will do the delete, followed by successively calling the insert proc to 
 If you take a look at our insert proc you&amp;rsquo;ll see very quickly that this will result in problems; we will not find the parent paths, and thus add too few actual paths.
 For this reason it is essential that we first insert all nodes without parents, then followed by the rest of the set that do have a parent, which will already be inserted.
 The insert proc will take care of adding all required paths, but only if we insert in the correct order.&lt;/p&gt;
-create proc closure_update @child_id int as begin
+
+&lt;pre&gt;&lt;code class=&#34;language-SQL&#34;&gt;create proc closure_update @child_id int as begin
 -- temp storage of nodes to insert after the deletion
 declare @t as table (id int primary key, parent_id int, label varchar(50));
 
@@ -1094,6 +1159,7 @@ while @@FETCH_STATUS = 0 begin
 fetch next from cur into @_p, @_c, @_l;
 end close cur deallocate cur;
 end;
+&lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;The insertion cursor query follows the usual pattern for a recursive CTE:&lt;/p&gt;
 
@@ -1107,7 +1173,8 @@ end;
 &lt;h3 id=&#34;closure-refresh:594089c9c61d3c8bcdb4d6b1895da11a&#34;&gt;Closure refresh&lt;/h3&gt;
 
 &lt;p&gt;To do the initial load, and in case something goes wrong, we add one more proc; a full refresh proc, which is simply successive calls to the insert proc, but in the correct order as described in the previous section.&lt;/p&gt;
-create proc closure_refresh as begin
+
+&lt;pre&gt;&lt;code class=&#34;language-SQL&#34;&gt;create proc closure_refresh as begin
 truncate table closure;
 
 declare @p int, @c int, @l varchar(50);
@@ -1133,11 +1200,13 @@ while @@FETCH_STATUS = 0 begin
 fetch next from cur into @p, @c, @l;
 end close cur deallocate cur;
 end;
+&lt;/code&gt;&lt;/pre&gt;
 
 &lt;h2 id=&#34;testing:594089c9c61d3c8bcdb4d6b1895da11a&#34;&gt;Testing&lt;/h2&gt;
 
 &lt;p&gt;Here are some sample queries which you can use to test your solution. I&amp;rsquo;ve done it, not going to paste 50 tables of output here, try all sorts and see what happens:&lt;/p&gt;
--- start clean
+
+&lt;pre&gt;&lt;code class=&#34;language-SQL&#34;&gt;-- start clean
 exec closure_refresh;
 -- check that everything is in order
 select * from closure;
@@ -1158,6 +1227,7 @@ update node set parent_id = 6 where id = 2;
 exec closure_update 2;
 -- node 2 should now be under node 6
 select * from closure;
+&lt;/code&gt;&lt;/pre&gt;
 
 &lt;h2 id=&#34;go-forth-and-conquer:594089c9c61d3c8bcdb4d6b1895da11a&#34;&gt;Go forth and conquer!&lt;/h2&gt;
 
@@ -1219,51 +1289,65 @@ For more details about the problem, visit the &lt;a href=&#34;https://code.googl
 &lt;h2 id=&#34;bit-boards:d352b201a1938ed46d030d55323cc26d&#34;&gt;Bit boards&lt;/h2&gt;
 
 &lt;p&gt;We choose an integer, 4 bytes, to store a bit mask of the player O, player X, how a column looks, how each of the two diagonals look and so on. We could have used a 2-byte unsigned  short instead of an int, sadly we didn&amp;rsquo;t. Well, got to leave something for next time.&lt;/p&gt;
-        public static int column, diagonal1, diagonal2, fullboard;
+
+&lt;pre&gt;&lt;code class=&#34;language-C#&#34;&gt;        public static int column, diagonal1, diagonal2, fullboard;
+&lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;and&lt;/p&gt;
-            int xboard = 0, oboard = 0, tboard = 0;
+
+&lt;pre&gt;&lt;code class=&#34;language-C#&#34;&gt;            int xboard = 0, oboard = 0, tboard = 0;
+&lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;We assign the static patterns we&amp;rsquo;ll use for column, the two diagonals and the full board:&lt;/p&gt;
-            column = Convert.ToInt32(&#34;1000100010001&#34;, 2);
-            diagonal1 = Convert.ToInt32(&#34;1000010000100001&#34;, 2);
-            diagonal2 = Convert.ToInt32(&#34;0001001001001000&#34;, 2);
-            fullboard = Convert.ToInt32(&#34;1111111111111111&#34;, 2);
+
+&lt;pre&gt;&lt;code class=&#34;language-C#&#34;&gt;            column = Convert.ToInt32(&amp;quot;1000100010001&amp;quot;, 2);
+            diagonal1 = Convert.ToInt32(&amp;quot;1000010000100001&amp;quot;, 2);
+            diagonal2 = Convert.ToInt32(&amp;quot;0001001001001000&amp;quot;, 2);
+            fullboard = Convert.ToInt32(&amp;quot;1111111111111111&amp;quot;, 2);
+&lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;I&amp;rsquo;m not going to bother you with file IO, so we skip to where we set the X, O and T boards:&lt;/p&gt;
-                        xboard = StringBoardToBitBoard(line, &#39;X&#39;);
+
+&lt;pre&gt;&lt;code class=&#34;language-C#&#34;&gt;                        xboard = StringBoardToBitBoard(line, &#39;X&#39;);
                         oboard = StringBoardToBitBoard(line, &#39;O&#39;);
                         tboard = StringBoardToBitBoard(line, &#39;T&#39;);
+&lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;Function StringBoardToBitBoard does exactly what  you would imagine - it assigns a &amp;lsquo;1&amp;rsquo; in the bit position if the char occurs and a &amp;lsquo;0&amp;rsquo; otherwise - see below for the full program.&lt;/p&gt;
 
 &lt;h2 id=&#34;decision-and-output:d352b201a1938ed46d030d55323cc26d&#34;&gt;Decision and output&lt;/h2&gt;
-                        if (Won(xboard, tboard))
-                            sw.WriteLine(&#34;Case #{0}: X won&#34;, i);
+
+&lt;pre&gt;&lt;code class=&#34;language-C#&#34;&gt;                        if (Won(xboard, tboard))
+                            sw.WriteLine(&amp;quot;Case #{0}: X won&amp;quot;, i);
                         else if (Won(oboard, tboard))
-                            sw.WriteLine(&#34;Case #{0}: O won&#34;, i);
-                        else if (((xboard | oboard | tboard) &amp; fullboard) == fullboard)
-                            sw.WriteLine(&#34;Case #{0}: Draw&#34;, i);
+                            sw.WriteLine(&amp;quot;Case #{0}: O won&amp;quot;, i);
+                        else if (((xboard | oboard | tboard) &amp;amp; fullboard) == fullboard)
+                            sw.WriteLine(&amp;quot;Case #{0}: Draw&amp;quot;, i);
                         else
-                            sw.WriteLine(&#34;Case #{0}: Game has not completed&#34;, i);
+                            sw.WriteLine(&amp;quot;Case #{0}: Game has not completed&amp;quot;, i);
+&lt;/code&gt;&lt;/pre&gt;
 
 &lt;h2 id=&#34;the-real-magic-bitwise-operators-and-shifts:d352b201a1938ed46d030d55323cc26d&#34;&gt;The real magic: bitwise operators and shifts&lt;/h2&gt;
 
 &lt;p&gt;And finally, let&amp;rsquo;s have a look at the elegant part; function Won and friends:&lt;/p&gt;
-        public static bool Won(int board, int tboard)
+
+&lt;pre&gt;&lt;code class=&#34;language-C#&#34;&gt;        public static bool Won(int board, int tboard)
         {
             board |= tboard;  // apply the T position
             return LinesMatch(board) || ColumnsMatch(board) || DiagonalsMatch(board);
         }
+&lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;makes sense doesn&amp;rsquo;t it; you win if you have a line, a column or a diagonal.&lt;/p&gt;
-        public static bool LinesMatch(int board)
+
+&lt;pre&gt;&lt;code class=&#34;language-C#&#34;&gt;        public static bool LinesMatch(int board)
         {
             return board == (board | 15)
-                || board == (board | (15 &lt;&lt; 4))
-                || board == (board | (15 &lt;&lt; 8))
-                || board == (board | (15 &lt;&lt; 12));
+                || board == (board | (15 &amp;lt;&amp;lt; 4))
+                || board == (board | (15 &amp;lt;&amp;lt; 8))
+                || board == (board | (15 &amp;lt;&amp;lt; 12));
         }
+&lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;You have a lines match if your board position
 is logical OR-ed (the &amp;lsquo;|&amp;rsquo; operator)  with any of the line representations, and still is equal to itself.
@@ -1271,19 +1355,21 @@ For the 4 line representations we could have used constants, to avoid the bit sh
 Also, the 15 magic number in there, for the first lines representation; should really live in a constant.&lt;/p&gt;
 
 &lt;p&gt;In the same way, but slightly different, the columns and diagonals are checked:&lt;/p&gt;
-        public static bool ColumnsMatch(int board)
+
+&lt;pre&gt;&lt;code class=&#34;language-C#&#34;&gt;        public static bool ColumnsMatch(int board)
         {
             return
                 board == (board | column)
-                || board == (board | (column &lt;&lt; 1))
-                || board == (board | (column &lt;&lt; 2))
-                || board == (board | (column &lt;&lt; 3));
+                || board == (board | (column &amp;lt;&amp;lt; 1))
+                || board == (board | (column &amp;lt;&amp;lt; 2))
+                || board == (board | (column &amp;lt;&amp;lt; 3));
         }
         public static bool DiagonalsMatch(int board)
         {
             return board == (board | diagonal1)
                 || board == (board | diagonal2);
         }
+&lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;The diagonals checking could have happened all at once, why is this possible?&lt;/p&gt;
 
@@ -1301,7 +1387,8 @@ The next week when I realized my mistake, I was upset. I just had to get one or 
 I like that. May it be that, when people survey our code and data representations, may it be that they would reflect upon how few bits was used, or how few lines of code were written&amp;hellip;&lt;/p&gt;
 
 &lt;h2 id=&#34;full-program:d352b201a1938ed46d030d55323cc26d&#34;&gt;Full program&lt;/h2&gt;
-using System;
+
+&lt;pre&gt;&lt;code class=&#34;language-C#&#34;&gt;using System;
 using System.IO;
 using System.Collections.Generic;
 using System.Linq;
@@ -1316,22 +1403,22 @@ namespace ConsoleApplication1
 
         static void Main(string[] args)
         {
-            column = Convert.ToInt32(&#34;1000100010001&#34;, 2);
-            diagonal1 = Convert.ToInt32(&#34;1000010000100001&#34;, 2);
-            diagonal2 = Convert.ToInt32(&#34;0001001001001000&#34;, 2);
-            fullboard = Convert.ToInt32(&#34;1111111111111111&#34;, 2);
+            column = Convert.ToInt32(&amp;quot;1000100010001&amp;quot;, 2);
+            diagonal1 = Convert.ToInt32(&amp;quot;1000010000100001&amp;quot;, 2);
+            diagonal2 = Convert.ToInt32(&amp;quot;0001001001001000&amp;quot;, 2);
+            fullboard = Convert.ToInt32(&amp;quot;1111111111111111&amp;quot;, 2);
 
             int xboard = 0, oboard = 0, tboard = 0;
 
             try
             {
-                string infile = &#34;A-large.in&#34;, outfile = &#34;A-large.out&#34;, line = &#34;&#34;;
+                string infile = &amp;quot;A-large.in&amp;quot;, outfile = &amp;quot;A-large.out&amp;quot;, line = &amp;quot;&amp;quot;;
                 using (StreamReader sr = new StreamReader(infile))
                 {
                     using (StreamWriter sw = new StreamWriter(outfile))
                     {
                     int numberOfProblems = Int32.Parse(sr.ReadLine());
-                    for (int i = 1; i &lt;= numberOfProblems; i++)
+                    for (int i = 1; i &amp;lt;= numberOfProblems; i++)
                     {
                         line = sr.ReadLine();
                         line += sr.ReadLine();
@@ -1342,13 +1429,13 @@ namespace ConsoleApplication1
                         oboard = StringBoardToBitBoard(line, &#39;O&#39;);
                         tboard = StringBoardToBitBoard(line, &#39;T&#39;);
                         if (Won(xboard, tboard))
-                            sw.WriteLine(&#34;Case #{0}: X won&#34;, i);
+                            sw.WriteLine(&amp;quot;Case #{0}: X won&amp;quot;, i);
                         else if (Won(oboard, tboard))
-                            sw.WriteLine(&#34;Case #{0}: O won&#34;, i);
-                        else if (((xboard | oboard | tboard) &amp; fullboard) == fullboard)
-                            sw.WriteLine(&#34;Case #{0}: Draw&#34;, i);
+                            sw.WriteLine(&amp;quot;Case #{0}: O won&amp;quot;, i);
+                        else if (((xboard | oboard | tboard) &amp;amp; fullboard) == fullboard)
+                            sw.WriteLine(&amp;quot;Case #{0}: Draw&amp;quot;, i);
                         else
-                            sw.WriteLine(&#34;Case #{0}: Game has not completed&#34;, i);
+                            sw.WriteLine(&amp;quot;Case #{0}: Game has not completed&amp;quot;, i);
 
                         line = sr.ReadLine();
                     }
@@ -1370,17 +1457,17 @@ namespace ConsoleApplication1
         public static bool LinesMatch(int board)
         {
             return board == (board | 15)
-                || board == (board | (15 &lt;&lt; 4))
-                || board == (board | (15 &lt;&lt; 8))
-                || board == (board | (15 &lt;&lt; 12));
+                || board == (board | (15 &amp;lt;&amp;lt; 4))
+                || board == (board | (15 &amp;lt;&amp;lt; 8))
+                || board == (board | (15 &amp;lt;&amp;lt; 12));
         }
         public static bool ColumnsMatch(int board)
         {
             return
                 board == (board | column)
-                || board == (board | (column &lt;&lt; 1))
-                || board == (board | (column &lt;&lt; 2))
-                || board == (board | (column &lt;&lt; 3));
+                || board == (board | (column &amp;lt;&amp;lt; 1))
+                || board == (board | (column &amp;lt;&amp;lt; 2))
+                || board == (board | (column &amp;lt;&amp;lt; 3));
         }
         public static bool DiagonalsMatch(int board)
         {
@@ -1391,13 +1478,14 @@ namespace ConsoleApplication1
         public static int StringBoardToBitBoard(string stringBoard, char oneChar)
         {
             string bitBoard = new String(stringBoard.Select(
-                x =&gt; x == oneChar ? &#39;1&#39; : &#39;0&#39;)
+                x =&amp;gt; x == oneChar ? &#39;1&#39; : &#39;0&#39;)
                 .ToArray());
             return Convert.ToInt32(bitBoard, 2);
         }
     }
 }
 
+&lt;/code&gt;&lt;/pre&gt;
 </description>
     </item>
     
@@ -1490,7 +1578,9 @@ So, you cannot consider a view to be a type of stored procedure, and you can als
 &lt;p&gt;It is possible for the query planner to &amp;ldquo;reach into&amp;rdquo; a view, and discover which indexes to use in order to access information in the best way, but this quikcly breaks down once you perform any kind of complicated thing, such as a CTE, UNION statement, or anything else that breaks up the link from the source tables to the result set of the view.
 When exactly you break this ability of the query planner to use appropriate indexes is a great idea for a future post - I have not found anything that directly states this as of yet.
 Intuitivly  it makes sense that some kinds of data mangling will just make it impossible for the query planner to find indexes to use.&lt;/p&gt;
-Note that it&#39;s of course always best to first inspect the query plan before concluding that a fiew is or is not making use of a particular index. I have made the mistake before of making grand statements on how poor the query planner is at choosing an index when dealing with a view, only to be shown that it in fact can do a bit more than what you might expect!
+
+&lt;pre&gt;&lt;code&gt;Note that it&#39;s of course always best to first inspect the query plan before concluding that a fiew is or is not making use of a particular index. I have made the mistake before of making grand statements on how poor the query planner is at choosing an index when dealing with a view, only to be shown that it in fact can do a bit more than what you might expect!
+&lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;My goal in this post is simply to make you aware of the possability that complex views might be causing your database to perform sub optimally, and then to offer an in place, zero downtime solution to the problem.&lt;/p&gt;
 
@@ -1761,7 +1851,8 @@ space complexity.&lt;/p&gt;
 
 &lt;p&gt;Looking at the table of belongings, we realise we would need a class to
 represent individual belongings (we&amp;rsquo;ll call it &lt;code&gt;class Belonging&lt;/code&gt;), as well as the set of all   of them (&lt;code&gt;class Inventory&lt;/code&gt;).&lt;/p&gt;
-namespace Knapsack
+
+&lt;pre&gt;&lt;code class=&#34;language-C#&#34;&gt;namespace Knapsack
 {
 public class Belonging
 	{
@@ -1773,11 +1864,12 @@ public class Belonging
 
 	public class Inventory
 	{
-		public static List&lt;Belonging&gt; AllGear { get; set; }
+		public static List&amp;lt;Belonging&amp;gt; AllGear { get; set; }
 
 		public uint Gear { get; set; }
 	}
 }
+&lt;/code&gt;&lt;/pre&gt;
 
 &lt;h3 id=&#34;functions-for-belonging-class:de8f46f1e4cc39c152533cf3328f55db&#34;&gt;Functions for Belonging class&lt;/h3&gt;
 
@@ -1785,7 +1877,8 @@ public class Belonging
 In true &lt;a href=&#34;http://agiledata.org/essays/tdd.html&#34;&gt;test driven development&lt;/a&gt; style (also see &lt;a href=&#34;https://en.wikipedia.org/wiki/Test-driven_development&#34;&gt;Wikipedia on TDD&lt;/a&gt;), let&amp;rsquo;s first create unit tests for each function, followed by an implementation.&lt;/p&gt;
 
 &lt;p&gt;We&amp;rsquo;ll wrap all the test classes in a general &lt;code&gt;TestKnapsack&lt;/code&gt; class which we can use to do setup and teardown actions if required.&lt;/p&gt;
-namespace Knapsack
+
+&lt;pre&gt;&lt;code class=&#34;language-C#&#34;&gt;namespace Knapsack
 {
 	[TestClass]
 	public class TestKnapsack
@@ -1797,7 +1890,7 @@ namespace Knapsack
 			public void ShouldAddRemoveAndConfirmItIsInGear()
 			{
 				uint gear = 0; // empty set of gear
-				var testBelonging = new Belonging { Number = 0, Name = &#34;map&#34;, GramsWeight = 90, Value = 150 };
+				var testBelonging = new Belonging { Number = 0, Name = &amp;quot;map&amp;quot;, GramsWeight = 90, Value = 150 };
 
 				Assert.IsFalse(testBelonging.IsInGear(gear));
 				uint gearAfterAdd = testBelonging.AddToGear(gear);
@@ -1812,6 +1905,7 @@ namespace Knapsack
 		}
 	}
 }
+&lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;Returning to our &lt;code&gt;Belonging&lt;/code&gt; class,  let&amp;rsquo;s implement the methods we described in our unit test class.&lt;/p&gt;
 
@@ -1826,17 +1920,18 @@ namespace Knapsack
 &lt;p&gt;Make sure you are completely familiar with all the &lt;a href=&#34;https://www.tutorialspoint.com/csharp/csharp_bitwise_operators.htm&#34;&gt;C# bit wise operators&lt;/a&gt; before proceeding.&lt;/p&gt;
 
 &lt;p&gt;Here are the functions we add to &lt;code&gt;Belonging&lt;/code&gt;:&lt;/p&gt;
-public uint AddToGear(uint gear)
+
+&lt;pre&gt;&lt;code class=&#34;language-C#&#34;&gt;public uint AddToGear(uint gear)
 		{
-			return gear | (uint)(1 &lt;&lt; this.Number);
+			return gear | (uint)(1 &amp;lt;&amp;lt; this.Number);
 		}
 		public uint RemoveFromGear(uint gear)
 		{
-			return gear &amp; ~(uint)(1 &lt;&lt; this.Number);
+			return gear &amp;amp; ~(uint)(1 &amp;lt;&amp;lt; this.Number);
 		}
 		public bool IsInGear(uint gear)
 		{
-			return (gear &amp; (1 &lt;&lt; this.Number)) == (1 &lt;&lt; this.Number);
+			return (gear &amp;amp; (1 &amp;lt;&amp;lt; this.Number)) == (1 &amp;lt;&amp;lt; this.Number);
 		}
 		public int GramsWeightInGear(uint gear)
 		{
@@ -1846,6 +1941,7 @@ public uint AddToGear(uint gear)
 		{
 			return this.IsInGear(gear) ? this.Value : 0;
 		}
+&lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;Success! Our tests all pass, and we can proceed to testing and developing &lt;code&gt;Inventory&lt;/code&gt;.&lt;/p&gt;
 
@@ -1855,16 +1951,17 @@ public uint AddToGear(uint gear)
 Our test creates a sample set of belongings (&lt;code&gt;allKit&lt;/code&gt;) with 3 items in it.
 We then add the first and last item from &lt;code&gt;allKit&lt;/code&gt; and ensure we get the correct totals when calling the summation functions on
 &lt;code&gt;Inventory&lt;/code&gt;:&lt;/p&gt;
-		[TestClass]
+
+&lt;pre&gt;&lt;code class=&#34;language-C#&#34;&gt;		[TestClass]
 		public class TestInventory : TestKnapsack
 		{
 			[TestMethod]
 			public void ShouldSumProperly()
 			{
-				var allKit = new List&lt;Belonging&gt;();
-				allKit.Add(new Belonging { Number = 0, Name = &#34;map&#34;, GramsWeight = 90, Value = 150 });
-				allKit.Add(new Belonging { Number = 1, Name = &#34;compass&#34;, GramsWeight = 130, Value = 35 });
-				allKit.Add(new Belonging { Number = 2, Name = &#34;water&#34;, GramsWeight = 1530, Value = 300 });
+				var allKit = new List&amp;lt;Belonging&amp;gt;();
+				allKit.Add(new Belonging { Number = 0, Name = &amp;quot;map&amp;quot;, GramsWeight = 90, Value = 150 });
+				allKit.Add(new Belonging { Number = 1, Name = &amp;quot;compass&amp;quot;, GramsWeight = 130, Value = 35 });
+				allKit.Add(new Belonging { Number = 2, Name = &amp;quot;water&amp;quot;, GramsWeight = 1530, Value = 300 });
 
 				Inventory.AllGear = allKit;
 				var testInventory = new Inventory { Gear = 0 };
@@ -1879,38 +1976,42 @@ We then add the first and last item from &lt;code&gt;allKit&lt;/code&gt; and ens
 					testInventory.TotalValue);
 			}
 		}
+&lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;Here are the summation functions to add to &lt;code&gt;Inventory&lt;/code&gt;:&lt;/p&gt;
 
+&lt;pre&gt;&lt;code class=&#34;language-C#&#34;&gt;
 		public int TotalGramsWeight { get { return Inventory.TotalGramsWeightForGear(this.Gear); } }
 		public int TotalValue { get { return Inventory.TotalValueForGear(this.Gear); } }
 
 		public static int TotalGramsWeightForGear (uint gear)
 		{
-				return AllGear.Select(o =&gt; 
+				return AllGear.Select(o =&amp;gt; 
 					o.GramsWeightInGear(gear))
 					.Sum();
 			}
 
 		public static int TotalValueForGear(uint gear)
 		{
-				return AllGear.Select(o =&gt; 
+				return AllGear.Select(o =&amp;gt; 
 					o.ValueInGear(gear))
 					.Sum();
 			}
+&lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;Nothing too complicated, and the tests all still pass. Next we move on to the actual search&lt;br /&gt;
 for the valid inventories:&lt;/p&gt;
 
 &lt;h3 id=&#34;search-functions-for-inventory:de8f46f1e4cc39c152533cf3328f55db&#34;&gt;Search functions for Inventory&lt;/h3&gt;
 
+&lt;pre&gt;&lt;code class=&#34;language-C#&#34;&gt;
 			[TestMethod]
 			public void TestFirstBestInventory()
 			{
-				var allKit = new List&lt;Belonging&gt;();
-				allKit.Add(new Belonging { Number = 0, Name = &#34;map&#34;, GramsWeight = 90, Value = 150 });
-				allKit.Add(new Belonging { Number = 1, Name = &#34;compass&#34;, GramsWeight = 130, Value = 35 });
-				allKit.Add(new Belonging { Number = 2, Name = &#34;water&#34;, GramsWeight = 1530, Value = 300 });
+				var allKit = new List&amp;lt;Belonging&amp;gt;();
+				allKit.Add(new Belonging { Number = 0, Name = &amp;quot;map&amp;quot;, GramsWeight = 90, Value = 150 });
+				allKit.Add(new Belonging { Number = 1, Name = &amp;quot;compass&amp;quot;, GramsWeight = 130, Value = 35 });
+				allKit.Add(new Belonging { Number = 2, Name = &amp;quot;water&amp;quot;, GramsWeight = 1530, Value = 300 });
 				Inventory.AllGear = allKit;
 
 				Assert.IsTrue(
@@ -1925,10 +2026,10 @@ for the valid inventories:&lt;/p&gt;
 			[TestMethod]
 			public void TestValidInventories()
 			{
-				var allKit = new List&lt;Belonging&gt;();
-				allKit.Add(new Belonging { Number = 0, Name = &#34;map&#34;, GramsWeight = 90, Value = 150 });
-				allKit.Add(new Belonging { Number = 1, Name = &#34;compass&#34;, GramsWeight = 130, Value = 35 });
-				allKit.Add(new Belonging { Number = 2, Name = &#34;water&#34;, GramsWeight = 1530, Value = 300 });
+				var allKit = new List&amp;lt;Belonging&amp;gt;();
+				allKit.Add(new Belonging { Number = 0, Name = &amp;quot;map&amp;quot;, GramsWeight = 90, Value = 150 });
+				allKit.Add(new Belonging { Number = 1, Name = &amp;quot;compass&amp;quot;, GramsWeight = 130, Value = 35 });
+				allKit.Add(new Belonging { Number = 2, Name = &amp;quot;water&amp;quot;, GramsWeight = 1530, Value = 300 });
 				Inventory.AllGear = allKit;
 
 				// nothing except the empty inventory - so only one possible empty inventory
@@ -1937,13 +2038,15 @@ for the valid inventories:&lt;/p&gt;
 				// since the upper weight limit is so large we end up with all possible inventories over 3 belongings, which is 8 including the empty inventory
 				Assert.AreEqual(8, Inventory.ValidInventories(5000).Count());
 			}
+&lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;We implement the new functions on &lt;code&gt;Invetory&lt;/code&gt; as follows:&lt;/p&gt;
-		public static uint NumberOfCombinations
+
+&lt;pre&gt;&lt;code class=&#34;language-C#&#34;&gt;		public static uint NumberOfCombinations
 		{
 			get
 			{
-				return (~(uint)0 % (uint)(1 &lt;&lt; AllGear.Count()));
+				return (~(uint)0 % (uint)(1 &amp;lt;&amp;lt; AllGear.Count()));
 			}
 		}
 
@@ -1953,9 +2056,9 @@ for the valid inventories:&lt;/p&gt;
 			int currentMaxValue = 0, overallBestValue = 0;
 			var bestInventory = new Inventory();
 
-			for (uint g = 0; g &lt;= numberOfCombinations; g++)
-				if (Inventory.TotalGramsWeightForGear(g) &lt;= maxGramsWeight &amp;&amp;
-					(currentMaxValue = Inventory.TotalValueForGear(g)) &gt; overallBestValue)
+			for (uint g = 0; g &amp;lt;= numberOfCombinations; g++)
+				if (Inventory.TotalGramsWeightForGear(g) &amp;lt;= maxGramsWeight &amp;amp;&amp;amp;
+					(currentMaxValue = Inventory.TotalValueForGear(g)) &amp;gt; overallBestValue)
 				{
 					bestInventory = new Inventory
 					{
@@ -1967,13 +2070,13 @@ for the valid inventories:&lt;/p&gt;
 			return bestInventory;
 		}
 
-		public static IQueryable&lt;Inventory&gt; ValidInventories(int maxGramsWeight)
+		public static IQueryable&amp;lt;Inventory&amp;gt; ValidInventories(int maxGramsWeight)
 		{
 			var numberOfCombinations = Inventory.NumberOfCombinations;
-			var validInventories = new List&lt;Inventory&gt;();
+			var validInventories = new List&amp;lt;Inventory&amp;gt;();
 
-			for (uint g = 0; g &lt;= numberOfCombinations; g++)
-				if (Inventory.TotalGramsWeightForGear(g) &lt;= maxGramsWeight)
+			for (uint g = 0; g &amp;lt;= numberOfCombinations; g++)
+				if (Inventory.TotalGramsWeightForGear(g) &amp;lt;= maxGramsWeight)
 					validInventories.Add(new Inventory
 					{
 						Gear = g
@@ -1982,6 +2085,7 @@ for the valid inventories:&lt;/p&gt;
 
 			return validInventories.AsQueryable();
 		}
+&lt;/code&gt;&lt;/pre&gt;
 
 &lt;h3 id=&#34;final-wrapup:de8f46f1e4cc39c152533cf3328f55db&#34;&gt;Final wrapup&lt;/h3&gt;
 
@@ -1990,30 +2094,35 @@ Our final work will be to create nice printout &lt;code&gt;ToString()&lt;/code&g
 
 &lt;p&gt;We add the following to &lt;code&gt;Belonging&lt;/code&gt;:&lt;/p&gt;
 
+&lt;pre&gt;&lt;code class=&#34;language-C#&#34;&gt;
 		public override string ToString()
 		{
-			return string.Format(&#34;{0}, {1} g, valued at {2}&#34;,
+			return string.Format(&amp;quot;{0}, {1} g, valued at {2}&amp;quot;,
 				this.Name,
 				this.GramsWeight,
 				this.Value);
 		}
+&lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;We want nice printout for &lt;code&gt;Inventory&lt;/code&gt; also, so we add the following to it:&lt;/p&gt;
-public override string ToString()
+
+&lt;pre&gt;&lt;code class=&#34;language-C#&#34;&gt;public override string ToString()
 		{
 			StringBuilder sb = new StringBuilder();
-			sb.AppendLine(&#34;---- Inventory Start:&#34;);
-			AllGear.Where(o =&gt; o.IsInGear(this.Gear))
+			sb.AppendLine(&amp;quot;---- Inventory Start:&amp;quot;);
+			AllGear.Where(o =&amp;gt; o.IsInGear(this.Gear))
 				.ToList()
-				.ForEach(o =&gt; sb.AppendLine(o.ToString()));
-			sb.AppendFormat(&#34;---- Inventory End: Total Weight: {0} g, Total Value: {1}&#34;,
+				.ForEach(o =&amp;gt; sb.AppendLine(o.ToString()));
+			sb.AppendFormat(&amp;quot;---- Inventory End: Total Weight: {0} g, Total Value: {1}&amp;quot;,
 				this.TotalGramsWeight,
 				this.TotalValue);
 			return sb.ToString();
 		}
+&lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;Finally, we add the &lt;code&gt;main&lt;/code&gt; method, along with a little helper method for setting up our set of all kit:&lt;/p&gt;
-class Program
+
+&lt;pre&gt;&lt;code class=&#34;language-C#&#34;&gt;class Program
 	{
 		static void Main(string[] args)
 		{
@@ -2023,55 +2132,57 @@ class Program
 
 			var bestInventories = Inventory
 				.ValidInventories(maxGramsWeight: 4000)
-				.OrderByDescending(o =&gt; o.TotalValue)
+				.OrderByDescending(o =&amp;gt; o.TotalValue)
 				.Take(5)
 				.ToList();
 
 			if (bestInventories.Count() == 0)
-				Console.WriteLine(&#34;No inventory match the requirements.&#34;);
+				Console.WriteLine(&amp;quot;No inventory match the requirements.&amp;quot;);
 			else
-			Console.WriteLine(string.Format(&#34;Best {0} inventories in descending order of value are:&#34;,bestInventories.Count()));
-			bestInventories.ForEach(o =&gt;
+			Console.WriteLine(string.Format(&amp;quot;Best {0} inventories in descending order of value are:&amp;quot;,bestInventories.Count()));
+			bestInventories.ForEach(o =&amp;gt;
 				Console.WriteLine(o)
 				);
 
 			var firstBestInventory = Inventory.FirstBestInventory( maxGramsWeight: 4000 );
 			if (firstBestInventory == null)
-				Console.WriteLine(&#34;No first best inventory found.&#34;);
+				Console.WriteLine(&amp;quot;No first best inventory found.&amp;quot;);
 			else
 			{
-				Console.WriteLine(&#34;Best inventory found: &#34;);
+				Console.WriteLine(&amp;quot;Best inventory found: &amp;quot;);
 				Console.WriteLine(firstBestInventory);
 			}
 		}
 
-		private static List&lt;Belonging&gt; LoadData()
+		private static List&amp;lt;Belonging&amp;gt; LoadData()
 		{
-			var allKit = new List&lt;Belonging&gt;();
-			allKit.Add(new Belonging { Number = 0, Name = &#34;map&#34;, GramsWeight = 90, Value = 150 });
-			allKit.Add(new Belonging { Number = 1, Name = &#34;compass&#34;, GramsWeight = 130, Value = 35 });
-			allKit.Add(new Belonging { Number = 2, Name = &#34;water&#34;, GramsWeight = 1530, Value = 300 });
-			allKit.Add(new Belonging { Number = 3, Name = &#34;Gold bar&#34;, GramsWeight = 3000, Value = 130 });
-			allKit.Add(new Belonging { Number = 4, Name = &#34;sandwich&#34;, GramsWeight = 500, Value = 160 });
-			allKit.Add(new Belonging { Number = 5, Name = &#34;glucose&#34;, GramsWeight = 150, Value = 60 });
-			allKit.Add(new Belonging { Number = 6, Name = &#34;tin&#34;, GramsWeight = 680, Value = 45 });
-			allKit.Add(new Belonging { Number = 7, Name = &#34;banana&#34;, GramsWeight = 270, Value = 60 });
-			allKit.Add(new Belonging { Number = 8, Name = &#34;apple&#34;, GramsWeight = 390, Value = 40 });
-			allKit.Add(new Belonging { Number = 9, Name = &#34;cheese&#34;, GramsWeight = 230, Value = 30 });
-			allKit.Add(new Belonging { Number = 10, Name = &#34;beer&#34;, GramsWeight = 620, Value = 10 });
-			allKit.Add(new Belonging { Number = 11, Name = &#34;suntan cream&#34;, GramsWeight = 110, Value = 70 });
-			allKit.Add(new Belonging { Number = 12, Name = &#34;camera&#34;, GramsWeight = 320, Value = 30 });
-			allKit.Add(new Belonging { Number = 13, Name = &#34;T-shirt&#34;, GramsWeight = 240, Value = 15 });
-			allKit.Add(new Belonging { Number = 14, Name = &#34;trousers&#34;, GramsWeight = 480, Value = 10 });
+			var allKit = new List&amp;lt;Belonging&amp;gt;();
+			allKit.Add(new Belonging { Number = 0, Name = &amp;quot;map&amp;quot;, GramsWeight = 90, Value = 150 });
+			allKit.Add(new Belonging { Number = 1, Name = &amp;quot;compass&amp;quot;, GramsWeight = 130, Value = 35 });
+			allKit.Add(new Belonging { Number = 2, Name = &amp;quot;water&amp;quot;, GramsWeight = 1530, Value = 300 });
+			allKit.Add(new Belonging { Number = 3, Name = &amp;quot;Gold bar&amp;quot;, GramsWeight = 3000, Value = 130 });
+			allKit.Add(new Belonging { Number = 4, Name = &amp;quot;sandwich&amp;quot;, GramsWeight = 500, Value = 160 });
+			allKit.Add(new Belonging { Number = 5, Name = &amp;quot;glucose&amp;quot;, GramsWeight = 150, Value = 60 });
+			allKit.Add(new Belonging { Number = 6, Name = &amp;quot;tin&amp;quot;, GramsWeight = 680, Value = 45 });
+			allKit.Add(new Belonging { Number = 7, Name = &amp;quot;banana&amp;quot;, GramsWeight = 270, Value = 60 });
+			allKit.Add(new Belonging { Number = 8, Name = &amp;quot;apple&amp;quot;, GramsWeight = 390, Value = 40 });
+			allKit.Add(new Belonging { Number = 9, Name = &amp;quot;cheese&amp;quot;, GramsWeight = 230, Value = 30 });
+			allKit.Add(new Belonging { Number = 10, Name = &amp;quot;beer&amp;quot;, GramsWeight = 620, Value = 10 });
+			allKit.Add(new Belonging { Number = 11, Name = &amp;quot;suntan cream&amp;quot;, GramsWeight = 110, Value = 70 });
+			allKit.Add(new Belonging { Number = 12, Name = &amp;quot;camera&amp;quot;, GramsWeight = 320, Value = 30 });
+			allKit.Add(new Belonging { Number = 13, Name = &amp;quot;T-shirt&amp;quot;, GramsWeight = 240, Value = 15 });
+			allKit.Add(new Belonging { Number = 14, Name = &amp;quot;trousers&amp;quot;, GramsWeight = 480, Value = 10 });
 
 			return allKit;
 		}
 	}
+&lt;/code&gt;&lt;/pre&gt;
 
 &lt;h2 id=&#34;finished-let-s-give-it-a-spin:de8f46f1e4cc39c152533cf3328f55db&#34;&gt;Finished! Let&amp;rsquo;s give it a spin&amp;hellip;&lt;/h2&gt;
 
 &lt;p&gt;We are done! Let&amp;rsquo;s see what we get if we run it all:&lt;/p&gt;
-Best 5 inventories in descending order of value are:
+
+&lt;pre&gt;&lt;code&gt;Best 5 inventories in descending order of value are:
 ---- Inventory Start:
 map, 90 g, valued at 150
 compass, 130 g, valued at 35
@@ -2147,6 +2258,7 @@ camera, 320 g, valued at 30
 T-shirt, 240 g, valued at 15
 ---- Inventory End: Total Weight: 3960 g, Total Value: 950
 
+&lt;/code&gt;&lt;/pre&gt;
 
 &lt;h2 id=&#34;conclusion:de8f46f1e4cc39c152533cf3328f55db&#34;&gt;Conclusion&lt;/h2&gt;
 
@@ -2225,23 +2337,29 @@ The relation between customers and their addresses is maintained in the person.B
 for each address (Billing, Home, Main Office etc).&lt;/p&gt;
 
 &lt;h2 id=&#34;we-want-to-know-how-many-customers-have-one-two-and-three-or-more-addresses:0dc054d968169eec76f7161b9d98121b&#34;&gt;We want to know how many customers have one, two and three or more addresses.&lt;/h2&gt;
-Since the purpose of this article is to discuss subquery vs CTEs, excuse the somewhat contrived query.
+
+&lt;pre&gt;&lt;code&gt;Since the purpose of this article is to discuss subquery vs CTEs, excuse the somewhat contrived query.
 At the end of this article I&#39;ll show  a simpler way to accomplish the tast at hand.
+&lt;/code&gt;&lt;/pre&gt;
 
 &lt;h2 id=&#34;sub-query-building-block:0dc054d968169eec76f7161b9d98121b&#34;&gt;Sub query building block&lt;/h2&gt;
 
 &lt;p&gt;We can establish that no BusinessEntity has more than two addresses by the empty result set returned by:&lt;/p&gt;
-select ba.BusinessEntityId, count(ba.AddressId)
+
+&lt;pre&gt;&lt;code class=&#34;language-sql&#34;&gt;select ba.BusinessEntityId, count(ba.AddressId)
 from person.BusinessEntity b
 join person.BusinessEntityAddress ba on ba.BusinessEntityId = b.BusinessEntityId
 group by ba.BusinessEntityId
-having count(ba.AddressId) &gt; 2;
+having count(ba.AddressId) &amp;gt; 2;
+&lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;We&amp;rsquo;ll assume for the remainder of this article that  this query is our best attempt, and that
 it is a &amp;ldquo;black box&amp;rdquo; with which we cannot tamper, save for adjusting the count in the HAVING clause.&lt;/p&gt;
 
 &lt;p&gt;Note that technically we do not need the additional join:&lt;/p&gt;
-join person.BusinessEntityAddress ba on ba.BusinessEntityId = b.BusinessEntityId
+
+&lt;pre&gt;&lt;code class=&#34;language-sql&#34;&gt;join person.BusinessEntityAddress ba on ba.BusinessEntityId = b.BusinessEntityId
+&lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;however this ensures we do not consider addresses in isolation - we ensure all addresses actually have an existing business tied to them.&lt;/p&gt;
 
@@ -2249,7 +2367,8 @@ join person.BusinessEntityAddress ba on ba.BusinessEntityId = b.BusinessEntityId
 
 &lt;p&gt;Now we would like to improve this result a bit, by rather returning a count of zero instead of nothing.
 We do this by wrapping the above query in a super query:&lt;/p&gt;
-select 
+
+&lt;pre&gt;&lt;code class=&#34;language-sql&#34;&gt;select 
 count(businessEntitiesWithMoreThanTwoAddresses.BusinessEntityId) as NumberOfBusinessesWithMoreThanTwoAddresses
 from
 (select ba.BusinessEntityId, 
@@ -2257,8 +2376,9 @@ count(ba.AddressId) as NumberOfAddresses
 from person.BusinessEntity b
 join person.BusinessEntityAddress ba on ba.BusinessEntityId = b.BusinessEntityId
 group by ba.BusinessEntityId
-having count(ba.AddressId) &gt; 2
+having count(ba.AddressId) &amp;gt; 2
 ) as businessEntitiesWithMoreThanTwoAddresses;
+&lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;Not too bad in terms of readability, and since we alias the sub query we always know where the result for the outer select column list comes from.
 But what if we would like to augment this query to also return the number of businesses with only one, and two addresses respectively?
@@ -2266,7 +2386,8 @@ Or to cover all possabilities, the number of businesses with one, two and three 
 Let&amp;rsquo;s try with the sub query approach:&lt;/p&gt;
 
 &lt;h2 id=&#34;combined-sub-query-approach:0dc054d968169eec76f7161b9d98121b&#34;&gt;Combined sub query approach&lt;/h2&gt;
-select 
+
+&lt;pre&gt;&lt;code class=&#34;language-sql&#34;&gt;select 
 count(businessEntitiesWithOneAddress.BusinessEntityId) as NumberOfBusinessesWithOneAddress,
 count(businessEntitiesWithTwoAddresses.BusinessEntityId) as NumberOfBusinessesWithTwoAddresses,
 count(businessEntitiesWithMoreThanTwoAddresses.BusinessEntityId) as NumberOfBusinessesWithMoreThanTwoAddresses
@@ -2290,8 +2411,9 @@ count(ba.AddressId) as NumberOfAddresses
 from person.BusinessEntity b
 join person.BusinessEntityAddress ba on ba.BusinessEntityId = b.BusinessEntityId
 group by ba.BusinessEntityId
-having count(ba.AddressId) &gt; 2
+having count(ba.AddressId) &amp;gt; 2
 ) as businessEntitiesWithMoreThanTwoAddresses;
+&lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;Hmm&amp;hellip; We get zero for everything. Something has gone wrong.
 Running each super/sub query pair separately we obtain a number for the one and two address scenario, but nothing for the three or more one.
@@ -2306,7 +2428,8 @@ worse, the last subquery returns zero rows, and anything multiplied by zero is o
 
 &lt;p&gt;Now, let&amp;rsquo;s first remedy this situation by cross joining on only one row each time.
 Hold on, it is going to get a bit messy since in order to do this, we have to introduce yet another subquery.&lt;/p&gt;
-select 
+
+&lt;pre&gt;&lt;code class=&#34;language-sql&#34;&gt;select 
 A.NumberOfBusinessesWithOneAddress,
 B.NumberOfBusinessesWithTwoAddresses,
 C.NumberOfBusinessesWithMoreThanTwoAddresses
@@ -2339,8 +2462,9 @@ count(ba.AddressId) as NumberOfAddresses
 from person.BusinessEntity b
 join person.BusinessEntityAddress ba on ba.BusinessEntityId = b.BusinessEntityId
 group by ba.BusinessEntityId
-having count(ba.AddressId) &gt; 2
+having count(ba.AddressId) &amp;gt; 2
 ) as businessEntitiesWithMoreThanTwoAddresses) as C;
+&lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;Success, but at quite a complexity and readability cost.&lt;/p&gt;
 
@@ -2355,7 +2479,8 @@ having count(ba.AddressId) &gt; 2
 &lt;li&gt;Next, the encapsulating super queries that reduce the sub queries to  single values are also stated as CTEs named A, B and C.&lt;/li&gt;
 &lt;li&gt;Finally we simply select from the aggregation CTEs A, B and C.&lt;/li&gt;
 &lt;/ol&gt;
--- First, the three innermost sub queries are stated as CTEs named businessEntitiesWithOneAddress, businessEntitiesWithTwoAddresses and businessEntitiesWithMoreThanTwoAddresses.
+
+&lt;pre&gt;&lt;code class=&#34;language-sql&#34;&gt;-- First, the three innermost sub queries are stated as CTEs named businessEntitiesWithOneAddress, businessEntitiesWithTwoAddresses and businessEntitiesWithMoreThanTwoAddresses.
 with  businessEntitiesWithOneAddress as
 (select ba.BusinessEntityId, 
 count(ba.AddressId) as NumberOfAddresses
@@ -2376,7 +2501,7 @@ count(ba.AddressId) as NumberOfAddresses
 from person.BusinessEntity b
 join person.BusinessEntityAddress ba on ba.BusinessEntityId = b.BusinessEntityId
 group by ba.BusinessEntityId
-having count(ba.AddressId) &gt; 2
+having count(ba.AddressId) &amp;gt; 2
 ), 
 
 -- Next, the encapsulating super queries that reduce the sub queries to  single values are also stated as CTEs named A, B and C.
@@ -2397,6 +2522,7 @@ A.NumberOfBusinessesWithOneAddress,
 B.NumberOfBusinessesWithTwoAddresses,
 C.NumberOfBusinessesWithMoreThanTwoAddresses
 from A, B, C;
+&lt;/code&gt;&lt;/pre&gt;
 
 &lt;h2 id=&#34;is-this-not-so-much-more-readable:0dc054d968169eec76f7161b9d98121b&#34;&gt;Is this not so much more readable?&lt;/h2&gt;
 
@@ -2450,7 +2576,8 @@ Is there not perhaps a way to join without throwing anything away?&lt;/p&gt;
 &lt;p&gt;Did you know about the full join? I will admit that although I knew there had to be something like it, I did not know / forgotten all about it.&lt;/p&gt;
 
 &lt;h2 id=&#34;sub-query-approach-simplified-with-a-full-join:0dc054d968169eec76f7161b9d98121b&#34;&gt;Sub query approach simplified with a FULL JOIN&lt;/h2&gt;
-select 
+
+&lt;pre&gt;&lt;code class=&#34;language-sql&#34;&gt;select 
 count(businessEntitiesWithOneAddress.BusinessEntityId) as NumberOfBusinessesWithOneAddress,
 count(businessEntitiesWithTwoAddresses.BusinessEntityId) as NumberOfBusinessesWithTwoAddresses,
 count(businessEntitiesWithMoreThanTwoAddresses.BusinessEntityId) as NumberOfBusinessesWithMoreThanTwoAddresses
@@ -2479,16 +2606,18 @@ count(ba.AddressId) as NumberOfAddresses
 from person.BusinessEntity b
 join person.BusinessEntityAddress ba on ba.BusinessEntityId = b.BusinessEntityId
 group by ba.BusinessEntityId
-having count(ba.AddressId) &gt; 2
+having count(ba.AddressId) &amp;gt; 2
 ) as businessEntitiesWithMoreThanTwoAddresses
 on
 businessEntitiesWithTwoAddresses.BusinessEntityId   = 
 businessEntitiesWithMoreThanTwoAddresses.BusinessEntityId;
+&lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;Yes, we do away with one level of sub queries, but it&amp;rsquo;s still not great.&lt;/p&gt;
 
 &lt;h2 id=&#34;cte-approach-simplified-with-full-join:0dc054d968169eec76f7161b9d98121b&#34;&gt;CTE approach simplified with FULL JOIN&lt;/h2&gt;
-with  businessEntitiesWithOneAddress as
+
+&lt;pre&gt;&lt;code class=&#34;language-sql&#34;&gt;with  businessEntitiesWithOneAddress as
 (select ba.BusinessEntityId, 
 count(ba.AddressId) as NumberOfAddresses
 from person.BusinessEntity b
@@ -2508,7 +2637,7 @@ count(ba.AddressId) as NumberOfAddresses
 from person.BusinessEntity b
 join person.BusinessEntityAddress ba on ba.BusinessEntityId = b.BusinessEntityId
 group by ba.BusinessEntityId
-having count(ba.AddressId) &gt; 2
+having count(ba.AddressId) &amp;gt; 2
 )
 select 
 count(businessEntitiesWithOneAddress.BusinessEntityId) as NumberOfBusinessesWithOneAddress,
@@ -2519,13 +2648,15 @@ full join businessEntitiesWithTwoAddresses
 on businessEntitiesWithOneAddress.BusinessEntityId = businessEntitiesWithTwoAddresses.BusinessEntityId
 full join businessEntitiesWithMoreThanTwoAddresses
 on businessEntitiesWithTwoAddresses.BusinessEntityId = businessEntitiesWithMoreThanTwoAddresses.BusinessEntityId
+&lt;/code&gt;&lt;/pre&gt;
 
 &lt;h2 id=&#34;simplest-solution:0dc054d968169eec76f7161b9d98121b&#34;&gt;Simplest solution&lt;/h2&gt;
 
 &lt;p&gt;Finally, if we relax the requirement (which was self imposed in the first place) to have the results in one row,
 as well as not worrying about returning the count for the three or more scenario,
 we can simplify everything very nice like this:&lt;/p&gt;
-with  businessEntitiesAddressCount as
+
+&lt;pre&gt;&lt;code class=&#34;language-sql&#34;&gt;with  businessEntitiesAddressCount as
 (select ba.BusinessEntityId, 
 count(ba.AddressId) as NumberOfAddresses
 from person.BusinessEntity b
@@ -2537,6 +2668,7 @@ count(BusinessEntityId) as NumberOfBusinesses,
 NumberOfAddresses 
 from businessEntitiesAddressCount 
 group by NumberOfAddresses;
+&lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;Best of all; we still get to use a wonderful CTE!&lt;/p&gt;
 
@@ -2589,9 +2721,11 @@ He started me on a nice set of aliases and I&amp;rsquo;ve been tweaking them eve
 &lt;p&gt;If you want to gain the most out of this article I recommend you install git bash and open up (or create) the file  ~/.bash_aliases which will become your secret weapon towards git guru status.
 In your ~/.bash_aliases file you will define short commands for  lengthy git command sequences.
 To ensure that your ~/.bash_aliases file is sourced on bash startup, put this in your ~/.bashrc file:&lt;/p&gt;
-if [ -f ~/.bash_aliases ]; then
+
+&lt;pre&gt;&lt;code&gt;if [ -f ~/.bash_aliases ]; then
     . ~/.bash_aliases
 fi
+&lt;/code&gt;&lt;/pre&gt;
 
 &lt;h2 id=&#34;learn-how-to-jump-to-git-bash-quickly-you-will-need-to-do-this-often:43ce4f2c703a95a3e073d309189c3a90&#34;&gt;Learn how to jump to git bash quickly: you will need to do this often&lt;/h2&gt;
 
@@ -2626,9 +2760,11 @@ When you suspect that confusion might arise over which branch your feature branc
 If you can see this feature branch being worked on by others also, and you want to make everyone know you are the original owner / creator you can prepend your initials: &amp;ldquo;kr/BANK-123&amp;rdquo;.&lt;/p&gt;
 
 &lt;p&gt;Here is your first three commands and aliases to make working with short lived feature branches a breeze:&lt;/p&gt;
-alias +=&#39;git checkout -b&#39;
+
+&lt;pre&gt;&lt;code&gt;alias +=&#39;git checkout -b&#39;
 alias D=&#39;git branch -D&#39;
 alias C=&#39;git checkout&#39;
+&lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;With those you can quickly:&lt;/p&gt;
 
@@ -2648,21 +2784,25 @@ Now everything up to 5 minutes earlier was great work, yet it seems impossible t
 We&amp;rsquo;ve all experienced this. It use to be a big deal in computer gaming, but I believe that these days the games saves for you.&lt;/p&gt;
 
 &lt;p&gt;Here is your commands and aliases  so you have no more excuses - they make committing regularly totally painless:&lt;/p&gt;
-# git add &amp; commit
+
+&lt;pre&gt;&lt;code&gt;# git add &amp;amp; commit
 	# git add
 	alias ga=&#39;git add -A&#39;
 
-	#git commit (usage: gc &#34;&lt;message&gt;&#34;)
+	#git commit (usage: gc &amp;quot;&amp;lt;message&amp;gt;&amp;quot;)
 	alias gc=&#39;git commit -m&#39;
 	
-	#git commit (usage: gac &#34;&lt;message&gt;&#34;
-	alias gac=&#39;git add -A &amp;&amp; git commit&#39;
+	#git commit (usage: gac &amp;quot;&amp;lt;message&amp;gt;&amp;quot;
+	alias gac=&#39;git add -A &amp;amp;&amp;amp; git commit&#39;
+&lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;Of these I tend to only use gac, and should probably change it to c only, but hey who&amp;rsquo;s perfect now?&lt;/p&gt;
 
 &lt;p&gt;Here are some aliases for rebasing on the remote branch, or local parent branch:&lt;/p&gt;
-	# rebase this branch of its tracked remote branch
+
+&lt;pre&gt;&lt;code&gt;	# rebase this branch of its tracked remote branch
 	alias gpr=&#39;git pull --rebase&#39;
+&lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;However, if your local feature branch  (call it BANK-123) came from a local branch (call it master) which in turn is tracking the remote branch origin/master, then the following command will:&lt;/p&gt;
 
@@ -2670,11 +2810,15 @@ We&amp;rsquo;ve all experienced this. It use to be a big deal in computer gaming
 &lt;li&gt;pull the remotely tracked master right from within your feature branch&lt;/li&gt;
 &lt;li&gt;rebase your local feature branch on the remote master&lt;/li&gt;
 &lt;/ol&gt;
-	# rebase this branch off its original parent tracked remote branch named master
+
+&lt;pre&gt;&lt;code&gt;	# rebase this branch off its original parent tracked remote branch named master
 	alias gprm=&#39;git pull --rebase origin master&#39;
+&lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;You can achieve the same effect with more steps:&lt;/p&gt;
-	$ C master &amp;&amp; gpr &amp;&amp; C BANK-123 &amp;&amp; gpr master
+
+&lt;pre&gt;&lt;code&gt;	$ C master &amp;amp;&amp;amp; gpr &amp;amp;&amp;amp; C BANK-123 &amp;amp;&amp;amp; gpr master
+&lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;Notice the &amp;amp;&amp;amp; logical combinators. It&amp;rsquo;s a bash feature that will shortcut as expected - i.e. if you have unstaged changes in your current branch, the &amp;lsquo;C master&amp;rsquo; will fail and hence the whole command line.
 This combining commands on the fly is very useful if you want to fire and forget and only come back later to check if everything went according to plan.
@@ -2685,11 +2829,15 @@ Notice that the above will also bring your local master up to date, while the &a
 &lt;p&gt;When you are sure you want to add your changes to your parent branch, we call it master for argument&amp;rsquo;s sake, you need to merge.
 Note that this is after you have successfully rebased on master, ran all relevant testing, pushed to your remote tracked feature branch (if applicable).
 You need one more alias:&lt;/p&gt;
-	alias gm=&#39;git merge&#39;
+
+&lt;pre&gt;&lt;code&gt;	alias gm=&#39;git merge&#39;
+&lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;You will now want to change to master, get the latest, merge in your feature branch and push to master.
 You can do this with the following:&lt;/p&gt;
-  $ C master &amp;&amp; gpr &amp;&amp; gm BANK-123 &amp;&amp; gh
+
+&lt;pre&gt;&lt;code&gt;  $ C master &amp;amp;&amp;amp; gpr &amp;amp;&amp;amp; gm BANK-123 &amp;amp;&amp;amp; gh
+&lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;where BANK-123 is the name of your feature branch.
 Of course you can make an alias out of this too, but personally I like to retain a little bit of control / do some things explicitly :-) else it gets a little bit scary ($ rm -R / # anyone perhaps?).&lt;/p&gt;
@@ -2700,7 +2848,9 @@ Of course you can make an alias out of this too, but personally I like to retain
 If you apply TDD properly, and hide more involved not yet completed features behind toggles this is very possible, however there might be times when you are not confident your code is ready for production yet you need to commit and push remotely.&lt;/p&gt;
 
 &lt;p&gt;Here is an alias for setting a remote branch upstream to track your local branch and push there in one go:&lt;/p&gt;
-	alias ghr=&#39;git push --set-upstream origin &#39;
+
+&lt;pre&gt;&lt;code&gt;	alias ghr=&#39;git push --set-upstream origin &#39;
+&lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;After issuing this command you can use the &amp;lsquo;gh&amp;rsquo; alias for subsequent pushes.&lt;/p&gt;
 
@@ -2712,10 +2862,14 @@ Example: &amp;ldquo;When this commit is applied it will add feature X which was 
 
 &lt;p&gt;In addition, it is helpful to prepend the issue number to the message.
 If your branch name is the same as your issue number you can use the following command to do this automatically for you:&lt;/p&gt;
-	alias gab=&#39;git add -A &amp;&amp; git commit -m &#34;`git rev-parse --abbrev-ref HEAD` - &#39;
+
+&lt;pre&gt;&lt;code&gt;	alias gab=&#39;git add -A &amp;amp;&amp;amp; git commit -m &amp;quot;`git rev-parse --abbrev-ref HEAD` - &#39;
+&lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;So if you are on branch BANK-123 you can issue:&lt;/p&gt;
-	$ gab proove P = NP and solve everything&#34;
+
+&lt;pre&gt;&lt;code&gt;	$ gab proove P = NP and solve everything&amp;quot;
+&lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;and the commit message would read: &amp;ldquo;BANK-123 - proove P = NP and solve everything&amp;rdquo;&lt;/p&gt;
 
@@ -2822,7 +2976,9 @@ practical purposes, unsorted.&lt;/p&gt;
 &lt;p&gt;You probably knew this already, but I needed that sentence
 because it contained the word &lt;em&gt;cloud&lt;/em&gt; so that I had an excuse to quote
 Stallman on cloud computing from 2008:&lt;/p&gt;
-&#34;It&#39;s stupidity. It&#39;s worse than stupidity: it&#39;s a marketing hype campaign,&#34;
+
+&lt;pre&gt;&lt;code&gt;&amp;quot;It&#39;s stupidity. It&#39;s worse than stupidity: it&#39;s a marketing hype campaign,&amp;quot;
+&lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;Back to tables&amp;hellip; It is probably because SQL Server&amp;rsquo;s default is to choose the
 physically sorted way of laying down the data, when you define a primary key on
@@ -3058,8 +3214,10 @@ Wienand&amp;rsquo;s fine article,
 Key&lt;/a&gt;.&lt;/p&gt;
 
 &lt;h2 id=&#34;summary-and-closing-thoughts-optimising-performance-is-an-interesting-and-very-relevant-problem:810306c57b772cfaef22459bbb55c3d7&#34;&gt;Summary and closing thoughts - Optimising performance is an  interesting and very relevant problem&lt;/h2&gt;
-&#34;Premature optimisation is the root of all evil&#34;
+
+&lt;pre&gt;&lt;code&gt;&amp;quot;Premature optimisation is the root of all evil&amp;quot;
  -- Donald E. Knuth
+&lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;As much as I concur with that statement, especially how it applies to code, I do think that a good understanding
 of the options available to you when turning a data model into an actual

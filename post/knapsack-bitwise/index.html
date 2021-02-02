@@ -316,7 +316,8 @@ space complexity.</p>
 
 <p>Looking at the table of belongings, we realise we would need a class to
 represent individual belongings (we&rsquo;ll call it <code>class Belonging</code>), as well as the set of all   of them (<code>class Inventory</code>).</p>
-namespace Knapsack
+
+<pre><code class="language-C#">namespace Knapsack
 {
 public class Belonging
 	{
@@ -328,11 +329,12 @@ public class Belonging
 
 	public class Inventory
 	{
-		public static List<Belonging> AllGear { get; set; }
+		public static List&lt;Belonging&gt; AllGear { get; set; }
 
 		public uint Gear { get; set; }
 	}
 }
+</code></pre>
 
 <h3 id="functions-for-belonging-class:de8f46f1e4cc39c152533cf3328f55db">Functions for Belonging class</h3>
 
@@ -340,7 +342,8 @@ public class Belonging
 In true <a href="http://agiledata.org/essays/tdd.html">test driven development</a> style (also see <a href="https://en.wikipedia.org/wiki/Test-driven_development">Wikipedia on TDD</a>), let&rsquo;s first create unit tests for each function, followed by an implementation.</p>
 
 <p>We&rsquo;ll wrap all the test classes in a general <code>TestKnapsack</code> class which we can use to do setup and teardown actions if required.</p>
-namespace Knapsack
+
+<pre><code class="language-C#">namespace Knapsack
 {
 	[TestClass]
 	public class TestKnapsack
@@ -352,7 +355,7 @@ namespace Knapsack
 			public void ShouldAddRemoveAndConfirmItIsInGear()
 			{
 				uint gear = 0; // empty set of gear
-				var testBelonging = new Belonging { Number = 0, Name = "map", GramsWeight = 90, Value = 150 };
+				var testBelonging = new Belonging { Number = 0, Name = &quot;map&quot;, GramsWeight = 90, Value = 150 };
 
 				Assert.IsFalse(testBelonging.IsInGear(gear));
 				uint gearAfterAdd = testBelonging.AddToGear(gear);
@@ -367,6 +370,7 @@ namespace Knapsack
 		}
 	}
 }
+</code></pre>
 
 <p>Returning to our <code>Belonging</code> class,  let&rsquo;s implement the methods we described in our unit test class.</p>
 
@@ -381,17 +385,18 @@ namespace Knapsack
 <p>Make sure you are completely familiar with all the <a href="https://www.tutorialspoint.com/csharp/csharp_bitwise_operators.htm">C# bit wise operators</a> before proceeding.</p>
 
 <p>Here are the functions we add to <code>Belonging</code>:</p>
-public uint AddToGear(uint gear)
+
+<pre><code class="language-C#">public uint AddToGear(uint gear)
 		{
-			return gear | (uint)(1 << this.Number);
+			return gear | (uint)(1 &lt;&lt; this.Number);
 		}
 		public uint RemoveFromGear(uint gear)
 		{
-			return gear & ~(uint)(1 << this.Number);
+			return gear &amp; ~(uint)(1 &lt;&lt; this.Number);
 		}
 		public bool IsInGear(uint gear)
 		{
-			return (gear & (1 << this.Number)) == (1 << this.Number);
+			return (gear &amp; (1 &lt;&lt; this.Number)) == (1 &lt;&lt; this.Number);
 		}
 		public int GramsWeightInGear(uint gear)
 		{
@@ -401,6 +406,7 @@ public uint AddToGear(uint gear)
 		{
 			return this.IsInGear(gear) ? this.Value : 0;
 		}
+</code></pre>
 
 <p>Success! Our tests all pass, and we can proceed to testing and developing <code>Inventory</code>.</p>
 
@@ -410,16 +416,17 @@ public uint AddToGear(uint gear)
 Our test creates a sample set of belongings (<code>allKit</code>) with 3 items in it.
 We then add the first and last item from <code>allKit</code> and ensure we get the correct totals when calling the summation functions on
 <code>Inventory</code>:</p>
-		[TestClass]
+
+<pre><code class="language-C#">		[TestClass]
 		public class TestInventory : TestKnapsack
 		{
 			[TestMethod]
 			public void ShouldSumProperly()
 			{
-				var allKit = new List<Belonging>();
-				allKit.Add(new Belonging { Number = 0, Name = "map", GramsWeight = 90, Value = 150 });
-				allKit.Add(new Belonging { Number = 1, Name = "compass", GramsWeight = 130, Value = 35 });
-				allKit.Add(new Belonging { Number = 2, Name = "water", GramsWeight = 1530, Value = 300 });
+				var allKit = new List&lt;Belonging&gt;();
+				allKit.Add(new Belonging { Number = 0, Name = &quot;map&quot;, GramsWeight = 90, Value = 150 });
+				allKit.Add(new Belonging { Number = 1, Name = &quot;compass&quot;, GramsWeight = 130, Value = 35 });
+				allKit.Add(new Belonging { Number = 2, Name = &quot;water&quot;, GramsWeight = 1530, Value = 300 });
 
 				Inventory.AllGear = allKit;
 				var testInventory = new Inventory { Gear = 0 };
@@ -434,38 +441,42 @@ We then add the first and last item from <code>allKit</code> and ensure we get t
 					testInventory.TotalValue);
 			}
 		}
+</code></pre>
 
 <p>Here are the summation functions to add to <code>Inventory</code>:</p>
 
+<pre><code class="language-C#">
 		public int TotalGramsWeight { get { return Inventory.TotalGramsWeightForGear(this.Gear); } }
 		public int TotalValue { get { return Inventory.TotalValueForGear(this.Gear); } }
 
 		public static int TotalGramsWeightForGear (uint gear)
 		{
-				return AllGear.Select(o => 
+				return AllGear.Select(o =&gt; 
 					o.GramsWeightInGear(gear))
 					.Sum();
 			}
 
 		public static int TotalValueForGear(uint gear)
 		{
-				return AllGear.Select(o => 
+				return AllGear.Select(o =&gt; 
 					o.ValueInGear(gear))
 					.Sum();
 			}
+</code></pre>
 
 <p>Nothing too complicated, and the tests all still pass. Next we move on to the actual search<br />
 for the valid inventories:</p>
 
 <h3 id="search-functions-for-inventory:de8f46f1e4cc39c152533cf3328f55db">Search functions for Inventory</h3>
 
+<pre><code class="language-C#">
 			[TestMethod]
 			public void TestFirstBestInventory()
 			{
-				var allKit = new List<Belonging>();
-				allKit.Add(new Belonging { Number = 0, Name = "map", GramsWeight = 90, Value = 150 });
-				allKit.Add(new Belonging { Number = 1, Name = "compass", GramsWeight = 130, Value = 35 });
-				allKit.Add(new Belonging { Number = 2, Name = "water", GramsWeight = 1530, Value = 300 });
+				var allKit = new List&lt;Belonging&gt;();
+				allKit.Add(new Belonging { Number = 0, Name = &quot;map&quot;, GramsWeight = 90, Value = 150 });
+				allKit.Add(new Belonging { Number = 1, Name = &quot;compass&quot;, GramsWeight = 130, Value = 35 });
+				allKit.Add(new Belonging { Number = 2, Name = &quot;water&quot;, GramsWeight = 1530, Value = 300 });
 				Inventory.AllGear = allKit;
 
 				Assert.IsTrue(
@@ -480,10 +491,10 @@ for the valid inventories:</p>
 			[TestMethod]
 			public void TestValidInventories()
 			{
-				var allKit = new List<Belonging>();
-				allKit.Add(new Belonging { Number = 0, Name = "map", GramsWeight = 90, Value = 150 });
-				allKit.Add(new Belonging { Number = 1, Name = "compass", GramsWeight = 130, Value = 35 });
-				allKit.Add(new Belonging { Number = 2, Name = "water", GramsWeight = 1530, Value = 300 });
+				var allKit = new List&lt;Belonging&gt;();
+				allKit.Add(new Belonging { Number = 0, Name = &quot;map&quot;, GramsWeight = 90, Value = 150 });
+				allKit.Add(new Belonging { Number = 1, Name = &quot;compass&quot;, GramsWeight = 130, Value = 35 });
+				allKit.Add(new Belonging { Number = 2, Name = &quot;water&quot;, GramsWeight = 1530, Value = 300 });
 				Inventory.AllGear = allKit;
 
 				// nothing except the empty inventory - so only one possible empty inventory
@@ -492,13 +503,15 @@ for the valid inventories:</p>
 				// since the upper weight limit is so large we end up with all possible inventories over 3 belongings, which is 8 including the empty inventory
 				Assert.AreEqual(8, Inventory.ValidInventories(5000).Count());
 			}
+</code></pre>
 
 <p>We implement the new functions on <code>Invetory</code> as follows:</p>
-		public static uint NumberOfCombinations
+
+<pre><code class="language-C#">		public static uint NumberOfCombinations
 		{
 			get
 			{
-				return (~(uint)0 % (uint)(1 << AllGear.Count()));
+				return (~(uint)0 % (uint)(1 &lt;&lt; AllGear.Count()));
 			}
 		}
 
@@ -508,9 +521,9 @@ for the valid inventories:</p>
 			int currentMaxValue = 0, overallBestValue = 0;
 			var bestInventory = new Inventory();
 
-			for (uint g = 0; g <= numberOfCombinations; g++)
-				if (Inventory.TotalGramsWeightForGear(g) <= maxGramsWeight &&
-					(currentMaxValue = Inventory.TotalValueForGear(g)) > overallBestValue)
+			for (uint g = 0; g &lt;= numberOfCombinations; g++)
+				if (Inventory.TotalGramsWeightForGear(g) &lt;= maxGramsWeight &amp;&amp;
+					(currentMaxValue = Inventory.TotalValueForGear(g)) &gt; overallBestValue)
 				{
 					bestInventory = new Inventory
 					{
@@ -522,13 +535,13 @@ for the valid inventories:</p>
 			return bestInventory;
 		}
 
-		public static IQueryable<Inventory> ValidInventories(int maxGramsWeight)
+		public static IQueryable&lt;Inventory&gt; ValidInventories(int maxGramsWeight)
 		{
 			var numberOfCombinations = Inventory.NumberOfCombinations;
-			var validInventories = new List<Inventory>();
+			var validInventories = new List&lt;Inventory&gt;();
 
-			for (uint g = 0; g <= numberOfCombinations; g++)
-				if (Inventory.TotalGramsWeightForGear(g) <= maxGramsWeight)
+			for (uint g = 0; g &lt;= numberOfCombinations; g++)
+				if (Inventory.TotalGramsWeightForGear(g) &lt;= maxGramsWeight)
 					validInventories.Add(new Inventory
 					{
 						Gear = g
@@ -537,6 +550,7 @@ for the valid inventories:</p>
 
 			return validInventories.AsQueryable();
 		}
+</code></pre>
 
 <h3 id="final-wrapup:de8f46f1e4cc39c152533cf3328f55db">Final wrapup</h3>
 
@@ -545,30 +559,35 @@ Our final work will be to create nice printout <code>ToString()</code> methods, 
 
 <p>We add the following to <code>Belonging</code>:</p>
 
+<pre><code class="language-C#">
 		public override string ToString()
 		{
-			return string.Format("{0}, {1} g, valued at {2}",
+			return string.Format(&quot;{0}, {1} g, valued at {2}&quot;,
 				this.Name,
 				this.GramsWeight,
 				this.Value);
 		}
+</code></pre>
 
 <p>We want nice printout for <code>Inventory</code> also, so we add the following to it:</p>
-public override string ToString()
+
+<pre><code class="language-C#">public override string ToString()
 		{
 			StringBuilder sb = new StringBuilder();
-			sb.AppendLine("---- Inventory Start:");
-			AllGear.Where(o => o.IsInGear(this.Gear))
+			sb.AppendLine(&quot;---- Inventory Start:&quot;);
+			AllGear.Where(o =&gt; o.IsInGear(this.Gear))
 				.ToList()
-				.ForEach(o => sb.AppendLine(o.ToString()));
-			sb.AppendFormat("---- Inventory End: Total Weight: {0} g, Total Value: {1}",
+				.ForEach(o =&gt; sb.AppendLine(o.ToString()));
+			sb.AppendFormat(&quot;---- Inventory End: Total Weight: {0} g, Total Value: {1}&quot;,
 				this.TotalGramsWeight,
 				this.TotalValue);
 			return sb.ToString();
 		}
+</code></pre>
 
 <p>Finally, we add the <code>main</code> method, along with a little helper method for setting up our set of all kit:</p>
-class Program
+
+<pre><code class="language-C#">class Program
 	{
 		static void Main(string[] args)
 		{
@@ -578,55 +597,57 @@ class Program
 
 			var bestInventories = Inventory
 				.ValidInventories(maxGramsWeight: 4000)
-				.OrderByDescending(o => o.TotalValue)
+				.OrderByDescending(o =&gt; o.TotalValue)
 				.Take(5)
 				.ToList();
 
 			if (bestInventories.Count() == 0)
-				Console.WriteLine("No inventory match the requirements.");
+				Console.WriteLine(&quot;No inventory match the requirements.&quot;);
 			else
-			Console.WriteLine(string.Format("Best {0} inventories in descending order of value are:",bestInventories.Count()));
-			bestInventories.ForEach(o =>
+			Console.WriteLine(string.Format(&quot;Best {0} inventories in descending order of value are:&quot;,bestInventories.Count()));
+			bestInventories.ForEach(o =&gt;
 				Console.WriteLine(o)
 				);
 
 			var firstBestInventory = Inventory.FirstBestInventory( maxGramsWeight: 4000 );
 			if (firstBestInventory == null)
-				Console.WriteLine("No first best inventory found.");
+				Console.WriteLine(&quot;No first best inventory found.&quot;);
 			else
 			{
-				Console.WriteLine("Best inventory found: ");
+				Console.WriteLine(&quot;Best inventory found: &quot;);
 				Console.WriteLine(firstBestInventory);
 			}
 		}
 
-		private static List<Belonging> LoadData()
+		private static List&lt;Belonging&gt; LoadData()
 		{
-			var allKit = new List<Belonging>();
-			allKit.Add(new Belonging { Number = 0, Name = "map", GramsWeight = 90, Value = 150 });
-			allKit.Add(new Belonging { Number = 1, Name = "compass", GramsWeight = 130, Value = 35 });
-			allKit.Add(new Belonging { Number = 2, Name = "water", GramsWeight = 1530, Value = 300 });
-			allKit.Add(new Belonging { Number = 3, Name = "Gold bar", GramsWeight = 3000, Value = 130 });
-			allKit.Add(new Belonging { Number = 4, Name = "sandwich", GramsWeight = 500, Value = 160 });
-			allKit.Add(new Belonging { Number = 5, Name = "glucose", GramsWeight = 150, Value = 60 });
-			allKit.Add(new Belonging { Number = 6, Name = "tin", GramsWeight = 680, Value = 45 });
-			allKit.Add(new Belonging { Number = 7, Name = "banana", GramsWeight = 270, Value = 60 });
-			allKit.Add(new Belonging { Number = 8, Name = "apple", GramsWeight = 390, Value = 40 });
-			allKit.Add(new Belonging { Number = 9, Name = "cheese", GramsWeight = 230, Value = 30 });
-			allKit.Add(new Belonging { Number = 10, Name = "beer", GramsWeight = 620, Value = 10 });
-			allKit.Add(new Belonging { Number = 11, Name = "suntan cream", GramsWeight = 110, Value = 70 });
-			allKit.Add(new Belonging { Number = 12, Name = "camera", GramsWeight = 320, Value = 30 });
-			allKit.Add(new Belonging { Number = 13, Name = "T-shirt", GramsWeight = 240, Value = 15 });
-			allKit.Add(new Belonging { Number = 14, Name = "trousers", GramsWeight = 480, Value = 10 });
+			var allKit = new List&lt;Belonging&gt;();
+			allKit.Add(new Belonging { Number = 0, Name = &quot;map&quot;, GramsWeight = 90, Value = 150 });
+			allKit.Add(new Belonging { Number = 1, Name = &quot;compass&quot;, GramsWeight = 130, Value = 35 });
+			allKit.Add(new Belonging { Number = 2, Name = &quot;water&quot;, GramsWeight = 1530, Value = 300 });
+			allKit.Add(new Belonging { Number = 3, Name = &quot;Gold bar&quot;, GramsWeight = 3000, Value = 130 });
+			allKit.Add(new Belonging { Number = 4, Name = &quot;sandwich&quot;, GramsWeight = 500, Value = 160 });
+			allKit.Add(new Belonging { Number = 5, Name = &quot;glucose&quot;, GramsWeight = 150, Value = 60 });
+			allKit.Add(new Belonging { Number = 6, Name = &quot;tin&quot;, GramsWeight = 680, Value = 45 });
+			allKit.Add(new Belonging { Number = 7, Name = &quot;banana&quot;, GramsWeight = 270, Value = 60 });
+			allKit.Add(new Belonging { Number = 8, Name = &quot;apple&quot;, GramsWeight = 390, Value = 40 });
+			allKit.Add(new Belonging { Number = 9, Name = &quot;cheese&quot;, GramsWeight = 230, Value = 30 });
+			allKit.Add(new Belonging { Number = 10, Name = &quot;beer&quot;, GramsWeight = 620, Value = 10 });
+			allKit.Add(new Belonging { Number = 11, Name = &quot;suntan cream&quot;, GramsWeight = 110, Value = 70 });
+			allKit.Add(new Belonging { Number = 12, Name = &quot;camera&quot;, GramsWeight = 320, Value = 30 });
+			allKit.Add(new Belonging { Number = 13, Name = &quot;T-shirt&quot;, GramsWeight = 240, Value = 15 });
+			allKit.Add(new Belonging { Number = 14, Name = &quot;trousers&quot;, GramsWeight = 480, Value = 10 });
 
 			return allKit;
 		}
 	}
+</code></pre>
 
 <h2 id="finished-let-s-give-it-a-spin:de8f46f1e4cc39c152533cf3328f55db">Finished! Let&rsquo;s give it a spin&hellip;</h2>
 
 <p>We are done! Let&rsquo;s see what we get if we run it all:</p>
-Best 5 inventories in descending order of value are:
+
+<pre><code>Best 5 inventories in descending order of value are:
 ---- Inventory Start:
 map, 90 g, valued at 150
 compass, 130 g, valued at 35
@@ -702,6 +723,7 @@ camera, 320 g, valued at 30
 T-shirt, 240 g, valued at 15
 ---- Inventory End: Total Weight: 3960 g, Total Value: 950
 
+</code></pre>
 
 <h2 id="conclusion:de8f46f1e4cc39c152533cf3328f55db">Conclusion</h2>
 

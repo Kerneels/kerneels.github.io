@@ -96,7 +96,9 @@ practical purposes, unsorted.&lt;/p&gt;
 &lt;p&gt;You probably knew this already, but I needed that sentence
 because it contained the word &lt;em&gt;cloud&lt;/em&gt; so that I had an excuse to quote
 Stallman on cloud computing from 2008:&lt;/p&gt;
-&#34;It&#39;s stupidity. It&#39;s worse than stupidity: it&#39;s a marketing hype campaign,&#34;
+
+&lt;pre&gt;&lt;code&gt;&amp;quot;It&#39;s stupidity. It&#39;s worse than stupidity: it&#39;s a marketing hype campaign,&amp;quot;
+&lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;Back to tables&amp;hellip; It is probably because SQL Server&amp;rsquo;s default is to choose the
 physically sorted way of laying down the data, when you define a primary key on
@@ -332,8 +334,10 @@ Wienand&amp;rsquo;s fine article,
 Key&lt;/a&gt;.&lt;/p&gt;
 
 &lt;h2 id=&#34;summary-and-closing-thoughts-optimising-performance-is-an-interesting-and-very-relevant-problem:810306c57b772cfaef22459bbb55c3d7&#34;&gt;Summary and closing thoughts - Optimising performance is an  interesting and very relevant problem&lt;/h2&gt;
-&#34;Premature optimisation is the root of all evil&#34;
+
+&lt;pre&gt;&lt;code&gt;&amp;quot;Premature optimisation is the root of all evil&amp;quot;
  -- Donald E. Knuth
+&lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;As much as I concur with that statement, especially how it applies to code, I do think that a good understanding
 of the options available to you when turning a data model into an actual

@@ -179,11 +179,13 @@ We place the data and header file in a <code>./gdelt</code> directory after down
 <h4 id="nix-solution:7167d0e820c7576947c6f743fb434a0c">*Nix Solution</h4>
 
 <p>While already well away cooking  up a C language solution, I remembered AWK, and the wc program.</p>
- $ wc -l gdelt/20190531.export.CSV
+
+<pre><code class="language-bash"> $ wc -l gdelt/20190531.export.CSV
  176780
 
-  $ gawk '{ if ($6 == "AFR") sum += 1; } END { print sum; }' gdelt/20190531.export.CSV
+  $ gawk '{ if ($6 == &quot;AFR&quot;) sum += 1; } END { print sum; }' gdelt/20190531.export.CSV
  1184
+</code></pre>
 
 <p>Here I used the <code>wc</code> or word count program, with the <code>-l</code> flag to count lines.
 For the count of &lsquo;AFR&rsquo; valued actor codes I used the GNU version of <code>awk</code>, together with a tiny awk program for a conditional incrementing of a counter.
@@ -235,14 +237,15 @@ Furthermore, we need to  verify our answer above,  by computing  the same in a f
 </ol>
 
 <p>And here is the simplest first attempt C solution:</p>
-#include <stdio.h>  // fopen, fclose, fgets
-#include <string.h>  // strtoc, strcmp
+
+<pre><code class="language-c">#include &lt;stdio.h&gt;  // fopen, fclose, fgets
+#include &lt;string.h&gt;  // strtoc, strcmp
 
 int main() 
 {
-   const char FILE_PATH[] = "../gdelt/20190531.export.CSV";
-   const char DELIMITER[] = "\t";
-   const char MATCH_TEXT[] = "AFR";
+   const char FILE_PATH[] = &quot;../gdelt/20190531.export.CSV&quot;;
+   const char DELIMITER[] = &quot;\t&quot;;
+   const char MATCH_TEXT[] = &quot;AFR&quot;;
    const int MATCH_COLUMN_POS = 5; 
 
    int match_count = 0;
@@ -251,7 +254,7 @@ int main()
    const int BUFF_SIZE = 2048;
    char buff[BUFF_SIZE];
 
-   fp = fopen(FILE_PATH, "r"); 
+   fp = fopen(FILE_PATH, &quot;r&quot;); 
    if (fp == NULL) return -1; 
    int lines_count = 0;
    while (fgets(buff, BUFF_SIZE, (FILE*)fp)) {
@@ -259,7 +262,7 @@ int main()
        char *ptr = strtok(buff, DELIMITER);
 
        // find the value of the ACTOR_CODE
-       for (int i=0; i<MATCH_COLUMN_POS; i++)
+       for (int i=0; i&lt;MATCH_COLUMN_POS; i++)
            ptr = strtok(NULL, DELIMITER);
 
 if (strcmp(ptr, MATCH_TEXT) == 0)
@@ -267,17 +270,20 @@ if (strcmp(ptr, MATCH_TEXT) == 0)
     match_count += 1;
 }
    }
-   printf("Total number of lines: %d\n", lines_count );
-   printf("Number of lines matching '%s' in column %d: %d\n", MATCH_TEXT, 
+   printf(&quot;Total number of lines: %d\n&quot;, lines_count );
+   printf(&quot;Number of lines matching '%s' in column %d: %d\n&quot;, MATCH_TEXT, 
            MATCH_COLUMN_POS,
            match_count );
    fclose(fp);
    return 0;
 }
+</code></pre>
 
 <p>After compiling  with gcc ./query.c -o ./query, (gcc .\query.c -o .\query.exe on Windows) and running it, the output is:</p>
-Total number of lines: 176780
+
+<pre><code class="language-bash">Total number of lines: 176780
 Number of lines matching 'AFR' in column 5: 1184
+</code></pre>
 
 <p>Nice. This answer corresponds perfectly with the *nix solution,
 but  what a lot of work for answering such a trivial question!
@@ -290,14 +296,16 @@ Because of this, you cannot directly work with flat files, but have to  first lo
 For my SQL solution I&rsquo;ll use <a href="sqlite">SQLite</a> as the SQL query engine; the DBMS.</p>
 
 <p>With the data and header file in the <code>./gdelt</code> directory, we get them loaded like this:</p>
-> sqlite3 gdelt.md
+
+<pre><code class="language-sql">&gt; sqlite3 gdelt.md
 SQLite version 3.28.0 2019-04-16 19:49:53
-Enter ".help" for usage hints.
-sqlite> .mode csv
-sqlite> .timer on
-sqlite> .separator "\t" "\r\n"
-sqlite> .import ../gdelt/CSV.header.dailyupdates.txt oneday
-sqlite> .import ../gdelt/20190531.export.CSV oneday
+Enter &quot;.help&quot; for usage hints.
+sqlite&gt; .mode csv
+sqlite&gt; .timer on
+sqlite&gt; .separator &quot;\t&quot; &quot;\r\n&quot;
+sqlite&gt; .import ../gdelt/CSV.header.dailyupdates.txt oneday
+sqlite&gt; .import ../gdelt/20190531.export.CSV oneday
+</code></pre>
 
 <p>Here is the breakdown:</p>
 
@@ -312,13 +320,15 @@ sqlite> .import ../gdelt/20190531.export.CSV oneday
 </ol>
 
 <p>Now we are ready to answer our question using SQL!</p>
-sqlite> select count(1) from oneday;
+
+<pre><code class="language-sql">sqlite&gt; select count(1) from oneday;
 176780
 Run Time: real 0.163 user 0.031250 sys 0.125000
-sqlite> select count(1) from oneday where actor1code = 'AFR';
+sqlite&gt; select count(1) from oneday where actor1code = 'AFR';
 1056
 Run Time: real 0.181 user 0.046875 sys 0.140625
-sqlite>
+sqlite&gt;
+</code></pre>
 
 <p>Hmm&hellip; We arrive at the same total row or lines count, but the count for the matching actor 1 code values is very different.
 To figure out why this is the case is not trivial, but very instructive to illustrate even more the need for something like SQL and database systems, so stay with me.</p>
@@ -347,21 +357,27 @@ Surely they would nnot use a broken thing!</p>
 <p>Since we have everything setup in SQLite already, let&rsquo;s query the data a bit more, in hope we find some clues to help us solve the dilemma.</p>
 
 <p>How many values are there for column <code>actor1code</code>?</p>
-sqlite> select count(distinct actor1code) from oneday;
+
+<pre><code class="language-sql">sqlite&gt; select count(distinct actor1code) from oneday;
 2148
+</code></pre>
 
 <p>Is the count from before for the SQLite solution still the same?</p>
-sqlite> select count(1) from oneday where actor1code like 'AFR';
+
+<pre><code class="language-sql">sqlite&gt; select count(1) from oneday where actor1code like 'AFR';
 1056
+</code></pre>
 
 <p>Perhaps the comparison predicate in the <code>where</code> clause <code>actor1code = 'AFR'</code> has a problem.
 Let us try some <code>LIKE</code> matching instead.</p>
-sqlite> select count(1) from oneday where actor1code like '%AFR';
+
+<pre><code class="language-sql">sqlite&gt; select count(1) from oneday where actor1code like '%AFR';
 1056
-sqlite> select count(1) from oneday where actor1code like '%AFR%';
+sqlite&gt; select count(1) from oneday where actor1code like '%AFR%';
 1241
-sqlite> select count(1) from oneday where actor1code like 'AFR%';
+sqlite&gt; select count(1) from oneday where actor1code like 'AFR%';
 1139
+</code></pre>
 
 <p>Nope, this is not helping much, andsomething else is going on.</p>
 
@@ -369,27 +385,33 @@ sqlite> select count(1) from oneday where actor1code like 'AFR%';
 
 <p>It&rsquo;s always a good idea to consider some edge cases in the data.
 One such edge case is blank values, so let&rsquo;s check for them in the actor 1 column:</p>
-sqlite> select count(1) from oneday where actor1code = '';
+
+<pre><code class="language-sql">sqlite&gt; select count(1) from oneday where actor1code = '';
 16475
+</code></pre>
 
 <p>We have seen that the SQLite solution under counts, or, <strong>gasp</strong> BOTH the AWK *nix solution AND the C language one over counts, and do it the same.
 Since both the AWK and the C language solution produced the same result, let&rsquo;s see if we can find the blanks count of above with AWK:</p>
- $ gawk '{ if ($6 == "") sum += 1; } END { print sum; }' ./gdelt/20190531.export.CSV
 
+<pre><code class="language-bash"> $ gawk '{ if ($6 == &quot;&quot;) sum += 1; } END { print sum; }' ./gdelt/20190531.export.CSV
+
+</code></pre>
 
 <p>Well, it produced no output, so gawk wasn&rsquo;t able to count blanks&hellip;.
 I bet the C language solution will do exactly the same!</p>
 
 <p>Now the actor 1 code of &lsquo;AFR&rsquo; is quite special, but we know from the documentation of GDELT and also from the header columns, that there is also an actor 2 code column, and it follows right after all the actor 1 columns.
 How many rows are there where the column actor1code is blank, and the actor2code is &lsquo;AFR&rsquo;:</p>
-sqlite> select count(1) from oneday where actor1code = 'AFR';
+
+<pre><code class="language-sql">sqlite&gt; select count(1) from oneday where actor1code = 'AFR';
 1056
 
-sqlite> select count(1) from oneday where actor1code = '' and actor2code = 'AFR';
+sqlite&gt; select count(1) from oneday where actor1code = '' and actor2code = 'AFR';
 128
 
-sqlite> select count(1) from oneday where actor1code = '' and actor2code = 'AFR' or actor1code = 'AFR';
+sqlite&gt; select count(1) from oneday where actor1code = '' and actor2code = 'AFR' or actor1code = 'AFR';
 1184
+</code></pre>
 
 <p>Now that is interesting.  The C and AWK solutions count, in column 6 where actor 1 code should live, the sum of the columns where actor 1 code is &lsquo;AFR&rsquo;, plus the number of
 rows where actor 1 code is blank AND actor 2 code is &lsquo;AFR&rsquo;.</p>
@@ -400,8 +422,10 @@ rows where actor 1 code is blank AND actor 2 code is &lsquo;AFR&rsquo;.</p>
 
 <p>We could now proceed and fix up the C solution, but by now I&rsquo;ve kind of lost interest, and I&rsquo;m truely thankful I do not have to code C for a living - it must be very, very hard.
 None the less, perhaps for the love of Linux, let&rsquo;s at least get AWK right.</p>
-$ gawk 'BEGIN {FS = "\t"} { if ($6 == "AFR") sum += 1; } END { print sum; }' gdelt/20190531.export.CSV
+
+<pre><code class="language-bash">$ gawk 'BEGIN {FS = &quot;\t&quot;} { if ($6 == &quot;AFR&quot;) sum += 1; } END { print sum; }' gdelt/20190531.export.CSV
 1056
+</code></pre>
 
 <p>Yay for AWK, yay for the Unix tradition, yay for Linux!
 We explicitly set the field seperator (FS), same as for the SQLite solution.</p>

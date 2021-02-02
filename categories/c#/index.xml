@@ -51,51 +51,65 @@ For more details about the problem, visit the &lt;a href=&#34;https://code.googl
 &lt;h2 id=&#34;bit-boards:d352b201a1938ed46d030d55323cc26d&#34;&gt;Bit boards&lt;/h2&gt;
 
 &lt;p&gt;We choose an integer, 4 bytes, to store a bit mask of the player O, player X, how a column looks, how each of the two diagonals look and so on. We could have used a 2-byte unsigned  short instead of an int, sadly we didn&amp;rsquo;t. Well, got to leave something for next time.&lt;/p&gt;
-        public static int column, diagonal1, diagonal2, fullboard;
+
+&lt;pre&gt;&lt;code class=&#34;language-C#&#34;&gt;        public static int column, diagonal1, diagonal2, fullboard;
+&lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;and&lt;/p&gt;
-            int xboard = 0, oboard = 0, tboard = 0;
+
+&lt;pre&gt;&lt;code class=&#34;language-C#&#34;&gt;            int xboard = 0, oboard = 0, tboard = 0;
+&lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;We assign the static patterns we&amp;rsquo;ll use for column, the two diagonals and the full board:&lt;/p&gt;
-            column = Convert.ToInt32(&#34;1000100010001&#34;, 2);
-            diagonal1 = Convert.ToInt32(&#34;1000010000100001&#34;, 2);
-            diagonal2 = Convert.ToInt32(&#34;0001001001001000&#34;, 2);
-            fullboard = Convert.ToInt32(&#34;1111111111111111&#34;, 2);
+
+&lt;pre&gt;&lt;code class=&#34;language-C#&#34;&gt;            column = Convert.ToInt32(&amp;quot;1000100010001&amp;quot;, 2);
+            diagonal1 = Convert.ToInt32(&amp;quot;1000010000100001&amp;quot;, 2);
+            diagonal2 = Convert.ToInt32(&amp;quot;0001001001001000&amp;quot;, 2);
+            fullboard = Convert.ToInt32(&amp;quot;1111111111111111&amp;quot;, 2);
+&lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;I&amp;rsquo;m not going to bother you with file IO, so we skip to where we set the X, O and T boards:&lt;/p&gt;
-                        xboard = StringBoardToBitBoard(line, &#39;X&#39;);
+
+&lt;pre&gt;&lt;code class=&#34;language-C#&#34;&gt;                        xboard = StringBoardToBitBoard(line, &#39;X&#39;);
                         oboard = StringBoardToBitBoard(line, &#39;O&#39;);
                         tboard = StringBoardToBitBoard(line, &#39;T&#39;);
+&lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;Function StringBoardToBitBoard does exactly what  you would imagine - it assigns a &amp;lsquo;1&amp;rsquo; in the bit position if the char occurs and a &amp;lsquo;0&amp;rsquo; otherwise - see below for the full program.&lt;/p&gt;
 
 &lt;h2 id=&#34;decision-and-output:d352b201a1938ed46d030d55323cc26d&#34;&gt;Decision and output&lt;/h2&gt;
-                        if (Won(xboard, tboard))
-                            sw.WriteLine(&#34;Case #{0}: X won&#34;, i);
+
+&lt;pre&gt;&lt;code class=&#34;language-C#&#34;&gt;                        if (Won(xboard, tboard))
+                            sw.WriteLine(&amp;quot;Case #{0}: X won&amp;quot;, i);
                         else if (Won(oboard, tboard))
-                            sw.WriteLine(&#34;Case #{0}: O won&#34;, i);
-                        else if (((xboard | oboard | tboard) &amp; fullboard) == fullboard)
-                            sw.WriteLine(&#34;Case #{0}: Draw&#34;, i);
+                            sw.WriteLine(&amp;quot;Case #{0}: O won&amp;quot;, i);
+                        else if (((xboard | oboard | tboard) &amp;amp; fullboard) == fullboard)
+                            sw.WriteLine(&amp;quot;Case #{0}: Draw&amp;quot;, i);
                         else
-                            sw.WriteLine(&#34;Case #{0}: Game has not completed&#34;, i);
+                            sw.WriteLine(&amp;quot;Case #{0}: Game has not completed&amp;quot;, i);
+&lt;/code&gt;&lt;/pre&gt;
 
 &lt;h2 id=&#34;the-real-magic-bitwise-operators-and-shifts:d352b201a1938ed46d030d55323cc26d&#34;&gt;The real magic: bitwise operators and shifts&lt;/h2&gt;
 
 &lt;p&gt;And finally, let&amp;rsquo;s have a look at the elegant part; function Won and friends:&lt;/p&gt;
-        public static bool Won(int board, int tboard)
+
+&lt;pre&gt;&lt;code class=&#34;language-C#&#34;&gt;        public static bool Won(int board, int tboard)
         {
             board |= tboard;  // apply the T position
             return LinesMatch(board) || ColumnsMatch(board) || DiagonalsMatch(board);
         }
+&lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;makes sense doesn&amp;rsquo;t it; you win if you have a line, a column or a diagonal.&lt;/p&gt;
-        public static bool LinesMatch(int board)
+
+&lt;pre&gt;&lt;code class=&#34;language-C#&#34;&gt;        public static bool LinesMatch(int board)
         {
             return board == (board | 15)
-                || board == (board | (15 &lt;&lt; 4))
-                || board == (board | (15 &lt;&lt; 8))
-                || board == (board | (15 &lt;&lt; 12));
+                || board == (board | (15 &amp;lt;&amp;lt; 4))
+                || board == (board | (15 &amp;lt;&amp;lt; 8))
+                || board == (board | (15 &amp;lt;&amp;lt; 12));
         }
+&lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;You have a lines match if your board position
 is logical OR-ed (the &amp;lsquo;|&amp;rsquo; operator)  with any of the line representations, and still is equal to itself.
@@ -103,19 +117,21 @@ For the 4 line representations we could have used constants, to avoid the bit sh
 Also, the 15 magic number in there, for the first lines representation; should really live in a constant.&lt;/p&gt;
 
 &lt;p&gt;In the same way, but slightly different, the columns and diagonals are checked:&lt;/p&gt;
-        public static bool ColumnsMatch(int board)
+
+&lt;pre&gt;&lt;code class=&#34;language-C#&#34;&gt;        public static bool ColumnsMatch(int board)
         {
             return
                 board == (board | column)
-                || board == (board | (column &lt;&lt; 1))
-                || board == (board | (column &lt;&lt; 2))
-                || board == (board | (column &lt;&lt; 3));
+                || board == (board | (column &amp;lt;&amp;lt; 1))
+                || board == (board | (column &amp;lt;&amp;lt; 2))
+                || board == (board | (column &amp;lt;&amp;lt; 3));
         }
         public static bool DiagonalsMatch(int board)
         {
             return board == (board | diagonal1)
                 || board == (board | diagonal2);
         }
+&lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;The diagonals checking could have happened all at once, why is this possible?&lt;/p&gt;
 
@@ -133,7 +149,8 @@ The next week when I realized my mistake, I was upset. I just had to get one or 
 I like that. May it be that, when people survey our code and data representations, may it be that they would reflect upon how few bits was used, or how few lines of code were written&amp;hellip;&lt;/p&gt;
 
 &lt;h2 id=&#34;full-program:d352b201a1938ed46d030d55323cc26d&#34;&gt;Full program&lt;/h2&gt;
-using System;
+
+&lt;pre&gt;&lt;code class=&#34;language-C#&#34;&gt;using System;
 using System.IO;
 using System.Collections.Generic;
 using System.Linq;
@@ -148,22 +165,22 @@ namespace ConsoleApplication1
 
         static void Main(string[] args)
         {
-            column = Convert.ToInt32(&#34;1000100010001&#34;, 2);
-            diagonal1 = Convert.ToInt32(&#34;1000010000100001&#34;, 2);
-            diagonal2 = Convert.ToInt32(&#34;0001001001001000&#34;, 2);
-            fullboard = Convert.ToInt32(&#34;1111111111111111&#34;, 2);
+            column = Convert.ToInt32(&amp;quot;1000100010001&amp;quot;, 2);
+            diagonal1 = Convert.ToInt32(&amp;quot;1000010000100001&amp;quot;, 2);
+            diagonal2 = Convert.ToInt32(&amp;quot;0001001001001000&amp;quot;, 2);
+            fullboard = Convert.ToInt32(&amp;quot;1111111111111111&amp;quot;, 2);
 
             int xboard = 0, oboard = 0, tboard = 0;
 
             try
             {
-                string infile = &#34;A-large.in&#34;, outfile = &#34;A-large.out&#34;, line = &#34;&#34;;
+                string infile = &amp;quot;A-large.in&amp;quot;, outfile = &amp;quot;A-large.out&amp;quot;, line = &amp;quot;&amp;quot;;
                 using (StreamReader sr = new StreamReader(infile))
                 {
                     using (StreamWriter sw = new StreamWriter(outfile))
                     {
                     int numberOfProblems = Int32.Parse(sr.ReadLine());
-                    for (int i = 1; i &lt;= numberOfProblems; i++)
+                    for (int i = 1; i &amp;lt;= numberOfProblems; i++)
                     {
                         line = sr.ReadLine();
                         line += sr.ReadLine();
@@ -174,13 +191,13 @@ namespace ConsoleApplication1
                         oboard = StringBoardToBitBoard(line, &#39;O&#39;);
                         tboard = StringBoardToBitBoard(line, &#39;T&#39;);
                         if (Won(xboard, tboard))
-                            sw.WriteLine(&#34;Case #{0}: X won&#34;, i);
+                            sw.WriteLine(&amp;quot;Case #{0}: X won&amp;quot;, i);
                         else if (Won(oboard, tboard))
-                            sw.WriteLine(&#34;Case #{0}: O won&#34;, i);
-                        else if (((xboard | oboard | tboard) &amp; fullboard) == fullboard)
-                            sw.WriteLine(&#34;Case #{0}: Draw&#34;, i);
+                            sw.WriteLine(&amp;quot;Case #{0}: O won&amp;quot;, i);
+                        else if (((xboard | oboard | tboard) &amp;amp; fullboard) == fullboard)
+                            sw.WriteLine(&amp;quot;Case #{0}: Draw&amp;quot;, i);
                         else
-                            sw.WriteLine(&#34;Case #{0}: Game has not completed&#34;, i);
+                            sw.WriteLine(&amp;quot;Case #{0}: Game has not completed&amp;quot;, i);
 
                         line = sr.ReadLine();
                     }
@@ -202,17 +219,17 @@ namespace ConsoleApplication1
         public static bool LinesMatch(int board)
         {
             return board == (board | 15)
-                || board == (board | (15 &lt;&lt; 4))
-                || board == (board | (15 &lt;&lt; 8))
-                || board == (board | (15 &lt;&lt; 12));
+                || board == (board | (15 &amp;lt;&amp;lt; 4))
+                || board == (board | (15 &amp;lt;&amp;lt; 8))
+                || board == (board | (15 &amp;lt;&amp;lt; 12));
         }
         public static bool ColumnsMatch(int board)
         {
             return
                 board == (board | column)
-                || board == (board | (column &lt;&lt; 1))
-                || board == (board | (column &lt;&lt; 2))
-                || board == (board | (column &lt;&lt; 3));
+                || board == (board | (column &amp;lt;&amp;lt; 1))
+                || board == (board | (column &amp;lt;&amp;lt; 2))
+                || board == (board | (column &amp;lt;&amp;lt; 3));
         }
         public static bool DiagonalsMatch(int board)
         {
@@ -223,13 +240,14 @@ namespace ConsoleApplication1
         public static int StringBoardToBitBoard(string stringBoard, char oneChar)
         {
             string bitBoard = new String(stringBoard.Select(
-                x =&gt; x == oneChar ? &#39;1&#39; : &#39;0&#39;)
+                x =&amp;gt; x == oneChar ? &#39;1&#39; : &#39;0&#39;)
                 .ToArray());
             return Convert.ToInt32(bitBoard, 2);
         }
     }
 }
 
+&lt;/code&gt;&lt;/pre&gt;
 </description>
     </item>
     
@@ -427,7 +445,8 @@ space complexity.&lt;/p&gt;
 
 &lt;p&gt;Looking at the table of belongings, we realise we would need a class to
 represent individual belongings (we&amp;rsquo;ll call it &lt;code&gt;class Belonging&lt;/code&gt;), as well as the set of all   of them (&lt;code&gt;class Inventory&lt;/code&gt;).&lt;/p&gt;
-namespace Knapsack
+
+&lt;pre&gt;&lt;code class=&#34;language-C#&#34;&gt;namespace Knapsack
 {
 public class Belonging
 	{
@@ -439,11 +458,12 @@ public class Belonging
 
 	public class Inventory
 	{
-		public static List&lt;Belonging&gt; AllGear { get; set; }
+		public static List&amp;lt;Belonging&amp;gt; AllGear { get; set; }
 
 		public uint Gear { get; set; }
 	}
 }
+&lt;/code&gt;&lt;/pre&gt;
 
 &lt;h3 id=&#34;functions-for-belonging-class:de8f46f1e4cc39c152533cf3328f55db&#34;&gt;Functions for Belonging class&lt;/h3&gt;
 
@@ -451,7 +471,8 @@ public class Belonging
 In true &lt;a href=&#34;http://agiledata.org/essays/tdd.html&#34;&gt;test driven development&lt;/a&gt; style (also see &lt;a href=&#34;https://en.wikipedia.org/wiki/Test-driven_development&#34;&gt;Wikipedia on TDD&lt;/a&gt;), let&amp;rsquo;s first create unit tests for each function, followed by an implementation.&lt;/p&gt;
 
 &lt;p&gt;We&amp;rsquo;ll wrap all the test classes in a general &lt;code&gt;TestKnapsack&lt;/code&gt; class which we can use to do setup and teardown actions if required.&lt;/p&gt;
-namespace Knapsack
+
+&lt;pre&gt;&lt;code class=&#34;language-C#&#34;&gt;namespace Knapsack
 {
 	[TestClass]
 	public class TestKnapsack
@@ -463,7 +484,7 @@ namespace Knapsack
 			public void ShouldAddRemoveAndConfirmItIsInGear()
 			{
 				uint gear = 0; // empty set of gear
-				var testBelonging = new Belonging { Number = 0, Name = &#34;map&#34;, GramsWeight = 90, Value = 150 };
+				var testBelonging = new Belonging { Number = 0, Name = &amp;quot;map&amp;quot;, GramsWeight = 90, Value = 150 };
 
 				Assert.IsFalse(testBelonging.IsInGear(gear));
 				uint gearAfterAdd = testBelonging.AddToGear(gear);
@@ -478,6 +499,7 @@ namespace Knapsack
 		}
 	}
 }
+&lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;Returning to our &lt;code&gt;Belonging&lt;/code&gt; class,  let&amp;rsquo;s implement the methods we described in our unit test class.&lt;/p&gt;
 
@@ -492,17 +514,18 @@ namespace Knapsack
 &lt;p&gt;Make sure you are completely familiar with all the &lt;a href=&#34;https://www.tutorialspoint.com/csharp/csharp_bitwise_operators.htm&#34;&gt;C# bit wise operators&lt;/a&gt; before proceeding.&lt;/p&gt;
 
 &lt;p&gt;Here are the functions we add to &lt;code&gt;Belonging&lt;/code&gt;:&lt;/p&gt;
-public uint AddToGear(uint gear)
+
+&lt;pre&gt;&lt;code class=&#34;language-C#&#34;&gt;public uint AddToGear(uint gear)
 		{
-			return gear | (uint)(1 &lt;&lt; this.Number);
+			return gear | (uint)(1 &amp;lt;&amp;lt; this.Number);
 		}
 		public uint RemoveFromGear(uint gear)
 		{
-			return gear &amp; ~(uint)(1 &lt;&lt; this.Number);
+			return gear &amp;amp; ~(uint)(1 &amp;lt;&amp;lt; this.Number);
 		}
 		public bool IsInGear(uint gear)
 		{
-			return (gear &amp; (1 &lt;&lt; this.Number)) == (1 &lt;&lt; this.Number);
+			return (gear &amp;amp; (1 &amp;lt;&amp;lt; this.Number)) == (1 &amp;lt;&amp;lt; this.Number);
 		}
 		public int GramsWeightInGear(uint gear)
 		{
@@ -512,6 +535,7 @@ public uint AddToGear(uint gear)
 		{
 			return this.IsInGear(gear) ? this.Value : 0;
 		}
+&lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;Success! Our tests all pass, and we can proceed to testing and developing &lt;code&gt;Inventory&lt;/code&gt;.&lt;/p&gt;
 
@@ -521,16 +545,17 @@ public uint AddToGear(uint gear)
 Our test creates a sample set of belongings (&lt;code&gt;allKit&lt;/code&gt;) with 3 items in it.
 We then add the first and last item from &lt;code&gt;allKit&lt;/code&gt; and ensure we get the correct totals when calling the summation functions on
 &lt;code&gt;Inventory&lt;/code&gt;:&lt;/p&gt;
-		[TestClass]
+
+&lt;pre&gt;&lt;code class=&#34;language-C#&#34;&gt;		[TestClass]
 		public class TestInventory : TestKnapsack
 		{
 			[TestMethod]
 			public void ShouldSumProperly()
 			{
-				var allKit = new List&lt;Belonging&gt;();
-				allKit.Add(new Belonging { Number = 0, Name = &#34;map&#34;, GramsWeight = 90, Value = 150 });
-				allKit.Add(new Belonging { Number = 1, Name = &#34;compass&#34;, GramsWeight = 130, Value = 35 });
-				allKit.Add(new Belonging { Number = 2, Name = &#34;water&#34;, GramsWeight = 1530, Value = 300 });
+				var allKit = new List&amp;lt;Belonging&amp;gt;();
+				allKit.Add(new Belonging { Number = 0, Name = &amp;quot;map&amp;quot;, GramsWeight = 90, Value = 150 });
+				allKit.Add(new Belonging { Number = 1, Name = &amp;quot;compass&amp;quot;, GramsWeight = 130, Value = 35 });
+				allKit.Add(new Belonging { Number = 2, Name = &amp;quot;water&amp;quot;, GramsWeight = 1530, Value = 300 });
 
 				Inventory.AllGear = allKit;
 				var testInventory = new Inventory { Gear = 0 };
@@ -545,38 +570,42 @@ We then add the first and last item from &lt;code&gt;allKit&lt;/code&gt; and ens
 					testInventory.TotalValue);
 			}
 		}
+&lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;Here are the summation functions to add to &lt;code&gt;Inventory&lt;/code&gt;:&lt;/p&gt;
 
+&lt;pre&gt;&lt;code class=&#34;language-C#&#34;&gt;
 		public int TotalGramsWeight { get { return Inventory.TotalGramsWeightForGear(this.Gear); } }
 		public int TotalValue { get { return Inventory.TotalValueForGear(this.Gear); } }
 
 		public static int TotalGramsWeightForGear (uint gear)
 		{
-				return AllGear.Select(o =&gt; 
+				return AllGear.Select(o =&amp;gt; 
 					o.GramsWeightInGear(gear))
 					.Sum();
 			}
 
 		public static int TotalValueForGear(uint gear)
 		{
-				return AllGear.Select(o =&gt; 
+				return AllGear.Select(o =&amp;gt; 
 					o.ValueInGear(gear))
 					.Sum();
 			}
+&lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;Nothing too complicated, and the tests all still pass. Next we move on to the actual search&lt;br /&gt;
 for the valid inventories:&lt;/p&gt;
 
 &lt;h3 id=&#34;search-functions-for-inventory:de8f46f1e4cc39c152533cf3328f55db&#34;&gt;Search functions for Inventory&lt;/h3&gt;
 
+&lt;pre&gt;&lt;code class=&#34;language-C#&#34;&gt;
 			[TestMethod]
 			public void TestFirstBestInventory()
 			{
-				var allKit = new List&lt;Belonging&gt;();
-				allKit.Add(new Belonging { Number = 0, Name = &#34;map&#34;, GramsWeight = 90, Value = 150 });
-				allKit.Add(new Belonging { Number = 1, Name = &#34;compass&#34;, GramsWeight = 130, Value = 35 });
-				allKit.Add(new Belonging { Number = 2, Name = &#34;water&#34;, GramsWeight = 1530, Value = 300 });
+				var allKit = new List&amp;lt;Belonging&amp;gt;();
+				allKit.Add(new Belonging { Number = 0, Name = &amp;quot;map&amp;quot;, GramsWeight = 90, Value = 150 });
+				allKit.Add(new Belonging { Number = 1, Name = &amp;quot;compass&amp;quot;, GramsWeight = 130, Value = 35 });
+				allKit.Add(new Belonging { Number = 2, Name = &amp;quot;water&amp;quot;, GramsWeight = 1530, Value = 300 });
 				Inventory.AllGear = allKit;
 
 				Assert.IsTrue(
@@ -591,10 +620,10 @@ for the valid inventories:&lt;/p&gt;
 			[TestMethod]
 			public void TestValidInventories()
 			{
-				var allKit = new List&lt;Belonging&gt;();
-				allKit.Add(new Belonging { Number = 0, Name = &#34;map&#34;, GramsWeight = 90, Value = 150 });
-				allKit.Add(new Belonging { Number = 1, Name = &#34;compass&#34;, GramsWeight = 130, Value = 35 });
-				allKit.Add(new Belonging { Number = 2, Name = &#34;water&#34;, GramsWeight = 1530, Value = 300 });
+				var allKit = new List&amp;lt;Belonging&amp;gt;();
+				allKit.Add(new Belonging { Number = 0, Name = &amp;quot;map&amp;quot;, GramsWeight = 90, Value = 150 });
+				allKit.Add(new Belonging { Number = 1, Name = &amp;quot;compass&amp;quot;, GramsWeight = 130, Value = 35 });
+				allKit.Add(new Belonging { Number = 2, Name = &amp;quot;water&amp;quot;, GramsWeight = 1530, Value = 300 });
 				Inventory.AllGear = allKit;
 
 				// nothing except the empty inventory - so only one possible empty inventory
@@ -603,13 +632,15 @@ for the valid inventories:&lt;/p&gt;
 				// since the upper weight limit is so large we end up with all possible inventories over 3 belongings, which is 8 including the empty inventory
 				Assert.AreEqual(8, Inventory.ValidInventories(5000).Count());
 			}
+&lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;We implement the new functions on &lt;code&gt;Invetory&lt;/code&gt; as follows:&lt;/p&gt;
-		public static uint NumberOfCombinations
+
+&lt;pre&gt;&lt;code class=&#34;language-C#&#34;&gt;		public static uint NumberOfCombinations
 		{
 			get
 			{
-				return (~(uint)0 % (uint)(1 &lt;&lt; AllGear.Count()));
+				return (~(uint)0 % (uint)(1 &amp;lt;&amp;lt; AllGear.Count()));
 			}
 		}
 
@@ -619,9 +650,9 @@ for the valid inventories:&lt;/p&gt;
 			int currentMaxValue = 0, overallBestValue = 0;
 			var bestInventory = new Inventory();
 
-			for (uint g = 0; g &lt;= numberOfCombinations; g++)
-				if (Inventory.TotalGramsWeightForGear(g) &lt;= maxGramsWeight &amp;&amp;
-					(currentMaxValue = Inventory.TotalValueForGear(g)) &gt; overallBestValue)
+			for (uint g = 0; g &amp;lt;= numberOfCombinations; g++)
+				if (Inventory.TotalGramsWeightForGear(g) &amp;lt;= maxGramsWeight &amp;amp;&amp;amp;
+					(currentMaxValue = Inventory.TotalValueForGear(g)) &amp;gt; overallBestValue)
 				{
 					bestInventory = new Inventory
 					{
@@ -633,13 +664,13 @@ for the valid inventories:&lt;/p&gt;
 			return bestInventory;
 		}
 
-		public static IQueryable&lt;Inventory&gt; ValidInventories(int maxGramsWeight)
+		public static IQueryable&amp;lt;Inventory&amp;gt; ValidInventories(int maxGramsWeight)
 		{
 			var numberOfCombinations = Inventory.NumberOfCombinations;
-			var validInventories = new List&lt;Inventory&gt;();
+			var validInventories = new List&amp;lt;Inventory&amp;gt;();
 
-			for (uint g = 0; g &lt;= numberOfCombinations; g++)
-				if (Inventory.TotalGramsWeightForGear(g) &lt;= maxGramsWeight)
+			for (uint g = 0; g &amp;lt;= numberOfCombinations; g++)
+				if (Inventory.TotalGramsWeightForGear(g) &amp;lt;= maxGramsWeight)
 					validInventories.Add(new Inventory
 					{
 						Gear = g
@@ -648,6 +679,7 @@ for the valid inventories:&lt;/p&gt;
 
 			return validInventories.AsQueryable();
 		}
+&lt;/code&gt;&lt;/pre&gt;
 
 &lt;h3 id=&#34;final-wrapup:de8f46f1e4cc39c152533cf3328f55db&#34;&gt;Final wrapup&lt;/h3&gt;
 
@@ -656,30 +688,35 @@ Our final work will be to create nice printout &lt;code&gt;ToString()&lt;/code&g
 
 &lt;p&gt;We add the following to &lt;code&gt;Belonging&lt;/code&gt;:&lt;/p&gt;
 
+&lt;pre&gt;&lt;code class=&#34;language-C#&#34;&gt;
 		public override string ToString()
 		{
-			return string.Format(&#34;{0}, {1} g, valued at {2}&#34;,
+			return string.Format(&amp;quot;{0}, {1} g, valued at {2}&amp;quot;,
 				this.Name,
 				this.GramsWeight,
 				this.Value);
 		}
+&lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;We want nice printout for &lt;code&gt;Inventory&lt;/code&gt; also, so we add the following to it:&lt;/p&gt;
-public override string ToString()
+
+&lt;pre&gt;&lt;code class=&#34;language-C#&#34;&gt;public override string ToString()
 		{
 			StringBuilder sb = new StringBuilder();
-			sb.AppendLine(&#34;---- Inventory Start:&#34;);
-			AllGear.Where(o =&gt; o.IsInGear(this.Gear))
+			sb.AppendLine(&amp;quot;---- Inventory Start:&amp;quot;);
+			AllGear.Where(o =&amp;gt; o.IsInGear(this.Gear))
 				.ToList()
-				.ForEach(o =&gt; sb.AppendLine(o.ToString()));
-			sb.AppendFormat(&#34;---- Inventory End: Total Weight: {0} g, Total Value: {1}&#34;,
+				.ForEach(o =&amp;gt; sb.AppendLine(o.ToString()));
+			sb.AppendFormat(&amp;quot;---- Inventory End: Total Weight: {0} g, Total Value: {1}&amp;quot;,
 				this.TotalGramsWeight,
 				this.TotalValue);
 			return sb.ToString();
 		}
+&lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;Finally, we add the &lt;code&gt;main&lt;/code&gt; method, along with a little helper method for setting up our set of all kit:&lt;/p&gt;
-class Program
+
+&lt;pre&gt;&lt;code class=&#34;language-C#&#34;&gt;class Program
 	{
 		static void Main(string[] args)
 		{
@@ -689,55 +726,57 @@ class Program
 
 			var bestInventories = Inventory
 				.ValidInventories(maxGramsWeight: 4000)
-				.OrderByDescending(o =&gt; o.TotalValue)
+				.OrderByDescending(o =&amp;gt; o.TotalValue)
 				.Take(5)
 				.ToList();
 
 			if (bestInventories.Count() == 0)
-				Console.WriteLine(&#34;No inventory match the requirements.&#34;);
+				Console.WriteLine(&amp;quot;No inventory match the requirements.&amp;quot;);
 			else
-			Console.WriteLine(string.Format(&#34;Best {0} inventories in descending order of value are:&#34;,bestInventories.Count()));
-			bestInventories.ForEach(o =&gt;
+			Console.WriteLine(string.Format(&amp;quot;Best {0} inventories in descending order of value are:&amp;quot;,bestInventories.Count()));
+			bestInventories.ForEach(o =&amp;gt;
 				Console.WriteLine(o)
 				);
 
 			var firstBestInventory = Inventory.FirstBestInventory( maxGramsWeight: 4000 );
 			if (firstBestInventory == null)
-				Console.WriteLine(&#34;No first best inventory found.&#34;);
+				Console.WriteLine(&amp;quot;No first best inventory found.&amp;quot;);
 			else
 			{
-				Console.WriteLine(&#34;Best inventory found: &#34;);
+				Console.WriteLine(&amp;quot;Best inventory found: &amp;quot;);
 				Console.WriteLine(firstBestInventory);
 			}
 		}
 
-		private static List&lt;Belonging&gt; LoadData()
+		private static List&amp;lt;Belonging&amp;gt; LoadData()
 		{
-			var allKit = new List&lt;Belonging&gt;();
-			allKit.Add(new Belonging { Number = 0, Name = &#34;map&#34;, GramsWeight = 90, Value = 150 });
-			allKit.Add(new Belonging { Number = 1, Name = &#34;compass&#34;, GramsWeight = 130, Value = 35 });
-			allKit.Add(new Belonging { Number = 2, Name = &#34;water&#34;, GramsWeight = 1530, Value = 300 });
-			allKit.Add(new Belonging { Number = 3, Name = &#34;Gold bar&#34;, GramsWeight = 3000, Value = 130 });
-			allKit.Add(new Belonging { Number = 4, Name = &#34;sandwich&#34;, GramsWeight = 500, Value = 160 });
-			allKit.Add(new Belonging { Number = 5, Name = &#34;glucose&#34;, GramsWeight = 150, Value = 60 });
-			allKit.Add(new Belonging { Number = 6, Name = &#34;tin&#34;, GramsWeight = 680, Value = 45 });
-			allKit.Add(new Belonging { Number = 7, Name = &#34;banana&#34;, GramsWeight = 270, Value = 60 });
-			allKit.Add(new Belonging { Number = 8, Name = &#34;apple&#34;, GramsWeight = 390, Value = 40 });
-			allKit.Add(new Belonging { Number = 9, Name = &#34;cheese&#34;, GramsWeight = 230, Value = 30 });
-			allKit.Add(new Belonging { Number = 10, Name = &#34;beer&#34;, GramsWeight = 620, Value = 10 });
-			allKit.Add(new Belonging { Number = 11, Name = &#34;suntan cream&#34;, GramsWeight = 110, Value = 70 });
-			allKit.Add(new Belonging { Number = 12, Name = &#34;camera&#34;, GramsWeight = 320, Value = 30 });
-			allKit.Add(new Belonging { Number = 13, Name = &#34;T-shirt&#34;, GramsWeight = 240, Value = 15 });
-			allKit.Add(new Belonging { Number = 14, Name = &#34;trousers&#34;, GramsWeight = 480, Value = 10 });
+			var allKit = new List&amp;lt;Belonging&amp;gt;();
+			allKit.Add(new Belonging { Number = 0, Name = &amp;quot;map&amp;quot;, GramsWeight = 90, Value = 150 });
+			allKit.Add(new Belonging { Number = 1, Name = &amp;quot;compass&amp;quot;, GramsWeight = 130, Value = 35 });
+			allKit.Add(new Belonging { Number = 2, Name = &amp;quot;water&amp;quot;, GramsWeight = 1530, Value = 300 });
+			allKit.Add(new Belonging { Number = 3, Name = &amp;quot;Gold bar&amp;quot;, GramsWeight = 3000, Value = 130 });
+			allKit.Add(new Belonging { Number = 4, Name = &amp;quot;sandwich&amp;quot;, GramsWeight = 500, Value = 160 });
+			allKit.Add(new Belonging { Number = 5, Name = &amp;quot;glucose&amp;quot;, GramsWeight = 150, Value = 60 });
+			allKit.Add(new Belonging { Number = 6, Name = &amp;quot;tin&amp;quot;, GramsWeight = 680, Value = 45 });
+			allKit.Add(new Belonging { Number = 7, Name = &amp;quot;banana&amp;quot;, GramsWeight = 270, Value = 60 });
+			allKit.Add(new Belonging { Number = 8, Name = &amp;quot;apple&amp;quot;, GramsWeight = 390, Value = 40 });
+			allKit.Add(new Belonging { Number = 9, Name = &amp;quot;cheese&amp;quot;, GramsWeight = 230, Value = 30 });
+			allKit.Add(new Belonging { Number = 10, Name = &amp;quot;beer&amp;quot;, GramsWeight = 620, Value = 10 });
+			allKit.Add(new Belonging { Number = 11, Name = &amp;quot;suntan cream&amp;quot;, GramsWeight = 110, Value = 70 });
+			allKit.Add(new Belonging { Number = 12, Name = &amp;quot;camera&amp;quot;, GramsWeight = 320, Value = 30 });
+			allKit.Add(new Belonging { Number = 13, Name = &amp;quot;T-shirt&amp;quot;, GramsWeight = 240, Value = 15 });
+			allKit.Add(new Belonging { Number = 14, Name = &amp;quot;trousers&amp;quot;, GramsWeight = 480, Value = 10 });
 
 			return allKit;
 		}
 	}
+&lt;/code&gt;&lt;/pre&gt;
 
 &lt;h2 id=&#34;finished-let-s-give-it-a-spin:de8f46f1e4cc39c152533cf3328f55db&#34;&gt;Finished! Let&amp;rsquo;s give it a spin&amp;hellip;&lt;/h2&gt;
 
 &lt;p&gt;We are done! Let&amp;rsquo;s see what we get if we run it all:&lt;/p&gt;
-Best 5 inventories in descending order of value are:
+
+&lt;pre&gt;&lt;code&gt;Best 5 inventories in descending order of value are:
 ---- Inventory Start:
 map, 90 g, valued at 150
 compass, 130 g, valued at 35
@@ -813,6 +852,7 @@ camera, 320 g, valued at 30
 T-shirt, 240 g, valued at 15
 ---- Inventory End: Total Weight: 3960 g, Total Value: 950
 
+&lt;/code&gt;&lt;/pre&gt;
 
 &lt;h2 id=&#34;conclusion:de8f46f1e4cc39c152533cf3328f55db&#34;&gt;Conclusion&lt;/h2&gt;
 

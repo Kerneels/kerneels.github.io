@@ -61,13 +61,16 @@ As a reminder, &lt;code&gt;UNION&lt;/code&gt; between two queries will produce t
 &lt;h3 id=&#34;intersect:b0fe8f0bcf3b6892f71d222f4dd92b20&#34;&gt;INTERSECT&lt;/h3&gt;
 
 &lt;p&gt;For obtaining a possible set intersection between two tables, we can use the &lt;code&gt;INTERSECT&lt;/code&gt; operator:&lt;/p&gt;
-select * from table_a
+
+&lt;pre&gt;&lt;code class=&#34;language-sql&#34;&gt;select * from table_a
 intersect
 select * from table_b
 ;
+&lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;As pointed out earlier, if the row count for the intersection is the same as the row counts for the two tables, we have set equivalence:&lt;/p&gt;
-select sum(row_count) = 0 as set_equivalence from (
+
+&lt;pre&gt;&lt;code class=&#34;language-sql&#34;&gt;select sum(row_count) = 0 as set_equivalence from (
 select count(1) as row_count from (
 select * from table_a
 intersect
@@ -78,20 +81,25 @@ select count(1) as row_count from table_a
 union all
 select -2 * count(1) as row_count from table_b
 );
+&lt;/code&gt;&lt;/pre&gt;
 
 &lt;h3 id=&#34;except:b0fe8f0bcf3b6892f71d222f4dd92b20&#34;&gt;EXCEPT&lt;/h3&gt;
 
 &lt;p&gt;When we use the &lt;code&gt;EXCEPT&lt;/code&gt; set operator, for example, &lt;code&gt;query_1 EXCEPT query_2&lt;/code&gt;, we are left with all rows from &lt;code&gt;query_1&lt;/code&gt; that do not occur in &lt;code&gt;query_2&lt;/code&gt;.
 Note that &lt;code&gt;query_2&lt;/code&gt; might contain rows that are not present in &lt;code&gt;query_1&lt;/code&gt;, but because &lt;code&gt;EXCEPT&lt;/code&gt; is not commutative, similar to how minus is not commutative, &lt;code&gt;query_1 EXCEPT query_2&lt;/code&gt; is not the same as &lt;code&gt;query_2 EXCEPT 
 query_1&lt;/code&gt;, and we are only left with non occurring rows in &lt;code&gt;query_1&lt;/code&gt;.&lt;/p&gt;
-select * from table_a
+
+&lt;pre&gt;&lt;code class=&#34;language-sql&#34;&gt;select * from table_a
 except
 select * from table_b;
+&lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;&amp;hellip;is not the same as:&lt;/p&gt;
-select * from table_b
+
+&lt;pre&gt;&lt;code class=&#34;language-sql&#34;&gt;select * from table_b
 except
 select * from table_a;
+&lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;Some points to note about &lt;code&gt;EXCEPT&lt;/code&gt;:&lt;/p&gt;
 
@@ -118,7 +126,8 @@ Persisting the result sets to actual tables is a better choice when the &lt;code
 
 &lt;p&gt;We want to find out what subset of columns cause &lt;code&gt;except_ab&lt;/code&gt; and &lt;code&gt;except_ba&lt;/code&gt; to differ.
 We start out by crafting a query of the form:&lt;/p&gt;
-select count(1) from (
+
+&lt;pre&gt;&lt;code class=&#34;language-sql&#34;&gt;select count(1) from (
 select
 column_001
 ,column_002
@@ -135,6 +144,7 @@ column_001
 ,column_100
 from except_ba
 );
+&lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;Of course, in practice, we  rarely have such clean column names, but rather have all sorts of interesting and creative names to deal with.
 When we execute this query, we get the number of different rows - no surprises.&lt;/p&gt;
@@ -142,7 +152,8 @@ When we execute this query, we get the number of different rows - no surprises.&
 &lt;h2 id=&#34;performing-a-binary-search-over-the-column-names:b0fe8f0bcf3b6892f71d222f4dd92b20&#34;&gt;Performing a binary search over the column names&lt;/h2&gt;
 
 &lt;p&gt;It is tempting at this point to start commenting out any column that appears suspicious&amp;hellip;. &amp;ldquo;That &lt;code&gt;column_066&lt;/code&gt; looks like a problem, let&amp;rsquo;s comment it out and run the query again&amp;rdquo; , you might reason:&lt;/p&gt;
-select count(1) from (
+
+&lt;pre&gt;&lt;code class=&#34;language-sql&#34;&gt;select count(1) from (
 select
 column_001
 ,column_002
@@ -163,6 +174,7 @@ column_001
 ,column_100
 from except_ba
 );
+&lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;Resist this urge in favor of a more systematic approach, which will lead you to the offending column(s) in the least amount of time.
 The basic idea of the systematic approach is not to try and identify individual columns, but rather finding regions of columns that contain differing column values, and then to shrink them one by one.
@@ -193,7 +205,8 @@ When we found the regions that cause the two result sets to differ, we reduce th
 &lt;/ol&gt;
 
 &lt;p&gt;Most databases provide the multi-line commenting so that you can comment  like this:&lt;/p&gt;
-select count(1) from (
+
+&lt;pre&gt;&lt;code class=&#34;language-sql&#34;&gt;select count(1) from (
 select
 /*column_001
 ,column_002
@@ -218,6 +231,7 @@ select
 ,column_100
 from except_ba
 );
+&lt;/code&gt;&lt;/pre&gt;
 
 &lt;h1 id=&#34;next-steps:b0fe8f0bcf3b6892f71d222f4dd92b20&#34;&gt;Next steps&lt;/h1&gt;
 
@@ -235,9 +249,11 @@ Such a manual approach is only applicable if the schema is relatively small;
 for larger schemas that would take too long to compare manually we can use diff tools.&lt;/p&gt;
 
 &lt;p&gt;When we know the schemas are equivalent, the next logical step would be to count rows - something as simple as:&lt;/p&gt;
-select count(1) from table_a
+
+&lt;pre&gt;&lt;code class=&#34;language-sql&#34;&gt;select count(1) from table_a
 union all
 select count(1) from table_b;
+&lt;/code&gt;&lt;/pre&gt;
 
 &lt;h1 id=&#34;conclusion:b0fe8f0bcf3b6892f71d222f4dd92b20&#34;&gt;Conclusion&lt;/h1&gt;
 

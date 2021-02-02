@@ -119,8 +119,10 @@ Away with maths terminology! OK, only until the end of this post.</p>
 </ul>
 
 <p>So we end up with this:</p>
-NumberOfPowerBallDraws = 50 * 49 * 48 * 47 * 46 * 20 
+
+<pre><code>NumberOfPowerBallDraws = 50 * 49 * 48 * 47 * 46 * 20 
 NumberOfPowerBallDraws  = 5085024000 
+</code></pre>
 
 <p>Hmm, that is very big, too big  wouldn&rsquo;t you say?
 At those odds, jackpots would be very seldom.</p>
@@ -130,15 +132,19 @@ Well, suppose we chose option 1 for our first choice, and then option 2 for our 
 In our equation above, both those would be valid start choices, but in actual fact, since order does not matter, those are the same choices according to the definition of the game: we are double counting.
 So how badly are we double counting?
 Well, as badly as you can choose to order five numbers in a row, so that order matters, and that is kind of what we figured out in our mistake above, giving:</p>
-WaysToOrderFiveNumbers = 1 * 2 * 3 * 4 * 5 
+
+<pre><code>WaysToOrderFiveNumbers = 1 * 2 * 3 * 4 * 5 
 WaysToOrderFiveNumbers = 120 
+</code></pre>
 
 <p>Finally,  to fix our error, we reduce our previous answer by this factor, to get:</p>
-CorrectNumberOfPowerBallDraws = NumberOfPowerBallDraws / WaysToOrderFiveNumbers 
+
+<pre><code>CorrectNumberOfPowerBallDraws = NumberOfPowerBallDraws / WaysToOrderFiveNumbers 
 
 CorrectNumberOfPowerBallDraws = 5085024000 / 120 
 
 CorrectNumberOfPowerBallDraws = 42375200 
+</code></pre>
 
 <p>Is this correct now? Yeah, go ahead and Google it!</p>
 
@@ -166,9 +172,10 @@ $$</p>
 <h3 id="python:b6bf697cd8bd4495824c64b2e031761c">Python</h3>
 
 <p>Using the names from the analysis above, we get a rather long solution:</p>
-import functools as ft # for reduce
 
-# n: the number of options, p: how many "power ball" options there are, k: the number of allowed numbers that can be chosen
+<pre><code class="language-python">import functools as ft # for reduce
+
+# n: the number of options, p: how many &quot;power ball&quot; options there are, k: the number of allowed numbers that can be chosen
 def numberOfPowerBallDraws(n,p,k):
     return ft.reduce(lambda a,b: a*b, range(n-k+1,n+1)) * p
 
@@ -181,6 +188,7 @@ def correctNumberOfPowerBallDraws(n,p,k):
 p, n, k = 20, 50, 5
 print(correctNumberOfPowerBallDraws(n,p,k))
 # output 42375200.0
+</code></pre>
 
 <p>Some points to note:</p>
 
@@ -190,26 +198,32 @@ print(correctNumberOfPowerBallDraws(n,p,k))
 </ol>
 
 <p>We can simplify the code into one line, which is less readable but more concise:</p>
-import functools as ft
+
+<pre><code class="language-python">import functools as ft
 p, n, k = 20, 50, 5
 ft.reduce(lambda a,b: a*b, range(n-k+1,n+1)) * p / ft.reduce(lambda a,b: a*b, range(1,k+1))
 # output 42375200.0
+</code></pre>
 
 <p>Noticing that we multiply lists in two places, we can simplify even more by adding a <code>mul(r)</code> product function like this.</p>
-import functools as ft
+
+<pre><code class="language-python">import functools as ft
 
 def mul(r): return ft.reduce(lambda a,b: a*b, r)
 
 p, n, k = 20, 50, 5
 mul(range(n-k+1,n+1)) * p / mul(range(1,k+1))
 # output 42375200.0
+</code></pre>
 
 <p>Much better, but still to me at least, not as clean as it could be.</p>
 
 <h3 id="haskell:b6bf697cd8bd4495824c64b2e031761c">Haskell</h3>
-Prelude> let draws n p k = product [n, (n-1) .. (n-k+1)] * p / product [1 .. k]
-Prelude> draws 50 20 5
+
+<pre><code class="language-haskell">Prelude&gt; let draws n p k = product [n, (n-1) .. (n-k+1)] * p / product [1 .. k]
+Prelude&gt; draws 50 20 5
 -- outputs 4.23752e7
+</code></pre>
 
 <p>In my opinion, the simplest, most straightforward, most beautiful code.</p>
 

@@ -143,9 +143,11 @@ He started me on a nice set of aliases and I&rsquo;ve been tweaking them ever si
 <p>If you want to gain the most out of this article I recommend you install git bash and open up (or create) the file  ~/.bash_aliases which will become your secret weapon towards git guru status.
 In your ~/.bash_aliases file you will define short commands for  lengthy git command sequences.
 To ensure that your ~/.bash_aliases file is sourced on bash startup, put this in your ~/.bashrc file:</p>
-if [ -f ~/.bash_aliases ]; then
+
+<pre><code>if [ -f ~/.bash_aliases ]; then
     . ~/.bash_aliases
 fi
+</code></pre>
 
 <h2 id="learn-how-to-jump-to-git-bash-quickly-you-will-need-to-do-this-often:43ce4f2c703a95a3e073d309189c3a90">Learn how to jump to git bash quickly: you will need to do this often</h2>
 
@@ -180,9 +182,11 @@ When you suspect that confusion might arise over which branch your feature branc
 If you can see this feature branch being worked on by others also, and you want to make everyone know you are the original owner / creator you can prepend your initials: &ldquo;kr/BANK-123&rdquo;.</p>
 
 <p>Here is your first three commands and aliases to make working with short lived feature branches a breeze:</p>
-alias +='git checkout -b'
+
+<pre><code>alias +='git checkout -b'
 alias D='git branch -D'
 alias C='git checkout'
+</code></pre>
 
 <p>With those you can quickly:</p>
 
@@ -202,21 +206,25 @@ Now everything up to 5 minutes earlier was great work, yet it seems impossible t
 We&rsquo;ve all experienced this. It use to be a big deal in computer gaming, but I believe that these days the games saves for you.</p>
 
 <p>Here is your commands and aliases  so you have no more excuses - they make committing regularly totally painless:</p>
-# git add & commit
+
+<pre><code># git add &amp; commit
 	# git add
 	alias ga='git add -A'
 
-	#git commit (usage: gc "<message>")
+	#git commit (usage: gc &quot;&lt;message&gt;&quot;)
 	alias gc='git commit -m'
 	
-	#git commit (usage: gac "<message>"
-	alias gac='git add -A && git commit'
+	#git commit (usage: gac &quot;&lt;message&gt;&quot;
+	alias gac='git add -A &amp;&amp; git commit'
+</code></pre>
 
 <p>Of these I tend to only use gac, and should probably change it to c only, but hey who&rsquo;s perfect now?</p>
 
 <p>Here are some aliases for rebasing on the remote branch, or local parent branch:</p>
-	# rebase this branch of its tracked remote branch
+
+<pre><code>	# rebase this branch of its tracked remote branch
 	alias gpr='git pull --rebase'
+</code></pre>
 
 <p>However, if your local feature branch  (call it BANK-123) came from a local branch (call it master) which in turn is tracking the remote branch origin/master, then the following command will:</p>
 
@@ -224,11 +232,15 @@ We&rsquo;ve all experienced this. It use to be a big deal in computer gaming, bu
 <li>pull the remotely tracked master right from within your feature branch</li>
 <li>rebase your local feature branch on the remote master</li>
 </ol>
-	# rebase this branch off its original parent tracked remote branch named master
+
+<pre><code>	# rebase this branch off its original parent tracked remote branch named master
 	alias gprm='git pull --rebase origin master'
+</code></pre>
 
 <p>You can achieve the same effect with more steps:</p>
-	$ C master && gpr && C BANK-123 && gpr master
+
+<pre><code>	$ C master &amp;&amp; gpr &amp;&amp; C BANK-123 &amp;&amp; gpr master
+</code></pre>
 
 <p>Notice the &amp;&amp; logical combinators. It&rsquo;s a bash feature that will shortcut as expected - i.e. if you have unstaged changes in your current branch, the &lsquo;C master&rsquo; will fail and hence the whole command line.
 This combining commands on the fly is very useful if you want to fire and forget and only come back later to check if everything went according to plan.
@@ -239,11 +251,15 @@ Notice that the above will also bring your local master up to date, while the &l
 <p>When you are sure you want to add your changes to your parent branch, we call it master for argument&rsquo;s sake, you need to merge.
 Note that this is after you have successfully rebased on master, ran all relevant testing, pushed to your remote tracked feature branch (if applicable).
 You need one more alias:</p>
-	alias gm='git merge'
+
+<pre><code>	alias gm='git merge'
+</code></pre>
 
 <p>You will now want to change to master, get the latest, merge in your feature branch and push to master.
 You can do this with the following:</p>
-  $ C master && gpr && gm BANK-123 && gh
+
+<pre><code>  $ C master &amp;&amp; gpr &amp;&amp; gm BANK-123 &amp;&amp; gh
+</code></pre>
 
 <p>where BANK-123 is the name of your feature branch.
 Of course you can make an alias out of this too, but personally I like to retain a little bit of control / do some things explicitly :-) else it gets a little bit scary ($ rm -R / # anyone perhaps?).</p>
@@ -254,7 +270,9 @@ Of course you can make an alias out of this too, but personally I like to retain
 If you apply TDD properly, and hide more involved not yet completed features behind toggles this is very possible, however there might be times when you are not confident your code is ready for production yet you need to commit and push remotely.</p>
 
 <p>Here is an alias for setting a remote branch upstream to track your local branch and push there in one go:</p>
-	alias ghr='git push --set-upstream origin '
+
+<pre><code>	alias ghr='git push --set-upstream origin '
+</code></pre>
 
 <p>After issuing this command you can use the &lsquo;gh&rsquo; alias for subsequent pushes.</p>
 
@@ -266,10 +284,14 @@ Example: &ldquo;When this commit is applied it will add feature X which was not 
 
 <p>In addition, it is helpful to prepend the issue number to the message.
 If your branch name is the same as your issue number you can use the following command to do this automatically for you:</p>
-	alias gab='git add -A && git commit -m "`git rev-parse --abbrev-ref HEAD` - '
+
+<pre><code>	alias gab='git add -A &amp;&amp; git commit -m &quot;`git rev-parse --abbrev-ref HEAD` - '
+</code></pre>
 
 <p>So if you are on branch BANK-123 you can issue:</p>
-	$ gab proove P = NP and solve everything"
+
+<pre><code>	$ gab proove P = NP and solve everything&quot;
+</code></pre>
 
 <p>and the commit message would read: &ldquo;BANK-123 - proove P = NP and solve everything&rdquo;</p>
 
