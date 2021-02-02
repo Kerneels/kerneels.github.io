@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+<meta charset="utf-8">
+<meta name="description" content="Article explaining a method for finding differences between two tabular data sets using set-based operations from SQL">
+<meta name="keywords" content="analysis,set operations,sql,finding differences,big data,intersect,except,union,equivalence">
+<meta name="author" content="Kerneels Roos">
+<meta name="generator" content="Hugo 0.15" />
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://blog.goodfast.info/css/style.css" type="text/css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Code+Pro:400,700" type="text/css">
+<link rel="alternate" href="https://blog.goodfast.info/index.xml" type="application/rss+xml" title="Good Fast">
+<title>Finding what you are looking for, faster - Good Fast</title>
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.0/jquery.min.js"></script>
+<script type="text/javascript" src="https://blockchain.info/Resources/js/pay-now-button.js"></script>
+<script type="text/javascript" async
+  src="https://cdn.rawgit.com/mathjax/MathJax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+  MathJax.Hub.Config({
+  tex2jax: {
+    inlineMath: [['$','$'], ['\\(','\\)']],
+    displayMath: [['$$','$$']],
+    processEscapes: true,
+    processEnvironments: true,
+    skipTags: ['script', 'noscript', 'style', 'textarea', 'pre'],
+    TeX: { equationNumbers: { autoNumber: "AMS" },
+         extensions: ["AMSmath.js", "AMSsymbols.js"] }
+  }
+  });
+  MathJax.Hub.Queue(function() {
+    
+    
+    
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i = 0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+
+  MathJax.Hub.Config({
+  
+  TeX: { equationNumbers: { autoNumber: "AMS" } }
+  });
+</script>
+
+</head>
+<body>
+
+<header>
+  <div class="container clearfix">
+    <a class="path" href="https://blog.goodfast.info/">[Good Fast]</a>
+    <span class="caret"># _</span>
+    <div class="right">
+      
+    </div>
+  </div>
+</header>
+
+<div class="container">
+
+
+<main role="main" class="article">
+  
+<article class="single" itemscope itemtype="http://schema.org/BlogPosting">
+  <div class="meta">
+
+    <span class="key">published on</span>
+    <span class="val"><time itemprop="datePublished" datetime="2021-01-31">January 31, 2021</time></span>
+
+
+    <span class="key">in</span>
+    <span class="val">
+
+        <a href="https://blog.goodfast.info/categories/sql">sql</a>
+
+        <a href="https://blog.goodfast.info/categories/data-analysis">data analysis</a>
+
+        <a href="https://blog.goodfast.info/categories/debugging">debugging</a>
+
+        <a href="https://blog.goodfast.info/categories/anomalies">anomalies</a>
+
+        <a href="https://blog.goodfast.info/categories/methods">methods</a>
+
+    </span>
+
+
+  </div>
+  <h1 class="headline" itemprop="headline">Finding what you are looking for, faster</h1>
+    <div id="toc" class="well col-md-4 col-sm-6">
+    <nav id="TableOfContents">
+<ul>
+<li><a href="#comparing-on-two-dimensions:b0fe8f0bcf3b6892f71d222f4dd92b20">Comparing on two dimensions</a></li>
+<li><a href="#vertical-or-row-difference:b0fe8f0bcf3b6892f71d222f4dd92b20">Vertical, or row difference</a>
+<ul>
+<li><a href="#sql-set-operators-intersect-and-except:b0fe8f0bcf3b6892f71d222f4dd92b20">SQL set operators INTERSECT and EXCEPT</a>
+<ul>
+<li><a href="#intersect:b0fe8f0bcf3b6892f71d222f4dd92b20">INTERSECT</a></li>
+<li><a href="#except:b0fe8f0bcf3b6892f71d222f4dd92b20">EXCEPT</a></li>
+</ul></li>
+</ul></li>
+<li><a href="#horizontal-or-column-differences:b0fe8f0bcf3b6892f71d222f4dd92b20">Horizontal, or column differences</a>
+<ul>
+<li><a href="#setting-things-up-for-horizontal-comparisons:b0fe8f0bcf3b6892f71d222f4dd92b20">Setting things up for horizontal comparisons</a></li>
+<li><a href="#performing-a-binary-search-over-the-column-names:b0fe8f0bcf3b6892f71d222f4dd92b20">Performing a binary search over the column names</a></li>
+</ul></li>
+<li><a href="#next-steps:b0fe8f0bcf3b6892f71d222f4dd92b20">Next steps</a></li>
+<li><a href="#establishing-shape-or-schema-equivalence:b0fe8f0bcf3b6892f71d222f4dd92b20">Establishing shape, or schema equivalence</a></li>
+<li><a href="#conclusion:b0fe8f0bcf3b6892f71d222f4dd92b20">Conclusion</a></li>
+</ul>
+</nav>
+    </div>
+  <section class="body" itemprop="articleBody">
+    
+
+<p>Sometimes we need to  show that the exact same data is produced by two different processes.
+We might be replacing one implementation of an algorithm with a more efficient one, or we might be running the same algorithm on a different technology.
+We want to  show that the data in <code>table_a</code> and <code>table_b</code> is identical, or if it is not identical, we want to identify all differences.
+In this article, I want to share with you a method that helped me do this.
+SQL, being set-based, help us do this fairly elegantly, but getting to the bottom of what causes
+the differences requires a bit of careful and systematic work on our part too.</p>
+
+<h1 id="comparing-on-two-dimensions:b0fe8f0bcf3b6892f71d222f4dd92b20">Comparing on two dimensions</h1>
+
+<p>Assuming that the &ldquo;shape&rdquo; or schema of the two  tables is equivalent (see notes below on how to determine this),
+we can consider how similar the contained data is by looking at the vertical (rows), and horizontal (columns) dimensions.</p>
+
+<h1 id="vertical-or-row-difference:b0fe8f0bcf3b6892f71d222f4dd92b20">Vertical, or row difference</h1>
+
+<p>these possibilities exist:
+1. full disjunction : <code>table_a</code> and <code>table_b</code> differ completely and do not overlap at all
+1. non empty union : <code>table_a</code> and <code>table_b</code> partially overlap, but differ in all other rows
+1. <code>table_a</code> is entirely contained in <code>table_b</code> : <code>table_a</code> is a subset of <code>table_b</code>
+1. <code>table_b</code> is entirely contained in <code>table_a</code> : <code>table_b</code> is a subset of <code>table_a</code>
+1. set equivalence : <code>table_a</code> and <code>table_b</code> overlap completely and do not differ at all</p>
+
+<p>It is worth noting that:
+a. We have set equivalence if we have both <code>table_a</code> is a subset of <code>table_b</code>, AND <code>table_b</code> is a subset of <code>table_a</code>.
+a. If row counts for the tables differ we can never have set equivalence.
+a. Even if row counts for the tables differ, we can still potentially have non empty union or a subset scenario.
+a. If row counts for the two tables are both <code>N</code>, , and the row count for the set intersection between the two tables is also  <code>N</code>, then we have set equivalence.</p>
+
+<p>To find differing/similar rows, you might be tempted to construct elaborate joins involving all the columns, perhaps using FULL JOIN, but there exist a more elegant approach which involves some of SQL&rsquo;s set operators.</p>
+
+<h2 id="sql-set-operators-intersect-and-except:b0fe8f0bcf3b6892f71d222f4dd92b20">SQL set operators INTERSECT and EXCEPT</h2>
+
+<p>Most people are familiar with the <code>UNION</code> and <code>UNION ALL</code> set operators, but <code>INTERSECT</code> and <code>EXCEPT</code> is perhaps a little less known.
+As a reminder, <code>UNION</code> between two queries will produce the set union, with all duplicates removed, while <code>UNION ALL</code> simply unifies the two result sets into one, where there might exist duplicates.
+<code>UNION</code> is more expensive than <code>UNION ALL</code> because <code>UNION</code> performs a sort in order to do the implicit <code>DISTINCT</code>.</p>
+
+<h3 id="intersect:b0fe8f0bcf3b6892f71d222f4dd92b20">INTERSECT</h3>
+
+<p>For obtaining a possible set intersection between two tables, we can use the <code>INTERSECT</code> operator:</p>
+select * from table_a
+intersect
+select * from table_b
+;
+
+<p>As pointed out earlier, if the row count for the intersection is the same as the row counts for the two tables, we have set equivalence:</p>
+select sum(row_count) = 0 as set_equivalence from (
+select count(1) as row_count from (
+select * from table_a
+intersect
+select * from table_b
+)
+union all
+select count(1) as row_count from table_a
+union all
+select -2 * count(1) as row_count from table_b
+);
+
+<h3 id="except:b0fe8f0bcf3b6892f71d222f4dd92b20">EXCEPT</h3>
+
+<p>When we use the <code>EXCEPT</code> set operator, for example, <code>query_1 EXCEPT query_2</code>, we are left with all rows from <code>query_1</code> that do not occur in <code>query_2</code>.
+Note that <code>query_2</code> might contain rows that are not present in <code>query_1</code>, but because <code>EXCEPT</code> is not commutative, similar to how minus is not commutative, <code>query_1 EXCEPT query_2</code> is not the same as <code>query_2 EXCEPT 
+query_1</code>, and we are only left with non occurring rows in <code>query_1</code>.</p>
+select * from table_a
+except
+select * from table_b;
+
+<p>&hellip;is not the same as:</p>
+select * from table_b
+except
+select * from table_a;
+
+<p>Some points to note about <code>EXCEPT</code>:
+1. if the row counts for both tables are the same, then the row count for the result of applying the <code>EXCEPT</code> operator will always be equal to, or less than the row count for the tables.
+1. If the row counts for the tables are equal, and the row count for the <code>EXCEPT</code> query is equal to that number, then the two tables differ completely.
+1. If the row counts for the tables are equal), then the  row count for an <code>EXCEPT</code> query between the two tables gives us the number of different rows between the two tables.
+1. If the row counts for the tables are equal, and the row count for the <code>table_a EXCEPT table_b</code> query is equal to zero, then it means that <code>table_a</code> is completely contained in <code>table_b</code>, but because the tables have the same number of rows, it must be that <code>table_b</code> and <code>table_a</code>  are set equivalent.
+Obtaining the query results for both <code>table_a EXCEPT table_b</code> and <code>table_b EXCEPT table_a</code> is especially useful when the row counts for <code>table_a</code> and <code>table_b</code> are equivalent.
+Armed with those two query results, we can now move on to the task of determining in which columns the differences occur.</p>
+
+<h1 id="horizontal-or-column-differences:b0fe8f0bcf3b6892f71d222f4dd92b20">Horizontal, or column differences</h1>
+
+<p>When we have both <code>table_a EXCEPT table_b</code> and <code>table_b EXCEPT table_a</code> result sets, we can do a further <code>EXCEPT</code> query on them, in a special regime of commenting out columns, in order to determine which columns differ.</p>
+
+<h2 id="setting-things-up-for-horizontal-comparisons:b0fe8f0bcf3b6892f71d222f4dd92b20">Setting things up for horizontal comparisons</h2>
+
+<p>Let&rsquo;s call the result of <code>table_a EXCEPT table_b</code> view <code>except_ab</code>, and  similarly <code>table_b EXCEPT table_a</code> we call view <code>except_ba</code>.
+<code>except_ab</code> and <code>except_ba</code> could be actual views, or results persisted in new tables.
+Persisting the result sets to actual tables is a better choice when the <code>EXCEPT</code> opperator has to work through large data sets.</p>
+
+<p>Let&rsquo;s further say that both <code>table_a</code> and <code>table_b</code> have columns <code>column_001</code> through <code>column_100</code> - not an uncommonly large number of columns when dealing with analytics type, column store data sets.</p>
+
+<p>We want to find out what subset of columns cause <code>except_ab</code> and <code>except_ba</code> to differ.
+We start out by crafting a query of the form:</p>
+select count(1) from (
+select
+column_001
+,column_002
+,column_003
+...
+,column_100
+from except_ab
+except
+select
+column_001
+,column_002
+,column_003
+...
+,column_100
+from except_ba
+);
+
+<p>Of course, in practice, we  rarely have such clean column names, but rather have all sorts of interesting and creative names to deal with.
+When we execute this query, we get the number of different rows - no surprises.</p>
+
+<h2 id="performing-a-binary-search-over-the-column-names:b0fe8f0bcf3b6892f71d222f4dd92b20">Performing a binary search over the column names</h2>
+
+<p>It is tempting at this point to start commenting out any column that appears suspicious&hellip;. &ldquo;That <code>column_066</code> looks like a problem, let&rsquo;s comment it out and run the query again&rdquo; , you might reason:</p>
+select count(1) from (
+select
+column_001
+,column_002
+,column_003
+...
+--,column_066
+...
+,column_100
+from except_ab
+except
+select
+column_001
+,column_002
+,column_003
+...
+--,column_066
+...
+,column_100
+from except_ba
+);
+
+<p>Resist this urge in favor of a more systematic approach, which will lead you to the offending column(s) in the least amount of time.
+The basic idea of the systematic approach is not to try and identify individual columns, but rather finding regions of columns that contain differing column values, and then to shrink them one by one.
+Once we have identified all the column regions that are causing the count to be greater than zero, we can work on each of the regions in turn, to narrow down to the individual column level, which columns differ in values.
+When we found the regions that cause the two result sets to differ, we reduce those regions by halving them each time, until we end up with the smallest (in number of columns) sized regions that accounts for all the differences.</p>
+
+<p>It is kind of awkward to describe the algorithm here in plain English, but hopefully you get the idea:</p>
+
+<ol>
+<li>Run the query and take note of the result - let&rsquo;s call it $D$.</li>
+<li>Comment out half the columns of all currently uncommented columns. At the start, this would be from <code>column_001</code> to <code>column_050</code>. Do this in both branches of the query.</li>
+<li>Run the query and take note of the new result - let&rsquo;s call it $E$.</li>
+<li>If the count is the same as before, if $D = E$, it means that the offending columns definitely exist in the uncommented list of columns (and potentially also exist in the commented out ones).
+
+<ol>
+<li>You can now try to invert the commented regions, and run the query again - start the process from step 1.</li>
+</ol></li>
+<li>If instead the count reduces to a number greater than zero, if $E &gt; 0$,  it means that you have found some of the differing columns: some of them are in the commented out list of columns.
+
+<ol>
+<li>Now comment half of the previously uncommented region - <code>column_051</code> through <code>column_075</code>, and run the query again (go to step 2.).</li>
+</ol></li>
+<li>If the count drops all the way to zero, then you know that all of the differing columns exist in the commented list of columns - you have found all of them.  This should be your goal in the first part of the process.</li>
+<li>Never start reducing the commented regions until you get a count of zero differences.</li>
+<li>Once you have a count of zero for the differences, start to work on each region in turn, by uncommenting half of it, and checking if the difference count remains zero.</li>
+<li>At the end of the process you want to be left with one or more regions of commented columns such that, uncommenting any column currently commented will make the query return a number greater than zero.</li>
+<li>If you reach this point, you have found the smallest number of columns that is responsible for the differences between the two result sets.</li>
+</ol>
+
+<p>Most databases provide the multi-line commenting so that you can comment  like this:</p>
+select count(1) from (
+select
+/*column_001
+,column_002
+,column_003
+...
+,*/column_051
+,column_052
+,column_053
+...
+,column_100
+from except_ab
+except
+select
+/*column_001
+,column_002
+,column_003
+...
+,*/column_051
+,column_052
+,column_053
+...
+,column_100
+from except_ba
+);
+
+<h1 id="next-steps:b0fe8f0bcf3b6892f71d222f4dd92b20">Next steps</h1>
+
+<p>Knowing which rows and columns differ, we can now more closely inspect the nature of the differences.
+One approach we can try is to aggregate over various sub groups in the data - we group over columns that do not differ, and we aggregate over values in columns that do differ.
+The cause of the differences might be due to something simple like a sign reversal, or a incorrect scaling operation, or it might be far more involved, but knowing which columns to inspect in the algorithm will help you a lot.</p>
+
+<h1 id="establishing-shape-or-schema-equivalence:b0fe8f0bcf3b6892f71d222f4dd92b20">Establishing shape, or schema equivalence</h1>
+
+<p>As a start, we have to establish schema equivalence - the two data sets have to have the same &ldquo;shape&rdquo; else they cannot be equivalent.
+In the context of a database, this would be the number of columns and their names and data types.
+Even for very wide tables, we can  fairly easily establish this by looking at the schema definition.
+One approach would be to get the DDL for both data sets, the <code>CREATE TABLE</code> statements, and compare the code side-by-side, or line-by-line.
+Such a manual approach is only applicable if the schema is relatively small;
+for larger schemas that would take too long to compare manually we can use diff tools.</p>
+
+<p>When we know the schemas are equivalent, the next logical step would be to count rows - something as simple as:</p>
+select count(1) from table_a
+union all
+select count(1) from table_b;
+
+<h1 id="conclusion:b0fe8f0bcf3b6892f71d222f4dd92b20">Conclusion</h1>
+
+<p>It can be disheartening when, after a lot of hard work crafting a new algorithm or process, only to be greeted with differences of hundreds of thousands of rows.
+Fortunately though, my experience has been that in a big data analytics context, the <a href="https://en.wikipedia.org/wiki/Pareto_principle">pareto principal</a>
+tends to hold in that, and that a minority of columns tend to be the cause of the majority of differences.
+In big data settings we often cannot simply eyeball the differences between data sets, mainly because of the ever-widening table schemas, and ever-growing data sizes.
+What we need is approaches that can scale, and that utilise the excellent features of the storage technology the data resides in, and this is probably some sort of stack that allows for set-based, SQL-like queries.</p>
+
+<p>I hope that the method I shared here can help you find what you are looking for, faster.</p>
+
+  </section>
+</article>
+
+</main>
+
+
+</div>
+
+<footer>
+  <div class="container">
+<div style="font-size:16px;margin:0 auto;width:300px" class="blockchain-btn"
+     data-address="1DNw8dEG14NazWDEQUkwPZJ2kfgoaSa7dv"
+     data-shared="false">
+    <div class="blockchain stage-begin">
+        <img src="https://blockchain.info/Resources/buttons/donate_64.png"/>
+    </div>
+    <div class="blockchain stage-loading" style="text-align:center">
+        <img src="https://blockchain.info/Resources/loading-large.gif"/>
+    </div>
+    <div class="blockchain stage-ready">
+         <p align="center">If you'd like to support this site and see the content here grow, please donate to Bitcoin address: <b>[[address]]</b></p>
+         <p align="center" class="qr-code"></p>
+    </div>
+    <div class="blockchain stage-paid">
+         Donation of <b>[[value]] BTC</b> Received. Thank You Very Much!
+    </div>
+    <div class="blockchain stage-error">
+        <font color="red">[[error]]</font>
+    </div>
+</div>
+  </div>
+  <div class="container">
+    <span class="copyright">&copy; 2021  Good Fast - <a rel="license" href="http://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a></span>
+  </div>
+</footer>
+
+</body>
+</html>
+

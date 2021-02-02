@@ -1,0 +1,246 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Debugging on Good Fast</title>
+    <link>https://blog.goodfast.info/categories/debugging/</link>
+    <description>Recent content in Debugging on Good Fast</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Sun, 31 Jan 2021 21:26:20 +0000</lastBuildDate>
+    <atom:link href="https://blog.goodfast.info/categories/debugging/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>Finding what you are looking for, faster</title>
+      <link>https://blog.goodfast.info/post/find-differences-fast/</link>
+      <pubDate>Sun, 31 Jan 2021 21:26:20 +0000</pubDate>
+      
+      <guid>https://blog.goodfast.info/post/find-differences-fast/</guid>
+      <description>
+
+&lt;p&gt;Sometimes we need to  show that the exact same data is produced by two different processes.
+We might be replacing one implementation of an algorithm with a more efficient one, or we might be running the same algorithm on a different technology.
+We want to  show that the data in &lt;code&gt;table_a&lt;/code&gt; and &lt;code&gt;table_b&lt;/code&gt; is identical, or if it is not identical, we want to identify all differences.
+In this article, I want to share with you a method that helped me do this.
+SQL, being set-based, help us do this fairly elegantly, but getting to the bottom of what causes
+the differences requires a bit of careful and systematic work on our part too.&lt;/p&gt;
+
+&lt;h1 id=&#34;comparing-on-two-dimensions:b0fe8f0bcf3b6892f71d222f4dd92b20&#34;&gt;Comparing on two dimensions&lt;/h1&gt;
+
+&lt;p&gt;Assuming that the &amp;ldquo;shape&amp;rdquo; or schema of the two  tables is equivalent (see notes below on how to determine this),
+we can consider how similar the contained data is by looking at the vertical (rows), and horizontal (columns) dimensions.&lt;/p&gt;
+
+&lt;h1 id=&#34;vertical-or-row-difference:b0fe8f0bcf3b6892f71d222f4dd92b20&#34;&gt;Vertical, or row difference&lt;/h1&gt;
+
+&lt;p&gt;these possibilities exist:
+1. full disjunction : &lt;code&gt;table_a&lt;/code&gt; and &lt;code&gt;table_b&lt;/code&gt; differ completely and do not overlap at all
+1. non empty union : &lt;code&gt;table_a&lt;/code&gt; and &lt;code&gt;table_b&lt;/code&gt; partially overlap, but differ in all other rows
+1. &lt;code&gt;table_a&lt;/code&gt; is entirely contained in &lt;code&gt;table_b&lt;/code&gt; : &lt;code&gt;table_a&lt;/code&gt; is a subset of &lt;code&gt;table_b&lt;/code&gt;
+1. &lt;code&gt;table_b&lt;/code&gt; is entirely contained in &lt;code&gt;table_a&lt;/code&gt; : &lt;code&gt;table_b&lt;/code&gt; is a subset of &lt;code&gt;table_a&lt;/code&gt;
+1. set equivalence : &lt;code&gt;table_a&lt;/code&gt; and &lt;code&gt;table_b&lt;/code&gt; overlap completely and do not differ at all&lt;/p&gt;
+
+&lt;p&gt;It is worth noting that:
+a. We have set equivalence if we have both &lt;code&gt;table_a&lt;/code&gt; is a subset of &lt;code&gt;table_b&lt;/code&gt;, AND &lt;code&gt;table_b&lt;/code&gt; is a subset of &lt;code&gt;table_a&lt;/code&gt;.
+a. If row counts for the tables differ we can never have set equivalence.
+a. Even if row counts for the tables differ, we can still potentially have non empty union or a subset scenario.
+a. If row counts for the two tables are both &lt;code&gt;N&lt;/code&gt;, , and the row count for the set intersection between the two tables is also  &lt;code&gt;N&lt;/code&gt;, then we have set equivalence.&lt;/p&gt;
+
+&lt;p&gt;To find differing/similar rows, you might be tempted to construct elaborate joins involving all the columns, perhaps using FULL JOIN, but there exist a more elegant approach which involves some of SQL&amp;rsquo;s set operators.&lt;/p&gt;
+
+&lt;h2 id=&#34;sql-set-operators-intersect-and-except:b0fe8f0bcf3b6892f71d222f4dd92b20&#34;&gt;SQL set operators INTERSECT and EXCEPT&lt;/h2&gt;
+
+&lt;p&gt;Most people are familiar with the &lt;code&gt;UNION&lt;/code&gt; and &lt;code&gt;UNION ALL&lt;/code&gt; set operators, but &lt;code&gt;INTERSECT&lt;/code&gt; and &lt;code&gt;EXCEPT&lt;/code&gt; is perhaps a little less known.
+As a reminder, &lt;code&gt;UNION&lt;/code&gt; between two queries will produce the set union, with all duplicates removed, while &lt;code&gt;UNION ALL&lt;/code&gt; simply unifies the two result sets into one, where there might exist duplicates.
+&lt;code&gt;UNION&lt;/code&gt; is more expensive than &lt;code&gt;UNION ALL&lt;/code&gt; because &lt;code&gt;UNION&lt;/code&gt; performs a sort in order to do the implicit &lt;code&gt;DISTINCT&lt;/code&gt;.&lt;/p&gt;
+
+&lt;h3 id=&#34;intersect:b0fe8f0bcf3b6892f71d222f4dd92b20&#34;&gt;INTERSECT&lt;/h3&gt;
+
+&lt;p&gt;For obtaining a possible set intersection between two tables, we can use the &lt;code&gt;INTERSECT&lt;/code&gt; operator:&lt;/p&gt;
+select * from table_a
+intersect
+select * from table_b
+;
+
+&lt;p&gt;As pointed out earlier, if the row count for the intersection is the same as the row counts for the two tables, we have set equivalence:&lt;/p&gt;
+select sum(row_count) = 0 as set_equivalence from (
+select count(1) as row_count from (
+select * from table_a
+intersect
+select * from table_b
+)
+union all
+select count(1) as row_count from table_a
+union all
+select -2 * count(1) as row_count from table_b
+);
+
+&lt;h3 id=&#34;except:b0fe8f0bcf3b6892f71d222f4dd92b20&#34;&gt;EXCEPT&lt;/h3&gt;
+
+&lt;p&gt;When we use the &lt;code&gt;EXCEPT&lt;/code&gt; set operator, for example, &lt;code&gt;query_1 EXCEPT query_2&lt;/code&gt;, we are left with all rows from &lt;code&gt;query_1&lt;/code&gt; that do not occur in &lt;code&gt;query_2&lt;/code&gt;.
+Note that &lt;code&gt;query_2&lt;/code&gt; might contain rows that are not present in &lt;code&gt;query_1&lt;/code&gt;, but because &lt;code&gt;EXCEPT&lt;/code&gt; is not commutative, similar to how minus is not commutative, &lt;code&gt;query_1 EXCEPT query_2&lt;/code&gt; is not the same as &lt;code&gt;query_2 EXCEPT 
+query_1&lt;/code&gt;, and we are only left with non occurring rows in &lt;code&gt;query_1&lt;/code&gt;.&lt;/p&gt;
+select * from table_a
+except
+select * from table_b;
+
+&lt;p&gt;&amp;hellip;is not the same as:&lt;/p&gt;
+select * from table_b
+except
+select * from table_a;
+
+&lt;p&gt;Some points to note about &lt;code&gt;EXCEPT&lt;/code&gt;:
+1. if the row counts for both tables are the same, then the row count for the result of applying the &lt;code&gt;EXCEPT&lt;/code&gt; operator will always be equal to, or less than the row count for the tables.
+1. If the row counts for the tables are equal, and the row count for the &lt;code&gt;EXCEPT&lt;/code&gt; query is equal to that number, then the two tables differ completely.
+1. If the row counts for the tables are equal), then the  row count for an &lt;code&gt;EXCEPT&lt;/code&gt; query between the two tables gives us the number of different rows between the two tables.
+1. If the row counts for the tables are equal, and the row count for the &lt;code&gt;table_a EXCEPT table_b&lt;/code&gt; query is equal to zero, then it means that &lt;code&gt;table_a&lt;/code&gt; is completely contained in &lt;code&gt;table_b&lt;/code&gt;, but because the tables have the same number of rows, it must be that &lt;code&gt;table_b&lt;/code&gt; and &lt;code&gt;table_a&lt;/code&gt;  are set equivalent.
+Obtaining the query results for both &lt;code&gt;table_a EXCEPT table_b&lt;/code&gt; and &lt;code&gt;table_b EXCEPT table_a&lt;/code&gt; is especially useful when the row counts for &lt;code&gt;table_a&lt;/code&gt; and &lt;code&gt;table_b&lt;/code&gt; are equivalent.
+Armed with those two query results, we can now move on to the task of determining in which columns the differences occur.&lt;/p&gt;
+
+&lt;h1 id=&#34;horizontal-or-column-differences:b0fe8f0bcf3b6892f71d222f4dd92b20&#34;&gt;Horizontal, or column differences&lt;/h1&gt;
+
+&lt;p&gt;When we have both &lt;code&gt;table_a EXCEPT table_b&lt;/code&gt; and &lt;code&gt;table_b EXCEPT table_a&lt;/code&gt; result sets, we can do a further &lt;code&gt;EXCEPT&lt;/code&gt; query on them, in a special regime of commenting out columns, in order to determine which columns differ.&lt;/p&gt;
+
+&lt;h2 id=&#34;setting-things-up-for-horizontal-comparisons:b0fe8f0bcf3b6892f71d222f4dd92b20&#34;&gt;Setting things up for horizontal comparisons&lt;/h2&gt;
+
+&lt;p&gt;Let&amp;rsquo;s call the result of &lt;code&gt;table_a EXCEPT table_b&lt;/code&gt; view &lt;code&gt;except_ab&lt;/code&gt;, and  similarly &lt;code&gt;table_b EXCEPT table_a&lt;/code&gt; we call view &lt;code&gt;except_ba&lt;/code&gt;.
+&lt;code&gt;except_ab&lt;/code&gt; and &lt;code&gt;except_ba&lt;/code&gt; could be actual views, or results persisted in new tables.
+Persisting the result sets to actual tables is a better choice when the &lt;code&gt;EXCEPT&lt;/code&gt; opperator has to work through large data sets.&lt;/p&gt;
+
+&lt;p&gt;Let&amp;rsquo;s further say that both &lt;code&gt;table_a&lt;/code&gt; and &lt;code&gt;table_b&lt;/code&gt; have columns &lt;code&gt;column_001&lt;/code&gt; through &lt;code&gt;column_100&lt;/code&gt; - not an uncommonly large number of columns when dealing with analytics type, column store data sets.&lt;/p&gt;
+
+&lt;p&gt;We want to find out what subset of columns cause &lt;code&gt;except_ab&lt;/code&gt; and &lt;code&gt;except_ba&lt;/code&gt; to differ.
+We start out by crafting a query of the form:&lt;/p&gt;
+select count(1) from (
+select
+column_001
+,column_002
+,column_003
+...
+,column_100
+from except_ab
+except
+select
+column_001
+,column_002
+,column_003
+...
+,column_100
+from except_ba
+);
+
+&lt;p&gt;Of course, in practice, we  rarely have such clean column names, but rather have all sorts of interesting and creative names to deal with.
+When we execute this query, we get the number of different rows - no surprises.&lt;/p&gt;
+
+&lt;h2 id=&#34;performing-a-binary-search-over-the-column-names:b0fe8f0bcf3b6892f71d222f4dd92b20&#34;&gt;Performing a binary search over the column names&lt;/h2&gt;
+
+&lt;p&gt;It is tempting at this point to start commenting out any column that appears suspicious&amp;hellip;. &amp;ldquo;That &lt;code&gt;column_066&lt;/code&gt; looks like a problem, let&amp;rsquo;s comment it out and run the query again&amp;rdquo; , you might reason:&lt;/p&gt;
+select count(1) from (
+select
+column_001
+,column_002
+,column_003
+...
+--,column_066
+...
+,column_100
+from except_ab
+except
+select
+column_001
+,column_002
+,column_003
+...
+--,column_066
+...
+,column_100
+from except_ba
+);
+
+&lt;p&gt;Resist this urge in favor of a more systematic approach, which will lead you to the offending column(s) in the least amount of time.
+The basic idea of the systematic approach is not to try and identify individual columns, but rather finding regions of columns that contain differing column values, and then to shrink them one by one.
+Once we have identified all the column regions that are causing the count to be greater than zero, we can work on each of the regions in turn, to narrow down to the individual column level, which columns differ in values.
+When we found the regions that cause the two result sets to differ, we reduce those regions by halving them each time, until we end up with the smallest (in number of columns) sized regions that accounts for all the differences.&lt;/p&gt;
+
+&lt;p&gt;It is kind of awkward to describe the algorithm here in plain English, but hopefully you get the idea:&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;Run the query and take note of the result - let&amp;rsquo;s call it $D$.&lt;/li&gt;
+&lt;li&gt;Comment out half the columns of all currently uncommented columns. At the start, this would be from &lt;code&gt;column_001&lt;/code&gt; to &lt;code&gt;column_050&lt;/code&gt;. Do this in both branches of the query.&lt;/li&gt;
+&lt;li&gt;Run the query and take note of the new result - let&amp;rsquo;s call it $E$.&lt;/li&gt;
+&lt;li&gt;If the count is the same as before, if $D = E$, it means that the offending columns definitely exist in the uncommented list of columns (and potentially also exist in the commented out ones).
+
+&lt;ol&gt;
+&lt;li&gt;You can now try to invert the commented regions, and run the query again - start the process from step 1.&lt;/li&gt;
+&lt;/ol&gt;&lt;/li&gt;
+&lt;li&gt;If instead the count reduces to a number greater than zero, if $E &amp;gt; 0$,  it means that you have found some of the differing columns: some of them are in the commented out list of columns.
+
+&lt;ol&gt;
+&lt;li&gt;Now comment half of the previously uncommented region - &lt;code&gt;column_051&lt;/code&gt; through &lt;code&gt;column_075&lt;/code&gt;, and run the query again (go to step 2.).&lt;/li&gt;
+&lt;/ol&gt;&lt;/li&gt;
+&lt;li&gt;If the count drops all the way to zero, then you know that all of the differing columns exist in the commented list of columns - you have found all of them.  This should be your goal in the first part of the process.&lt;/li&gt;
+&lt;li&gt;Never start reducing the commented regions until you get a count of zero differences.&lt;/li&gt;
+&lt;li&gt;Once you have a count of zero for the differences, start to work on each region in turn, by uncommenting half of it, and checking if the difference count remains zero.&lt;/li&gt;
+&lt;li&gt;At the end of the process you want to be left with one or more regions of commented columns such that, uncommenting any column currently commented will make the query return a number greater than zero.&lt;/li&gt;
+&lt;li&gt;If you reach this point, you have found the smallest number of columns that is responsible for the differences between the two result sets.&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;Most databases provide the multi-line commenting so that you can comment  like this:&lt;/p&gt;
+select count(1) from (
+select
+/*column_001
+,column_002
+,column_003
+...
+,*/column_051
+,column_052
+,column_053
+...
+,column_100
+from except_ab
+except
+select
+/*column_001
+,column_002
+,column_003
+...
+,*/column_051
+,column_052
+,column_053
+...
+,column_100
+from except_ba
+);
+
+&lt;h1 id=&#34;next-steps:b0fe8f0bcf3b6892f71d222f4dd92b20&#34;&gt;Next steps&lt;/h1&gt;
+
+&lt;p&gt;Knowing which rows and columns differ, we can now more closely inspect the nature of the differences.
+One approach we can try is to aggregate over various sub groups in the data - we group over columns that do not differ, and we aggregate over values in columns that do differ.
+The cause of the differences might be due to something simple like a sign reversal, or a incorrect scaling operation, or it might be far more involved, but knowing which columns to inspect in the algorithm will help you a lot.&lt;/p&gt;
+
+&lt;h1 id=&#34;establishing-shape-or-schema-equivalence:b0fe8f0bcf3b6892f71d222f4dd92b20&#34;&gt;Establishing shape, or schema equivalence&lt;/h1&gt;
+
+&lt;p&gt;As a start, we have to establish schema equivalence - the two data sets have to have the same &amp;ldquo;shape&amp;rdquo; else they cannot be equivalent.
+In the context of a database, this would be the number of columns and their names and data types.
+Even for very wide tables, we can  fairly easily establish this by looking at the schema definition.
+One approach would be to get the DDL for both data sets, the &lt;code&gt;CREATE TABLE&lt;/code&gt; statements, and compare the code side-by-side, or line-by-line.
+Such a manual approach is only applicable if the schema is relatively small;
+for larger schemas that would take too long to compare manually we can use diff tools.&lt;/p&gt;
+
+&lt;p&gt;When we know the schemas are equivalent, the next logical step would be to count rows - something as simple as:&lt;/p&gt;
+select count(1) from table_a
+union all
+select count(1) from table_b;
+
+&lt;h1 id=&#34;conclusion:b0fe8f0bcf3b6892f71d222f4dd92b20&#34;&gt;Conclusion&lt;/h1&gt;
+
+&lt;p&gt;It can be disheartening when, after a lot of hard work crafting a new algorithm or process, only to be greeted with differences of hundreds of thousands of rows.
+Fortunately though, my experience has been that in a big data analytics context, the &lt;a href=&#34;https://en.wikipedia.org/wiki/Pareto_principle&#34;&gt;pareto principal&lt;/a&gt;
+tends to hold in that, and that a minority of columns tend to be the cause of the majority of differences.
+In big data settings we often cannot simply eyeball the differences between data sets, mainly because of the ever-widening table schemas, and ever-growing data sizes.
+What we need is approaches that can scale, and that utilise the excellent features of the storage technology the data resides in, and this is probably some sort of stack that allows for set-based, SQL-like queries.&lt;/p&gt;
+
+&lt;p&gt;I hope that the method I shared here can help you find what you are looking for, faster.&lt;/p&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>
