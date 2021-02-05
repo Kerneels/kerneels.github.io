@@ -6,13 +6,13 @@
     <description>Recent content in Anomalies on Good Fast</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Sun, 31 Jan 2021 21:26:20 +0000</lastBuildDate>
+    <lastBuildDate>Fri, 05 Feb 2021 10:26:20 +0000</lastBuildDate>
     <atom:link href="https://blog.goodfast.info/categories/anomalies/index.xml" rel="self" type="application/rss+xml" />
     
     <item>
-      <title>Finding what you are looking for, faster</title>
+      <title>Finding vertical and horizontal, or row and column differences on wide tables, faster</title>
       <link>https://blog.goodfast.info/post/find-differences-fast/</link>
-      <pubDate>Sun, 31 Jan 2021 21:26:20 +0000</pubDate>
+      <pubDate>Fri, 05 Feb 2021 10:26:20 +0000</pubDate>
       
       <guid>https://blog.goodfast.info/post/find-differences-fast/</guid>
       <description>
@@ -21,8 +21,7 @@
 We might be replacing one implementation of an algorithm with a more efficient one, or we might be running the same algorithm on a different technology.
 We want to  show that the data in &lt;code&gt;table_a&lt;/code&gt; and &lt;code&gt;table_b&lt;/code&gt; is identical, or if it is not identical, we want to identify all differences.
 In this article, I want to share with you a method that helped me do this.
-SQL, being set-based, help us do this fairly elegantly, but getting to the bottom of what causes
-the differences requires a bit of careful and systematic work on our part too.&lt;/p&gt;
+SQL, being set-based, help us find differing rows easily and elegantly, but  finding the differing columns requires a bit of careful and systematic manual work on our part.&lt;/p&gt;
 
 &lt;h1 id=&#34;comparing-on-two-dimensions:b0fe8f0bcf3b6892f71d222f4dd92b20&#34;&gt;Comparing on two dimensions&lt;/h1&gt;
 

@@ -2,7 +2,7 @@
 <html lang="en-us">
 <head>
 <meta charset="utf-8">
-<meta name="description" content="Article explaining a method for finding differences between two tabular data sets using set-based operations from SQL">
+<meta name="description" content="Article explaining a method for finding row differences between two wide (many columns) tabular data sets using set-based operations, and a type of binary search to find differing columns">
 <meta name="keywords" content="analysis,set operations,sql,finding differences,big data,intersect,except,union,equivalence">
 <meta name="author" content="Kerneels Roos">
 <meta name="generator" content="Hugo 0.15" />
@@ -10,7 +10,7 @@
 <link rel="stylesheet" href="https://blog.goodfast.info/css/style.css" type="text/css">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Code+Pro:400,700" type="text/css">
 <link rel="alternate" href="https://blog.goodfast.info/index.xml" type="application/rss+xml" title="Good Fast">
-<title>Finding what you are looking for, faster - Good Fast</title>
+<title>Finding vertical and horizontal, or row and column differences on wide tables, faster - Good Fast</title>
 <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.0/jquery.min.js"></script>
 <script type="text/javascript" src="https://blockchain.info/Resources/js/pay-now-button.js"></script>
 <script type="text/javascript" async
@@ -64,7 +64,7 @@
   <div class="meta">
 
     <span class="key">published on</span>
-    <span class="val"><time itemprop="datePublished" datetime="2021-01-31">January 31, 2021</time></span>
+    <span class="val"><time itemprop="datePublished" datetime="2021-02-05">February 05, 2021</time></span>
 
 
     <span class="key">in</span>
@@ -84,7 +84,7 @@
 
 
   </div>
-  <h1 class="headline" itemprop="headline">Finding what you are looking for, faster</h1>
+  <h1 class="headline" itemprop="headline">Finding vertical and horizontal, or row and column differences on wide tables, faster</h1>
     <div id="toc" class="well col-md-4 col-sm-6">
     <nav id="TableOfContents">
 <ul>
@@ -115,8 +115,7 @@
 We might be replacing one implementation of an algorithm with a more efficient one, or we might be running the same algorithm on a different technology.
 We want to  show that the data in <code>table_a</code> and <code>table_b</code> is identical, or if it is not identical, we want to identify all differences.
 In this article, I want to share with you a method that helped me do this.
-SQL, being set-based, help us do this fairly elegantly, but getting to the bottom of what causes
-the differences requires a bit of careful and systematic work on our part too.</p>
+SQL, being set-based, help us find differing rows easily and elegantly, but  finding the differing columns requires a bit of careful and systematic manual work on our part.</p>
 
 <h1 id="comparing-on-two-dimensions:b0fe8f0bcf3b6892f71d222f4dd92b20">Comparing on two dimensions</h1>
 
