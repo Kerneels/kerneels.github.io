@@ -1,11 +1,31 @@
-<!DOCTYPE html>
+<!doctype html5>
+<html lang="en-us">
+  <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no"><meta name="description" content="A solution and discussion of the 0/1 knapsack problem, in C# using bit masks and bitwise operators." >
+    <meta property="og:description" content="A solution and discussion of the 0/1 knapsack problem, in C# using bit masks and bitwise operators." ><meta name="keywords" content="knapsack problem,bitwise operators,brute force,algorithms,TDD,C#"><meta name="theme-color" content="#2d2d2d">
+  <meta name="twitter:card" content="summary"><meta name="twitter:creator" content="@twitter user"><meta property="og:type" content="blog">
+  <meta property="og:title"content="Knapsack Bitwise | Good Fast">
+  <meta property="og:url" content="https://blog.goodfast.info/">
+  <meta property="og:site_name" content="Base16">
+  
+  
+  <link rel="stylesheet" href="https://blog.goodfast.info/style.815a0436c85997db50e9ab6cf5ad0762bd92c602213b2b7975a922ef4117cabb227c29a9c1285d8036ee446b387e6eac5ead873e5571e7a9a14d672acc69b876.css" type="text/css"integrity="sha512-gVoENshZl9tQ6ats9a0HYr2SxgIhOyt5daki70EXyrsifCmpwShdgDbuRGs4fm6sXq2HPlVx56mhTWcqzGm4dg==" >
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Code+Pro:400,700" type="text/css">
+  <link rel="alternate" href="/index.xml" type="application/rss+xml" title="Good Fast">
+  <link rel="shortcut icon" type="image/x-icon" href="https://blog.goodfast.info/favicon.ico">
+  <title>Knapsack Bitwise - Good Fast</title>
+</head>
+
+  <body>
+    <!DOCTYPE html>
 <html lang="en-us">
 <head>
 <meta charset="utf-8">
 <meta name="description" content="A solution and discussion of the 0/1 knapsack problem, in C# using bit masks and bitwise operators.">
 <meta name="keywords" content="knapsack problem,bitwise operators,brute force,algorithms,TDD,C#">
 <meta name="author" content="Kerneels Roos">
-<meta name="generator" content="Hugo 0.15" />
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="stylesheet" href="https://blog.goodfast.info/css/style.css" type="text/css">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Code+Pro:400,700" type="text/css">
@@ -57,9 +77,9 @@
 
 <div class="container">
 
-
-<main role="main" class="article">
-  
+      <div class="container">
+        <main role="main" class="article">
+          
 <article class="single" itemscope itemtype="http://schema.org/BlogPosting">
   <div class="meta">
 
@@ -105,57 +125,45 @@
   <h1 class="headline" itemprop="headline">Knapsack Bitwise</h1>
     <div id="toc" class="well col-md-4 col-sm-6">
     <nav id="TableOfContents">
-<ul>
-<li>
-<ul>
-<li><a href="#what-is-it:de8f46f1e4cc39c152533cf3328f55db">What is it?</a></li>
-<li><a href="#a-concrete-example:de8f46f1e4cc39c152533cf3328f55db">A concrete example</a></li>
-<li><a href="#how-many-possible-inventories-exist:de8f46f1e4cc39c152533cf3328f55db">How many possible inventories exist?</a></li>
-<li><a href="#brute-force-solution:de8f46f1e4cc39c152533cf3328f55db">Brute force solution</a></li>
-<li><a href="#complexity:de8f46f1e4cc39c152533cf3328f55db">Complexity</a></li>
-<li><a href="#implementation:de8f46f1e4cc39c152533cf3328f55db">Implementation</a>
-<ul>
-<li><a href="#belonging-and-inventory-class:de8f46f1e4cc39c152533cf3328f55db">Belonging and Inventory class</a></li>
-<li><a href="#functions-for-belonging-class:de8f46f1e4cc39c152533cf3328f55db">Functions for Belonging class</a></li>
-<li><a href="#functions-for-inventory:de8f46f1e4cc39c152533cf3328f55db">Functions for Inventory</a></li>
-<li><a href="#search-functions-for-inventory:de8f46f1e4cc39c152533cf3328f55db">Search functions for Inventory</a></li>
-<li><a href="#final-wrapup:de8f46f1e4cc39c152533cf3328f55db">Final wrapup</a></li>
-</ul></li>
-<li><a href="#finished-let-s-give-it-a-spin:de8f46f1e4cc39c152533cf3328f55db">Finished! Let&rsquo;s give it a spin&hellip;</a></li>
-<li><a href="#conclusion:de8f46f1e4cc39c152533cf3328f55db">Conclusion</a></li>
-</ul></li>
-</ul>
+  <ul>
+    <li><a href="#what-is-it">What is it?</a></li>
+    <li><a href="#a-concrete-example">A concrete example</a></li>
+    <li><a href="#how-many-possible-inventories-exist">How many possible inventories exist?</a></li>
+    <li><a href="#brute-force-solution">Brute force solution</a></li>
+    <li><a href="#complexity">Complexity</a></li>
+    <li><a href="#implementation">Implementation</a>
+      <ul>
+        <li><a href="#belonging-and-inventory-class">Belonging and Inventory class</a></li>
+        <li><a href="#functions-for-belonging-class">Functions for Belonging class</a></li>
+        <li><a href="#functions-for-inventory">Functions for Inventory</a></li>
+        <li><a href="#search-functions-for-inventory">Search functions for Inventory</a></li>
+        <li><a href="#final-wrapup">Final wrapup</a></li>
+      </ul>
+    </li>
+    <li><a href="#finished-lets-give-it-a-spin">Finished! Let&rsquo;s give it a spin&hellip;</a></li>
+    <li><a href="#conclusion">Conclusion</a></li>
+  </ul>
 </nav>
     </div>
   <section class="body" itemprop="articleBody">
-    
-
-<p>An interesting bit of computer science, the <a href="https://en.wikipedia.org/wiki/Knapsack_problem">knapsack problem</a> has been studied for over a century, and according to Wikipedia, seems to be quite  popular - as these sort of things go.
-For the first post in this series I&rsquo;ll present a solution to the <sup>1</sup>&frasl;<sub>0</sub>, or binary version of this famous problem
+    <p>An interesting bit of computer science, the <a href="https://en.wikipedia.org/wiki/Knapsack_problem">knapsack problem</a> has been studied for over a century, and according to Wikipedia, seems to be quite  popular - as these sort of things go.
+For the first post in this series I&rsquo;ll present a solution to the 1/0, or binary version of this famous problem
 I designed in 2015.</p>
-
 <p>I was immediately intrigued by it when I first read the problem statement.
 It&rsquo;s application to anything requireing optimal resource allocation was
 very clear, and my mind started obsessively thinking of how to solve this efficiently.
 Now with a heavily studied problem like this, there are of course already many algorithms
 developed, but since this problem was a test, I did not look anything up, and just started coding a solution as soon as I had one.</p>
-
 <p>The full solution is <a href="https://github.com/Kerneels/knapsack">available here on GitHub</a>, but you are encouraged to copy and paste from this article, into your own project, to understand the whole thing bit by bit.</p>
-
-<h2 id="what-is-it:de8f46f1e4cc39c152533cf3328f55db">What is it?</h2>
-
+<h2 id="what-is-it">What is it?</h2>
 <p>The 0/1 or binary variant is very simple. Given a set of items, where each item has a weight and value, determine the optimal
 selection of items such that the sum of the weight of all the items do not exceed some limit,
 while the sum of the value of all of the items is maximised.</p>
-
 <p>The 0/1 or binary part of the name comes from the restriction that only one of each item may be chosen.
 The &ldquo;knapsack&rdquo; in the name refers to a ficticious rugsack or bag that can only contain a given weight.
 The complexity of the problem lies in the exponential explosion of all the possible selection of items.</p>
-
-<h2 id="a-concrete-example:de8f46f1e4cc39c152533cf3328f55db">A concrete example</h2>
-
+<h2 id="a-concrete-example">A concrete example</h2>
 <p>Suppose we have the following set of 15 items:</p>
-
 <table>
 <thead>
 <tr>
@@ -165,7 +173,6 @@ The complexity of the problem lies in the exponential explosion of all the possi
 <th>Value</th>
 </tr>
 </thead>
-
 <tbody>
 <tr>
 <td>0</td>
@@ -173,98 +180,84 @@ The complexity of the problem lies in the exponential explosion of all the possi
 <td>90</td>
 <td>150</td>
 </tr>
-
 <tr>
 <td>1</td>
 <td>compass</td>
 <td>130</td>
 <td>35</td>
 </tr>
-
 <tr>
 <td>2</td>
 <td>water</td>
 <td>1530</td>
 <td>300</td>
 </tr>
-
 <tr>
 <td>3</td>
 <td>Gold bar</td>
 <td>3000</td>
 <td>130</td>
 </tr>
-
 <tr>
 <td>4</td>
 <td>sandwich</td>
 <td>500</td>
 <td>160</td>
 </tr>
-
 <tr>
 <td>5</td>
 <td>glucose</td>
 <td>150</td>
 <td>60</td>
 </tr>
-
 <tr>
 <td>6</td>
 <td>tin</td>
 <td>680</td>
 <td>45</td>
 </tr>
-
 <tr>
 <td>7</td>
 <td>banana</td>
 <td>270</td>
 <td>60</td>
 </tr>
-
 <tr>
 <td>8</td>
 <td>apple</td>
 <td>390</td>
 <td>40</td>
 </tr>
-
 <tr>
 <td>9</td>
 <td>cheese</td>
 <td>230</td>
 <td>30</td>
 </tr>
-
 <tr>
 <td>10</td>
 <td>beer</td>
 <td>620</td>
 <td>10</td>
 </tr>
-
 <tr>
 <td>11</td>
 <td>suntan cream</td>
 <td>110</td>
 <td>70</td>
 </tr>
-
 <tr>
 <td>12</td>
 <td>camera</td>
 <td>320</td>
 <td>30</td>
 </tr>
-
 <tr>
 <td>13</td>
 <td>T-shirt</td>
 <td>240</td>
 <td>15</td>
 </tr>
-
 <tr>
 <td>14</td>
 <td>trousers</td>
@@ -273,381 +266,322 @@ The complexity of the problem lies in the exponential explosion of all the possi
 </tr>
 </tbody>
 </table>
-
 <p>Our knapsack can only hold a maximum of 4 Kg or 4000 grams, but we want to choose  a selection of items (or inventory) with the highest possible value.</p>
-
-<h2 id="how-many-possible-inventories-exist:de8f46f1e4cc39c152533cf3328f55db">How many possible inventories exist?</h2>
-
+<h2 id="how-many-possible-inventories-exist">How many possible inventories exist?</h2>
 <p>Given we have <code>n</code> items to choose from, each with a weight <code>w</code> and value <code>v</code>, we observe that:</p>
-
 <ol>
 <li>We will never be choosing zero items.</li>
 <li>We can either choose to include an item or not.</li>
 </ol>
-
 <p>We take a stab at a formula for calculating the number of choices: <code>c = 2^n - 1</code>. The <code>2^n</code> is because each item can either be chosen or not chosen, and the <code>- 1</code> is to eliminate the selection of not choosing anything.</p>
-
 <p>Let&rsquo;s see how it holds for one item: <code>c = 2^1 - 1 = 2 - 1 = 1</code>, obvious, since with one item you only have one choice - this can be our base case, so for <code>n = 1</code> the formula holds.
 Now we consider <code>n + 1</code>, so for 2: <code>c = 2^2 - 1 = 4 - 1 = 3</code>, and this makes sense since you can either choose one of the items or both, so for <code>n + 1</code> the formula also holds.
 So, by mathematical induction, our formula is proven, although we knew it was going to be right intuetively.</p>
-
-<p>Using our formula, we conclude that there are <code>c = 2^15 - 1 = 32768 - 1 = 32767</code> possible inventories.<br />
+<p>Using our formula, we conclude that there are <code>c = 2^15 - 1 = 32768 - 1 = 32767</code> possible inventories.<br>
 This number is neglegeable in computer terms, yet already far too big for by hand calculation.</p>
-
-<h2 id="brute-force-solution:de8f46f1e4cc39c152533cf3328f55db">Brute force solution</h2>
-
+<h2 id="brute-force-solution">Brute force solution</h2>
 <p>Since our particular senario is so small we will simply do a brute force search to find the best inventories (if any) that satisfy the 4000 grams weight limit.</p>
-
 <p>Any inventory can only have a maximum of 15 items, so we will represent an arbitrary inventory with a
 bit mask, where each bit will represent a particular item, with 0 meaning the item is not chosen, and 1 meaning the item was chosen.</p>
-
 <p>The bit mask will drive a calculation function to determine the total weight and value of a given inventory.
 Considering all possible inventories is now reduced to iterating over the number 1 through 32767 possible options,
 calculating the sum of the weights and values each time, and retaining those inventories where the weight limit is satisfied.</p>
-
-<h2 id="complexity:de8f46f1e4cc39c152533cf3328f55db">Complexity</h2>
-
+<h2 id="complexity">Complexity</h2>
 <p>Using our formula, we can say that our solution will have <code>O(2^n - 1)</code> time complexity, and similarly, worst case <code>O(2^n - 1)</code>
 space complexity.</p>
-
-<h2 id="implementation:de8f46f1e4cc39c152533cf3328f55db">Implementation</h2>
-
-<h3 id="belonging-and-inventory-class:de8f46f1e4cc39c152533cf3328f55db">Belonging and Inventory class</h3>
-
+<h2 id="implementation">Implementation</h2>
+<h3 id="belonging-and-inventory-class">Belonging and Inventory class</h3>
 <p>Looking at the table of belongings, we realise we would need a class to
 represent individual belongings (we&rsquo;ll call it <code>class Belonging</code>), as well as the set of all   of them (<code>class Inventory</code>).</p>
-
-<pre><code class="language-C#">namespace Knapsack
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-C#" data-lang="C#"><span style="color:#66d9ef">namespace</span> Knapsack
 {
-public class Belonging
+<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Belonging</span>
 	{
-		public byte Number { get; set; }
-		public string Name { get; set; }
-		public int GramsWeight { get; set; }
-		public int Value { get; set; }
+		<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">byte</span> Number { <span style="color:#66d9ef">get</span>; <span style="color:#66d9ef">set</span>; }
+		<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">string</span> Name { <span style="color:#66d9ef">get</span>; <span style="color:#66d9ef">set</span>; }
+		<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">int</span> GramsWeight { <span style="color:#66d9ef">get</span>; <span style="color:#66d9ef">set</span>; }
+		<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">int</span> Value { <span style="color:#66d9ef">get</span>; <span style="color:#66d9ef">set</span>; }
 	}
 
-	public class Inventory
+	<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Inventory</span>
 	{
-		public static List&lt;Belonging&gt; AllGear { get; set; }
+		<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> List&lt;Belonging&gt; AllGear { <span style="color:#66d9ef">get</span>; <span style="color:#66d9ef">set</span>; }
 
-		public uint Gear { get; set; }
+		<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">uint</span> Gear { <span style="color:#66d9ef">get</span>; <span style="color:#66d9ef">set</span>; }
 	}
 }
-</code></pre>
-
-<h3 id="functions-for-belonging-class:de8f46f1e4cc39c152533cf3328f55db">Functions for Belonging class</h3>
-
+</code></pre></div><h3 id="functions-for-belonging-class">Functions for Belonging class</h3>
 <p>Now that we&rsquo;ve dealt with the data needs, let&rsquo;s add some functionality to each of the classes.
 In true <a href="http://agiledata.org/essays/tdd.html">test driven development</a> style (also see <a href="https://en.wikipedia.org/wiki/Test-driven_development">Wikipedia on TDD</a>), let&rsquo;s first create unit tests for each function, followed by an implementation.</p>
-
 <p>We&rsquo;ll wrap all the test classes in a general <code>TestKnapsack</code> class which we can use to do setup and teardown actions if required.</p>
-
-<pre><code class="language-C#">namespace Knapsack
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-C#" data-lang="C#"><span style="color:#66d9ef">namespace</span> Knapsack
 {
-	[TestClass]
-	public class TestKnapsack
+<span style="color:#a6e22e">	[TestClass]</span>
+	<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">TestKnapsack</span>
 	{
-		[TestClass]
-		public class TestBelonging : TestKnapsack
+<span style="color:#a6e22e">		[TestClass]</span>
+		<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">TestBelonging</span> : TestKnapsack
 		{
-			[TestMethod]
-			public void ShouldAddRemoveAndConfirmItIsInGear()
+<span style="color:#a6e22e">			[TestMethod]</span>
+			<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> ShouldAddRemoveAndConfirmItIsInGear()
 			{
-				uint gear = 0; // empty set of gear
-				var testBelonging = new Belonging { Number = 0, Name = &quot;map&quot;, GramsWeight = 90, Value = 150 };
+				<span style="color:#66d9ef">uint</span> gear = <span style="color:#ae81ff">0</span>; <span style="color:#75715e">// empty set of gear
+</span><span style="color:#75715e"></span>				<span style="color:#66d9ef">var</span> testBelonging = <span style="color:#66d9ef">new</span> Belonging { Number = <span style="color:#ae81ff">0</span>, Name = <span style="color:#e6db74">&#34;map&#34;</span>, GramsWeight = <span style="color:#ae81ff">90</span>, Value = <span style="color:#ae81ff">150</span> };
 
 				Assert.IsFalse(testBelonging.IsInGear(gear));
-				uint gearAfterAdd = testBelonging.AddToGear(gear);
+				<span style="color:#66d9ef">uint</span> gearAfterAdd = testBelonging.AddToGear(gear);
 				Assert.IsFalse(testBelonging.IsInGear(gear));
 				Assert.IsTrue(testBelonging.IsInGear(gearAfterAdd));
 				Assert.AreNotEqual(gearAfterAdd, gear);
 
-				uint gearAfterRemove= testBelonging.RemoveFromGear(gearAfterAdd);
+				<span style="color:#66d9ef">uint</span> gearAfterRemove= testBelonging.RemoveFromGear(gearAfterAdd);
 				Assert.AreEqual(gearAfterRemove, gear);
 				Assert.IsFalse(testBelonging.IsInGear(gearAfterRemove));
 			}
 		}
 	}
 }
-</code></pre>
-
-<p>Returning to our <code>Belonging</code> class,  let&rsquo;s implement the methods we described in our unit test class.</p>
-
+</code></pre></div><p>Returning to our <code>Belonging</code> class,  let&rsquo;s implement the methods we described in our unit test class.</p>
 <p>We will make heavy use of the bitwise operators:</p>
-
 <ul>
 <li><code>&lt;&lt;</code> and <code>&gt;&gt;</code> : bit shifts, which moves all the bits in a number left or right by the given count</li>
 <li><code>&amp;</code> and <code>|</code> : bitwise AND and OR which combines the two numbers bit by bit and returns the resulting number</li>
 <li><code>~</code> : the compliment or negation unary operator that inverts all bits</li>
 </ul>
-
 <p>Make sure you are completely familiar with all the <a href="https://www.tutorialspoint.com/csharp/csharp_bitwise_operators.htm">C# bit wise operators</a> before proceeding.</p>
-
 <p>Here are the functions we add to <code>Belonging</code>:</p>
-
-<pre><code class="language-C#">public uint AddToGear(uint gear)
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-C#" data-lang="C#"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">uint</span> AddToGear(<span style="color:#66d9ef">uint</span> gear)
 		{
-			return gear | (uint)(1 &lt;&lt; this.Number);
+			<span style="color:#66d9ef">return</span> gear | (<span style="color:#66d9ef">uint</span>)(<span style="color:#ae81ff">1</span> &lt;&lt; <span style="color:#66d9ef">this</span>.Number);
 		}
-		public uint RemoveFromGear(uint gear)
+		<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">uint</span> RemoveFromGear(<span style="color:#66d9ef">uint</span> gear)
 		{
-			return gear &amp; ~(uint)(1 &lt;&lt; this.Number);
+			<span style="color:#66d9ef">return</span> gear &amp; ~(<span style="color:#66d9ef">uint</span>)(<span style="color:#ae81ff">1</span> &lt;&lt; <span style="color:#66d9ef">this</span>.Number);
 		}
-		public bool IsInGear(uint gear)
+		<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">bool</span> IsInGear(<span style="color:#66d9ef">uint</span> gear)
 		{
-			return (gear &amp; (1 &lt;&lt; this.Number)) == (1 &lt;&lt; this.Number);
+			<span style="color:#66d9ef">return</span> (gear &amp; (<span style="color:#ae81ff">1</span> &lt;&lt; <span style="color:#66d9ef">this</span>.Number)) == (<span style="color:#ae81ff">1</span> &lt;&lt; <span style="color:#66d9ef">this</span>.Number);
 		}
-		public int GramsWeightInGear(uint gear)
+		<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">int</span> GramsWeightInGear(<span style="color:#66d9ef">uint</span> gear)
 		{
-			return this.IsInGear(gear) ? this.GramsWeight : 0;
+			<span style="color:#66d9ef">return</span> <span style="color:#66d9ef">this</span>.IsInGear(gear) ? <span style="color:#66d9ef">this</span>.GramsWeight : <span style="color:#ae81ff">0</span>;
 		}
-		public int ValueInGear (uint gear)
+		<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">int</span> ValueInGear (<span style="color:#66d9ef">uint</span> gear)
 		{
-			return this.IsInGear(gear) ? this.Value : 0;
+			<span style="color:#66d9ef">return</span> <span style="color:#66d9ef">this</span>.IsInGear(gear) ? <span style="color:#66d9ef">this</span>.Value : <span style="color:#ae81ff">0</span>;
 		}
-</code></pre>
-
-<p>Success! Our tests all pass, and we can proceed to testing and developing <code>Inventory</code>.</p>
-
-<h3 id="functions-for-inventory:de8f46f1e4cc39c152533cf3328f55db">Functions for Inventory</h3>
-
+</code></pre></div><p>Success! Our tests all pass, and we can proceed to testing and developing <code>Inventory</code>.</p>
+<h3 id="functions-for-inventory">Functions for Inventory</h3>
 <p>We start by testing the very simple summation functions.
 Our test creates a sample set of belongings (<code>allKit</code>) with 3 items in it.
 We then add the first and last item from <code>allKit</code> and ensure we get the correct totals when calling the summation functions on
 <code>Inventory</code>:</p>
-
-<pre><code class="language-C#">		[TestClass]
-		public class TestInventory : TestKnapsack
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-C#" data-lang="C#"><span style="color:#a6e22e">		[TestClass]</span>
+		<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">TestInventory</span> : TestKnapsack
 		{
-			[TestMethod]
-			public void ShouldSumProperly()
+<span style="color:#a6e22e">			[TestMethod]</span>
+			<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> ShouldSumProperly()
 			{
-				var allKit = new List&lt;Belonging&gt;();
-				allKit.Add(new Belonging { Number = 0, Name = &quot;map&quot;, GramsWeight = 90, Value = 150 });
-				allKit.Add(new Belonging { Number = 1, Name = &quot;compass&quot;, GramsWeight = 130, Value = 35 });
-				allKit.Add(new Belonging { Number = 2, Name = &quot;water&quot;, GramsWeight = 1530, Value = 300 });
+				<span style="color:#66d9ef">var</span> allKit = <span style="color:#66d9ef">new</span> List&lt;Belonging&gt;();
+				allKit.Add(<span style="color:#66d9ef">new</span> Belonging { Number = <span style="color:#ae81ff">0</span>, Name = <span style="color:#e6db74">&#34;map&#34;</span>, GramsWeight = <span style="color:#ae81ff">90</span>, Value = <span style="color:#ae81ff">150</span> });
+				allKit.Add(<span style="color:#66d9ef">new</span> Belonging { Number = <span style="color:#ae81ff">1</span>, Name = <span style="color:#e6db74">&#34;compass&#34;</span>, GramsWeight = <span style="color:#ae81ff">130</span>, Value = <span style="color:#ae81ff">35</span> });
+				allKit.Add(<span style="color:#66d9ef">new</span> Belonging { Number = <span style="color:#ae81ff">2</span>, Name = <span style="color:#e6db74">&#34;water&#34;</span>, GramsWeight = <span style="color:#ae81ff">1530</span>, Value = <span style="color:#ae81ff">300</span> });
 
 				Inventory.AllGear = allKit;
-				var testInventory = new Inventory { Gear = 0 };
-				testInventory.Gear = allKit[0].AddToGear(
+				<span style="color:#66d9ef">var</span> testInventory = <span style="color:#66d9ef">new</span> Inventory { Gear = <span style="color:#ae81ff">0</span> };
+				testInventory.Gear = allKit[<span style="color:#ae81ff">0</span>].AddToGear(
 					testInventory.Gear);
-				testInventory.Gear = allKit[2].AddToGear(
+				testInventory.Gear = allKit[<span style="color:#ae81ff">2</span>].AddToGear(
 					testInventory.Gear);
 
-				Assert.AreEqual(allKit[0].GramsWeight + allKit[2].GramsWeight,
+				Assert.AreEqual(allKit[<span style="color:#ae81ff">0</span>].GramsWeight + allKit[<span style="color:#ae81ff">2</span>].GramsWeight,
 					testInventory.TotalGramsWeight);
-				Assert.AreEqual(allKit[0].Value + allKit[2].Value,
+				Assert.AreEqual(allKit[<span style="color:#ae81ff">0</span>].Value + allKit[<span style="color:#ae81ff">2</span>].Value,
 					testInventory.TotalValue);
 			}
 		}
-</code></pre>
+</code></pre></div><p>Here are the summation functions to add to <code>Inventory</code>:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-C#" data-lang="C#">
+		<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">int</span> TotalGramsWeight { <span style="color:#66d9ef">get</span> { <span style="color:#66d9ef">return</span> Inventory.TotalGramsWeightForGear(<span style="color:#66d9ef">this</span>.Gear); } }
+		<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">int</span> TotalValue { <span style="color:#66d9ef">get</span> { <span style="color:#66d9ef">return</span> Inventory.TotalValueForGear(<span style="color:#66d9ef">this</span>.Gear); } }
 
-<p>Here are the summation functions to add to <code>Inventory</code>:</p>
-
-<pre><code class="language-C#">
-		public int TotalGramsWeight { get { return Inventory.TotalGramsWeightForGear(this.Gear); } }
-		public int TotalValue { get { return Inventory.TotalValueForGear(this.Gear); } }
-
-		public static int TotalGramsWeightForGear (uint gear)
+		<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">int</span> TotalGramsWeightForGear (<span style="color:#66d9ef">uint</span> gear)
 		{
-				return AllGear.Select(o =&gt; 
+				<span style="color:#66d9ef">return</span> AllGear.Select(o =&gt; 
 					o.GramsWeightInGear(gear))
 					.Sum();
 			}
 
-		public static int TotalValueForGear(uint gear)
+		<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">int</span> TotalValueForGear(<span style="color:#66d9ef">uint</span> gear)
 		{
-				return AllGear.Select(o =&gt; 
+				<span style="color:#66d9ef">return</span> AllGear.Select(o =&gt; 
 					o.ValueInGear(gear))
 					.Sum();
 			}
-</code></pre>
-
-<p>Nothing too complicated, and the tests all still pass. Next we move on to the actual search<br />
+</code></pre></div><p>Nothing too complicated, and the tests all still pass. Next we move on to the actual search<br>
 for the valid inventories:</p>
-
-<h3 id="search-functions-for-inventory:de8f46f1e4cc39c152533cf3328f55db">Search functions for Inventory</h3>
-
-<pre><code class="language-C#">
-			[TestMethod]
-			public void TestFirstBestInventory()
+<h3 id="search-functions-for-inventory">Search functions for Inventory</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-C#" data-lang="C#"><span style="color:#a6e22e">
+</span><span style="color:#a6e22e">			[TestMethod]</span>
+			<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> TestFirstBestInventory()
 			{
-				var allKit = new List&lt;Belonging&gt;();
-				allKit.Add(new Belonging { Number = 0, Name = &quot;map&quot;, GramsWeight = 90, Value = 150 });
-				allKit.Add(new Belonging { Number = 1, Name = &quot;compass&quot;, GramsWeight = 130, Value = 35 });
-				allKit.Add(new Belonging { Number = 2, Name = &quot;water&quot;, GramsWeight = 1530, Value = 300 });
+				<span style="color:#66d9ef">var</span> allKit = <span style="color:#66d9ef">new</span> List&lt;Belonging&gt;();
+				allKit.Add(<span style="color:#66d9ef">new</span> Belonging { Number = <span style="color:#ae81ff">0</span>, Name = <span style="color:#e6db74">&#34;map&#34;</span>, GramsWeight = <span style="color:#ae81ff">90</span>, Value = <span style="color:#ae81ff">150</span> });
+				allKit.Add(<span style="color:#66d9ef">new</span> Belonging { Number = <span style="color:#ae81ff">1</span>, Name = <span style="color:#e6db74">&#34;compass&#34;</span>, GramsWeight = <span style="color:#ae81ff">130</span>, Value = <span style="color:#ae81ff">35</span> });
+				allKit.Add(<span style="color:#66d9ef">new</span> Belonging { Number = <span style="color:#ae81ff">2</span>, Name = <span style="color:#e6db74">&#34;water&#34;</span>, GramsWeight = <span style="color:#ae81ff">1530</span>, Value = <span style="color:#ae81ff">300</span> });
 				Inventory.AllGear = allKit;
 
 				Assert.IsTrue(
-					allKit[1].IsInGear(
-					Inventory.FirstBestInventory(220).Gear));
+					allKit[<span style="color:#ae81ff">1</span>].IsInGear(
+					Inventory.FirstBestInventory(<span style="color:#ae81ff">220</span>).Gear));
 
 				Assert.IsFalse(
-					allKit[2].IsInGear(
-					Inventory.FirstBestInventory(220).Gear));
+					allKit[<span style="color:#ae81ff">2</span>].IsInGear(
+					Inventory.FirstBestInventory(<span style="color:#ae81ff">220</span>).Gear));
 			}
-
-			[TestMethod]
-			public void TestValidInventories()
+<span style="color:#a6e22e">
+</span><span style="color:#a6e22e">			[TestMethod]</span>
+			<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> TestValidInventories()
 			{
-				var allKit = new List&lt;Belonging&gt;();
-				allKit.Add(new Belonging { Number = 0, Name = &quot;map&quot;, GramsWeight = 90, Value = 150 });
-				allKit.Add(new Belonging { Number = 1, Name = &quot;compass&quot;, GramsWeight = 130, Value = 35 });
-				allKit.Add(new Belonging { Number = 2, Name = &quot;water&quot;, GramsWeight = 1530, Value = 300 });
+				<span style="color:#66d9ef">var</span> allKit = <span style="color:#66d9ef">new</span> List&lt;Belonging&gt;();
+				allKit.Add(<span style="color:#66d9ef">new</span> Belonging { Number = <span style="color:#ae81ff">0</span>, Name = <span style="color:#e6db74">&#34;map&#34;</span>, GramsWeight = <span style="color:#ae81ff">90</span>, Value = <span style="color:#ae81ff">150</span> });
+				allKit.Add(<span style="color:#66d9ef">new</span> Belonging { Number = <span style="color:#ae81ff">1</span>, Name = <span style="color:#e6db74">&#34;compass&#34;</span>, GramsWeight = <span style="color:#ae81ff">130</span>, Value = <span style="color:#ae81ff">35</span> });
+				allKit.Add(<span style="color:#66d9ef">new</span> Belonging { Number = <span style="color:#ae81ff">2</span>, Name = <span style="color:#e6db74">&#34;water&#34;</span>, GramsWeight = <span style="color:#ae81ff">1530</span>, Value = <span style="color:#ae81ff">300</span> });
 				Inventory.AllGear = allKit;
 
-				// nothing except the empty inventory - so only one possible empty inventory
-				Assert.AreEqual(1, Inventory.ValidInventories(5).Count());
+				<span style="color:#75715e">// nothing except the empty inventory - so only one possible empty inventory
+</span><span style="color:#75715e"></span>				Assert.AreEqual(<span style="color:#ae81ff">1</span>, Inventory.ValidInventories(<span style="color:#ae81ff">5</span>).Count());
 
-				// since the upper weight limit is so large we end up with all possible inventories over 3 belongings, which is 8 including the empty inventory
-				Assert.AreEqual(8, Inventory.ValidInventories(5000).Count());
+				<span style="color:#75715e">// since the upper weight limit is so large we end up with all possible inventories over 3 belongings, which is 8 including the empty inventory
+</span><span style="color:#75715e"></span>				Assert.AreEqual(<span style="color:#ae81ff">8</span>, Inventory.ValidInventories(<span style="color:#ae81ff">5000</span>).Count());
 			}
-</code></pre>
-
-<p>We implement the new functions on <code>Invetory</code> as follows:</p>
-
-<pre><code class="language-C#">		public static uint NumberOfCombinations
+</code></pre></div><p>We implement the new functions on <code>Invetory</code> as follows:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-C#" data-lang="C#">		<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">uint</span> NumberOfCombinations
 		{
-			get
+			<span style="color:#66d9ef">get</span>
 			{
-				return (~(uint)0 % (uint)(1 &lt;&lt; AllGear.Count()));
+				<span style="color:#66d9ef">return</span> (~(<span style="color:#66d9ef">uint</span>)<span style="color:#ae81ff">0</span> % (<span style="color:#66d9ef">uint</span>)(<span style="color:#ae81ff">1</span> &lt;&lt; AllGear.Count()));
 			}
 		}
 
-		public static Inventory FirstBestInventory(int maxGramsWeight)
+		<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> Inventory FirstBestInventory(<span style="color:#66d9ef">int</span> maxGramsWeight)
 		{
-			var numberOfCombinations = Inventory.NumberOfCombinations;
-			int currentMaxValue = 0, overallBestValue = 0;
-			var bestInventory = new Inventory();
+			<span style="color:#66d9ef">var</span> numberOfCombinations = Inventory.NumberOfCombinations;
+			<span style="color:#66d9ef">int</span> currentMaxValue = <span style="color:#ae81ff">0</span>, overallBestValue = <span style="color:#ae81ff">0</span>;
+			<span style="color:#66d9ef">var</span> bestInventory = <span style="color:#66d9ef">new</span> Inventory();
 
-			for (uint g = 0; g &lt;= numberOfCombinations; g++)
-				if (Inventory.TotalGramsWeightForGear(g) &lt;= maxGramsWeight &amp;&amp;
+			<span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">uint</span> g = <span style="color:#ae81ff">0</span>; g &lt;= numberOfCombinations; g++)
+				<span style="color:#66d9ef">if</span> (Inventory.TotalGramsWeightForGear(g) &lt;= maxGramsWeight &amp;&amp;
 					(currentMaxValue = Inventory.TotalValueForGear(g)) &gt; overallBestValue)
 				{
-					bestInventory = new Inventory
+					bestInventory = <span style="color:#66d9ef">new</span> Inventory
 					{
 						Gear = g
 					};
 					overallBestValue = currentMaxValue;
 				}
 
-			return bestInventory;
+			<span style="color:#66d9ef">return</span> bestInventory;
 		}
 
-		public static IQueryable&lt;Inventory&gt; ValidInventories(int maxGramsWeight)
+		<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> IQueryable&lt;Inventory&gt; ValidInventories(<span style="color:#66d9ef">int</span> maxGramsWeight)
 		{
-			var numberOfCombinations = Inventory.NumberOfCombinations;
-			var validInventories = new List&lt;Inventory&gt;();
+			<span style="color:#66d9ef">var</span> numberOfCombinations = Inventory.NumberOfCombinations;
+			<span style="color:#66d9ef">var</span> validInventories = <span style="color:#66d9ef">new</span> List&lt;Inventory&gt;();
 
-			for (uint g = 0; g &lt;= numberOfCombinations; g++)
-				if (Inventory.TotalGramsWeightForGear(g) &lt;= maxGramsWeight)
-					validInventories.Add(new Inventory
+			<span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">uint</span> g = <span style="color:#ae81ff">0</span>; g &lt;= numberOfCombinations; g++)
+				<span style="color:#66d9ef">if</span> (Inventory.TotalGramsWeightForGear(g) &lt;= maxGramsWeight)
+					validInventories.Add(<span style="color:#66d9ef">new</span> Inventory
 					{
 						Gear = g
 					}
 					);
 
-			return validInventories.AsQueryable();
+			<span style="color:#66d9ef">return</span> validInventories.AsQueryable();
 		}
-</code></pre>
-
-<h3 id="final-wrapup:de8f46f1e4cc39c152533cf3328f55db">Final wrapup</h3>
-
+</code></pre></div><h3 id="final-wrapup">Final wrapup</h3>
 <p>After testing everything again and getting all tests to still pass, we are very nearly done.
 Our final work will be to create nice printout <code>ToString()</code> methods, and putting it all together in a <code>main</code> method which will be the entry point for the console application.</p>
-
 <p>We add the following to <code>Belonging</code>:</p>
-
-<pre><code class="language-C#">
-		public override string ToString()
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-C#" data-lang="C#">
+		<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">override</span> <span style="color:#66d9ef">string</span> ToString()
 		{
-			return string.Format(&quot;{0}, {1} g, valued at {2}&quot;,
-				this.Name,
-				this.GramsWeight,
-				this.Value);
+			<span style="color:#66d9ef">return</span> <span style="color:#66d9ef">string</span>.Format(<span style="color:#e6db74">&#34;{0}, {1} g, valued at {2}&#34;</span>,
+				<span style="color:#66d9ef">this</span>.Name,
+				<span style="color:#66d9ef">this</span>.GramsWeight,
+				<span style="color:#66d9ef">this</span>.Value);
 		}
-</code></pre>
-
-<p>We want nice printout for <code>Inventory</code> also, so we add the following to it:</p>
-
-<pre><code class="language-C#">public override string ToString()
+</code></pre></div><p>We want nice printout for <code>Inventory</code> also, so we add the following to it:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-C#" data-lang="C#"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">override</span> <span style="color:#66d9ef">string</span> ToString()
 		{
-			StringBuilder sb = new StringBuilder();
-			sb.AppendLine(&quot;---- Inventory Start:&quot;);
-			AllGear.Where(o =&gt; o.IsInGear(this.Gear))
+			StringBuilder sb = <span style="color:#66d9ef">new</span> StringBuilder();
+			sb.AppendLine(<span style="color:#e6db74">&#34;---- Inventory Start:&#34;</span>);
+			AllGear.Where(o =&gt; o.IsInGear(<span style="color:#66d9ef">this</span>.Gear))
 				.ToList()
 				.ForEach(o =&gt; sb.AppendLine(o.ToString()));
-			sb.AppendFormat(&quot;---- Inventory End: Total Weight: {0} g, Total Value: {1}&quot;,
-				this.TotalGramsWeight,
-				this.TotalValue);
-			return sb.ToString();
+			sb.AppendFormat(<span style="color:#e6db74">&#34;---- Inventory End: Total Weight: {0} g, Total Value: {1}&#34;</span>,
+				<span style="color:#66d9ef">this</span>.TotalGramsWeight,
+				<span style="color:#66d9ef">this</span>.TotalValue);
+			<span style="color:#66d9ef">return</span> sb.ToString();
 		}
-</code></pre>
-
-<p>Finally, we add the <code>main</code> method, along with a little helper method for setting up our set of all kit:</p>
-
-<pre><code class="language-C#">class Program
+</code></pre></div><p>Finally, we add the <code>main</code> method, along with a little helper method for setting up our set of all kit:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-C#" data-lang="C#"><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Program</span>
 	{
-		static void Main(string[] args)
+		<span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> Main(<span style="color:#66d9ef">string</span>[] args)
 		{
-			var allKit = LoadData();
+			<span style="color:#66d9ef">var</span> allKit = LoadData();
 
 			Inventory.AllGear = allKit;
 
-			var bestInventories = Inventory
-				.ValidInventories(maxGramsWeight: 4000)
+			<span style="color:#66d9ef">var</span> bestInventories = Inventory
+				.ValidInventories(maxGramsWeight: <span style="color:#ae81ff">4000</span>)
 				.OrderByDescending(o =&gt; o.TotalValue)
-				.Take(5)
+				.Take(<span style="color:#ae81ff">5</span>)
 				.ToList();
 
-			if (bestInventories.Count() == 0)
-				Console.WriteLine(&quot;No inventory match the requirements.&quot;);
-			else
-			Console.WriteLine(string.Format(&quot;Best {0} inventories in descending order of value are:&quot;,bestInventories.Count()));
+			<span style="color:#66d9ef">if</span> (bestInventories.Count() == <span style="color:#ae81ff">0</span>)
+				Console.WriteLine(<span style="color:#e6db74">&#34;No inventory match the requirements.&#34;</span>);
+			<span style="color:#66d9ef">else</span>
+			Console.WriteLine(<span style="color:#66d9ef">string</span>.Format(<span style="color:#e6db74">&#34;Best {0} inventories in descending order of value are:&#34;</span>,bestInventories.Count()));
 			bestInventories.ForEach(o =&gt;
 				Console.WriteLine(o)
 				);
 
-			var firstBestInventory = Inventory.FirstBestInventory( maxGramsWeight: 4000 );
-			if (firstBestInventory == null)
-				Console.WriteLine(&quot;No first best inventory found.&quot;);
-			else
+			<span style="color:#66d9ef">var</span> firstBestInventory = Inventory.FirstBestInventory( maxGramsWeight: <span style="color:#ae81ff">4000</span> );
+			<span style="color:#66d9ef">if</span> (firstBestInventory == <span style="color:#66d9ef">null</span>)
+				Console.WriteLine(<span style="color:#e6db74">&#34;No first best inventory found.&#34;</span>);
+			<span style="color:#66d9ef">else</span>
 			{
-				Console.WriteLine(&quot;Best inventory found: &quot;);
+				Console.WriteLine(<span style="color:#e6db74">&#34;Best inventory found: &#34;</span>);
 				Console.WriteLine(firstBestInventory);
 			}
 		}
 
-		private static List&lt;Belonging&gt; LoadData()
+		<span style="color:#66d9ef">private</span> <span style="color:#66d9ef">static</span> List&lt;Belonging&gt; LoadData()
 		{
-			var allKit = new List&lt;Belonging&gt;();
-			allKit.Add(new Belonging { Number = 0, Name = &quot;map&quot;, GramsWeight = 90, Value = 150 });
-			allKit.Add(new Belonging { Number = 1, Name = &quot;compass&quot;, GramsWeight = 130, Value = 35 });
-			allKit.Add(new Belonging { Number = 2, Name = &quot;water&quot;, GramsWeight = 1530, Value = 300 });
-			allKit.Add(new Belonging { Number = 3, Name = &quot;Gold bar&quot;, GramsWeight = 3000, Value = 130 });
-			allKit.Add(new Belonging { Number = 4, Name = &quot;sandwich&quot;, GramsWeight = 500, Value = 160 });
-			allKit.Add(new Belonging { Number = 5, Name = &quot;glucose&quot;, GramsWeight = 150, Value = 60 });
-			allKit.Add(new Belonging { Number = 6, Name = &quot;tin&quot;, GramsWeight = 680, Value = 45 });
-			allKit.Add(new Belonging { Number = 7, Name = &quot;banana&quot;, GramsWeight = 270, Value = 60 });
-			allKit.Add(new Belonging { Number = 8, Name = &quot;apple&quot;, GramsWeight = 390, Value = 40 });
-			allKit.Add(new Belonging { Number = 9, Name = &quot;cheese&quot;, GramsWeight = 230, Value = 30 });
-			allKit.Add(new Belonging { Number = 10, Name = &quot;beer&quot;, GramsWeight = 620, Value = 10 });
-			allKit.Add(new Belonging { Number = 11, Name = &quot;suntan cream&quot;, GramsWeight = 110, Value = 70 });
-			allKit.Add(new Belonging { Number = 12, Name = &quot;camera&quot;, GramsWeight = 320, Value = 30 });
-			allKit.Add(new Belonging { Number = 13, Name = &quot;T-shirt&quot;, GramsWeight = 240, Value = 15 });
-			allKit.Add(new Belonging { Number = 14, Name = &quot;trousers&quot;, GramsWeight = 480, Value = 10 });
+			<span style="color:#66d9ef">var</span> allKit = <span style="color:#66d9ef">new</span> List&lt;Belonging&gt;();
+			allKit.Add(<span style="color:#66d9ef">new</span> Belonging { Number = <span style="color:#ae81ff">0</span>, Name = <span style="color:#e6db74">&#34;map&#34;</span>, GramsWeight = <span style="color:#ae81ff">90</span>, Value = <span style="color:#ae81ff">150</span> });
+			allKit.Add(<span style="color:#66d9ef">new</span> Belonging { Number = <span style="color:#ae81ff">1</span>, Name = <span style="color:#e6db74">&#34;compass&#34;</span>, GramsWeight = <span style="color:#ae81ff">130</span>, Value = <span style="color:#ae81ff">35</span> });
+			allKit.Add(<span style="color:#66d9ef">new</span> Belonging { Number = <span style="color:#ae81ff">2</span>, Name = <span style="color:#e6db74">&#34;water&#34;</span>, GramsWeight = <span style="color:#ae81ff">1530</span>, Value = <span style="color:#ae81ff">300</span> });
+			allKit.Add(<span style="color:#66d9ef">new</span> Belonging { Number = <span style="color:#ae81ff">3</span>, Name = <span style="color:#e6db74">&#34;Gold bar&#34;</span>, GramsWeight = <span style="color:#ae81ff">3000</span>, Value = <span style="color:#ae81ff">130</span> });
+			allKit.Add(<span style="color:#66d9ef">new</span> Belonging { Number = <span style="color:#ae81ff">4</span>, Name = <span style="color:#e6db74">&#34;sandwich&#34;</span>, GramsWeight = <span style="color:#ae81ff">500</span>, Value = <span style="color:#ae81ff">160</span> });
+			allKit.Add(<span style="color:#66d9ef">new</span> Belonging { Number = <span style="color:#ae81ff">5</span>, Name = <span style="color:#e6db74">&#34;glucose&#34;</span>, GramsWeight = <span style="color:#ae81ff">150</span>, Value = <span style="color:#ae81ff">60</span> });
+			allKit.Add(<span style="color:#66d9ef">new</span> Belonging { Number = <span style="color:#ae81ff">6</span>, Name = <span style="color:#e6db74">&#34;tin&#34;</span>, GramsWeight = <span style="color:#ae81ff">680</span>, Value = <span style="color:#ae81ff">45</span> });
+			allKit.Add(<span style="color:#66d9ef">new</span> Belonging { Number = <span style="color:#ae81ff">7</span>, Name = <span style="color:#e6db74">&#34;banana&#34;</span>, GramsWeight = <span style="color:#ae81ff">270</span>, Value = <span style="color:#ae81ff">60</span> });
+			allKit.Add(<span style="color:#66d9ef">new</span> Belonging { Number = <span style="color:#ae81ff">8</span>, Name = <span style="color:#e6db74">&#34;apple&#34;</span>, GramsWeight = <span style="color:#ae81ff">390</span>, Value = <span style="color:#ae81ff">40</span> });
+			allKit.Add(<span style="color:#66d9ef">new</span> Belonging { Number = <span style="color:#ae81ff">9</span>, Name = <span style="color:#e6db74">&#34;cheese&#34;</span>, GramsWeight = <span style="color:#ae81ff">230</span>, Value = <span style="color:#ae81ff">30</span> });
+			allKit.Add(<span style="color:#66d9ef">new</span> Belonging { Number = <span style="color:#ae81ff">10</span>, Name = <span style="color:#e6db74">&#34;beer&#34;</span>, GramsWeight = <span style="color:#ae81ff">620</span>, Value = <span style="color:#ae81ff">10</span> });
+			allKit.Add(<span style="color:#66d9ef">new</span> Belonging { Number = <span style="color:#ae81ff">11</span>, Name = <span style="color:#e6db74">&#34;suntan cream&#34;</span>, GramsWeight = <span style="color:#ae81ff">110</span>, Value = <span style="color:#ae81ff">70</span> });
+			allKit.Add(<span style="color:#66d9ef">new</span> Belonging { Number = <span style="color:#ae81ff">12</span>, Name = <span style="color:#e6db74">&#34;camera&#34;</span>, GramsWeight = <span style="color:#ae81ff">320</span>, Value = <span style="color:#ae81ff">30</span> });
+			allKit.Add(<span style="color:#66d9ef">new</span> Belonging { Number = <span style="color:#ae81ff">13</span>, Name = <span style="color:#e6db74">&#34;T-shirt&#34;</span>, GramsWeight = <span style="color:#ae81ff">240</span>, Value = <span style="color:#ae81ff">15</span> });
+			allKit.Add(<span style="color:#66d9ef">new</span> Belonging { Number = <span style="color:#ae81ff">14</span>, Name = <span style="color:#e6db74">&#34;trousers&#34;</span>, GramsWeight = <span style="color:#ae81ff">480</span>, Value = <span style="color:#ae81ff">10</span> });
 
-			return allKit;
+			<span style="color:#66d9ef">return</span> allKit;
 		}
 	}
-</code></pre>
-
-<h2 id="finished-let-s-give-it-a-spin:de8f46f1e4cc39c152533cf3328f55db">Finished! Let&rsquo;s give it a spin&hellip;</h2>
-
+</code></pre></div><h2 id="finished-lets-give-it-a-spin">Finished! Let&rsquo;s give it a spin&hellip;</h2>
 <p>We are done! Let&rsquo;s see what we get if we run it all:</p>
-
-<pre><code>Best 5 inventories in descending order of value are:
+<pre tabindex="0"><code>Best 5 inventories in descending order of value are:
 ---- Inventory Start:
 map, 90 g, valued at 150
 compass, 130 g, valued at 35
@@ -723,53 +657,24 @@ camera, 320 g, valued at 30
 T-shirt, 240 g, valued at 15
 ---- Inventory End: Total Weight: 3960 g, Total Value: 950
 
-</code></pre>
-
-<h2 id="conclusion:de8f46f1e4cc39c152533cf3328f55db">Conclusion</h2>
-
+</code></pre><h2 id="conclusion">Conclusion</h2>
 <p>We have solved the 0/1  version of the knapsack problem, and it has been fun!
 Not only is our solution well tested, but it runs fast, for small numbers of items.</p>
-
 <p>In subsequent articles in this series we will expand on our solution, test it for larger number of items, and hopefully tackle the
 other, harder versions of this interesting computer science problem.</p>
-
 <p>Who knows, perhaps we&rsquo;ll even take a stab at a quantum algorithm!</p>
-
 <p>If only we could do this type of programming all day long&hellip;</p>
-
 <p>The full solution is <a href="https://github.com/Kerneels/knapsack">available here, on GitHub</a></p>
 
   </section>
 </article>
 
-</main>
-
-
+        </main>
+      </div>
+    
 </div>
 
 <footer>
-  <div class="container">
-<div style="font-size:16px;margin:0 auto;width:300px" class="blockchain-btn"
-     data-address="1DNw8dEG14NazWDEQUkwPZJ2kfgoaSa7dv"
-     data-shared="false">
-    <div class="blockchain stage-begin">
-        <img src="https://blockchain.info/Resources/buttons/donate_64.png"/>
-    </div>
-    <div class="blockchain stage-loading" style="text-align:center">
-        <img src="https://blockchain.info/Resources/loading-large.gif"/>
-    </div>
-    <div class="blockchain stage-ready">
-         <p align="center">If you'd like to support this site and see the content here grow, please donate to Bitcoin address: <b>[[address]]</b></p>
-         <p align="center" class="qr-code"></p>
-    </div>
-    <div class="blockchain stage-paid">
-         Donation of <b>[[value]] BTC</b> Received. Thank You Very Much!
-    </div>
-    <div class="blockchain stage-error">
-        <font color="red">[[error]]</font>
-    </div>
-</div>
-  </div>
   <div class="container">
     <span class="copyright">&copy; 2016  Good Fast - <a rel="license" href="http://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a></span>
   </div>
@@ -778,3 +683,5 @@ other, harder versions of this interesting computer science problem.</p>
 </body>
 </html>
 
+  </body>
+</html>

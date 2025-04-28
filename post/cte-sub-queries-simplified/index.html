@@ -1,11 +1,31 @@
-<!DOCTYPE html>
+<!doctype html5>
+<html lang="en-us">
+  <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no"><meta name="description" content="Technical article explaining how to use the CTE SQL construct to simplify nested subqueries." >
+    <meta property="og:description" content="Technical article explaining how to use the CTE SQL construct to simplify nested subqueries." ><meta name="keywords" content="cte,sub query,cartesian join ,full join"><meta name="author" content="Kerneels Roos"><meta name="theme-color" content="#2d2d2d">
+  <meta name="twitter:card" content="summary"><meta name="twitter:creator" content="@twitter user"><meta property="og:type" content="blog">
+  <meta property="og:title"content="CTE : simplify those nested sub queries | Good Fast">
+  <meta property="og:url" content="https://blog.goodfast.info/">
+  <meta property="og:site_name" content="Base16">
+  
+  
+  <link rel="stylesheet" href="https://blog.goodfast.info/style.815a0436c85997db50e9ab6cf5ad0762bd92c602213b2b7975a922ef4117cabb227c29a9c1285d8036ee446b387e6eac5ead873e5571e7a9a14d672acc69b876.css" type="text/css"integrity="sha512-gVoENshZl9tQ6ats9a0HYr2SxgIhOyt5daki70EXyrsifCmpwShdgDbuRGs4fm6sXq2HPlVx56mhTWcqzGm4dg==" >
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Code+Pro:400,700" type="text/css">
+  <link rel="alternate" href="/index.xml" type="application/rss+xml" title="Good Fast">
+  <link rel="shortcut icon" type="image/x-icon" href="https://blog.goodfast.info/favicon.ico">
+  <title>CTE : simplify those nested sub queries - Good Fast</title>
+</head>
+
+  <body>
+    <!DOCTYPE html>
 <html lang="en-us">
 <head>
 <meta charset="utf-8">
 <meta name="description" content="Technical article explaining how to use the CTE SQL construct to simplify nested subqueries.">
 <meta name="keywords" content="cte,sub query,cartesian join ,full join">
 <meta name="author" content="Kerneels Roos">
-<meta name="generator" content="Hugo 0.15" />
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="stylesheet" href="https://blog.goodfast.info/css/style.css" type="text/css">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Code+Pro:400,700" type="text/css">
@@ -57,9 +77,9 @@
 
 <div class="container">
 
-
-<main role="main" class="article">
-  
+      <div class="container">
+        <main role="main" class="article">
+          
 <article class="single" itemscope itemtype="http://schema.org/BlogPosting">
   <div class="meta">
 
@@ -101,291 +121,233 @@
   <h1 class="headline" itemprop="headline">CTE : simplify those nested sub queries</h1>
     <div id="toc" class="well col-md-4 col-sm-6">
     <nav id="TableOfContents">
-<ul>
-<li>
-<ul>
-<li><a href="#is-it-just-me-or-is-this-strange:0dc054d968169eec76f7161b9d98121b">Is it just me, or is this strange?</a></li>
-<li><a href="#adventureworks-customers-and-their-addresses:0dc054d968169eec76f7161b9d98121b">Adventureworks customers and their addresses</a></li>
-<li><a href="#we-want-to-know-how-many-customers-have-one-two-and-three-or-more-addresses:0dc054d968169eec76f7161b9d98121b">We want to know how many customers have one, two and three or more addresses.</a></li>
-<li><a href="#sub-query-building-block:0dc054d968169eec76f7161b9d98121b">Sub query building block</a></li>
-<li><a href="#sub-query-with-count-of-zero-instead-of-nothing:0dc054d968169eec76f7161b9d98121b">Sub query with count of zero instead of nothing</a></li>
-<li><a href="#combined-sub-query-approach:0dc054d968169eec76f7161b9d98121b">Combined sub query approach</a></li>
-<li><a href="#fixup-by-throwing-more-sub-queries-at-the-problem:0dc054d968169eec76f7161b9d98121b">Fixup by throwing more sub queries at the problem</a></li>
-<li><a href="#first-cte-attempt:0dc054d968169eec76f7161b9d98121b">First CTE attempt</a></li>
-<li><a href="#is-this-not-so-much-more-readable:0dc054d968169eec76f7161b9d98121b">Is this not so much more readable?</a></li>
-<li><a href="#cte-support:0dc054d968169eec76f7161b9d98121b">CTE support</a></li>
-<li><a href="#but-can-we-not-just-join-better:0dc054d968169eec76f7161b9d98121b">But, can we not just join better?</a></li>
-<li><a href="#sub-query-approach-simplified-with-a-full-join:0dc054d968169eec76f7161b9d98121b">Sub query approach simplified with a FULL JOIN</a></li>
-<li><a href="#cte-approach-simplified-with-full-join:0dc054d968169eec76f7161b9d98121b">CTE approach simplified with FULL JOIN</a></li>
-<li><a href="#simplest-solution:0dc054d968169eec76f7161b9d98121b">Simplest solution</a></li>
-<li><a href="#final-thoughts:0dc054d968169eec76f7161b9d98121b">Final Thoughts</a></li>
-</ul></li>
-</ul>
+  <ul>
+    <li><a href="#is-it-just-me-or-is-this-strange">Is it just me, or is this strange?</a></li>
+    <li><a href="#adventureworks-customers-and-their-addresses">Adventureworks customers and their addresses</a></li>
+    <li><a href="#we-want-to-know-how-many-customers-have-one-two-and-three-or-more-addresses">We want to know how many customers have one, two and three or more addresses.</a></li>
+    <li><a href="#sub-query-building-block">Sub query building block</a></li>
+    <li><a href="#sub-query-with-count-of-zero-instead-of-nothing">Sub query with count of zero instead of nothing</a></li>
+    <li><a href="#combined-sub-query-approach">Combined sub query approach</a></li>
+    <li><a href="#fixup-by-throwing-more-sub-queries-at-the-problem">Fixup by throwing more sub queries at the problem</a></li>
+    <li><a href="#first-cte-attempt">First CTE attempt</a></li>
+    <li><a href="#is-this-not-so-much-more-readable">Is this not so much more readable?</a></li>
+    <li><a href="#cte-support">CTE support</a></li>
+    <li><a href="#but-can-we-not-just-join-better">But, can we not just join better?</a></li>
+    <li><a href="#sub-query-approach-simplified-with-a-full-join">Sub query approach simplified with a FULL JOIN</a></li>
+    <li><a href="#cte-approach-simplified-with-full-join">CTE approach simplified with FULL JOIN</a></li>
+    <li><a href="#simplest-solution">Simplest solution</a></li>
+    <li><a href="#final-thoughts">Final Thoughts</a></li>
+  </ul>
 </nav>
     </div>
   <section class="body" itemprop="articleBody">
-    
-
-<p>This article examines how sub queries can be substituted for the far more readable common table expressions, or CTEs available in many RDBMS systems.
+    <p>This article examines how sub queries can be substituted for the far more readable common table expressions, or CTEs available in many RDBMS systems.
 I was motivated to write this article when a friend who is fairly new to SQL expressed difficulty in grasping queries containing nested sub queries.</p>
-
 <p>If you&rsquo;ve never heard of CTEs before and you want to get the most out of this article, I recommend you get <a href="https://msftdbprodsamples.codeplex.com/releases/view/125550">AdventureWorks2014</a> sample database and experiment a little with the queries below.
 Adventureworks is a nice sample database designed to demonstrate SQL Server features, and many examples online makes use of it.
 If on the other hand CTEs are old hat to you a quick skim reading of the below will suffice, but pay attention since there is something
 interesting below which you might never have known, or maybe forgotten.</p>
-
-<h2 id="is-it-just-me-or-is-this-strange:0dc054d968169eec76f7161b9d98121b">Is it just me, or is this strange?</h2>
-
+<h2 id="is-it-just-me-or-is-this-strange">Is it just me, or is this strange?</h2>
 <p>No-no, this thing came from long, long ago, was what I was thinking
 the first time I was confronted with SQL SELECT syntax.</p>
-
 <p>It&rsquo;s all the wrong way round.
 Take the most basic form of  a SELECT statement for example&hellip;</p>
-
 <ol>
 <li>You start out with what you want in the column list while starting the SELECT statement.</li>
 <li>Next you proceed to say from where you want the data  to come from, in the FROM clause.</li>
 <li>Then you stipulate  how  you want to filter what is returned when you write the WHERE clause.</li>
 <li>Finally  you end off with how stuff should be ordered in the ORDER BY clause.</li>
 </ol>
-
 <p>Now, I do realise that there are (were) probably very good reasons why this particular order was chosen, but
 would it not make more sense to rather start out with saying where you want to draw info from (FROM clause), proceed to filter that with the WHERE clause, followed by your preferred ordering in the ORDER BY, and finishing up with the list of which columns you are interested in, e.g:</p>
-
 <ol>
 <li>FROM</li>
 <li>WHERE</li>
 <li>ORDER BY</li>
 <li>SELECT</li>
 </ol>
-
 <p>Well, it is really of no consequence now - we have come too far along this road, however, note that the fluent way of constructing queries
 with .NET C# Linq offer exactly this; a more logical flow of steps.</p>
-
 <p>This post is about simplifying subqueries, so getting back on track, it turns out there is a powerful feature of SQL99 called
 Common Table Expressions, or CTEs which offers a great help when you are dealing with a monster query with little minions of subqueries, nested deeper in there than  your TV remote that sunk into the couch folds.</p>
-
 <p>Whereas sub query syntax quickly gets confusing and convoluted, using the CTE approach breaks down complexity and deals with each step of the workload in separate parts before moving on to
 constructing a more intertwined picture.</p>
-
 <p>To me, it somewhat moves towards my &ldquo;more ideal&rdquo; ordering of statements, all be it no real alteration to the standard SELECT syntax.</p>
-
 <p>Let&rsquo;s have a look at an example.</p>
-
-<h2 id="adventureworks-customers-and-their-addresses:0dc054d968169eec76f7161b9d98121b">Adventureworks customers and their addresses</h2>
-
+<h2 id="adventureworks-customers-and-their-addresses">Adventureworks customers and their addresses</h2>
 <p>In Adventureworks, customers are modeled in the person.BusinessEntity table, and their addresses in the person.Address table.
 The relation between customers and their addresses is maintained in the person.BusinessEntityAddress table, which adds a type
 for each address (Billing, Home, Main Office etc).</p>
-
-<h2 id="we-want-to-know-how-many-customers-have-one-two-and-three-or-more-addresses:0dc054d968169eec76f7161b9d98121b">We want to know how many customers have one, two and three or more addresses.</h2>
-
+<h2 id="we-want-to-know-how-many-customers-have-one-two-and-three-or-more-addresses">We want to know how many customers have one, two and three or more addresses.</h2>
 <pre><code>Since the purpose of this article is to discuss subquery vs CTEs, excuse the somewhat contrived query.
 At the end of this article I'll show  a simpler way to accomplish the tast at hand.
 </code></pre>
-
-<h2 id="sub-query-building-block:0dc054d968169eec76f7161b9d98121b">Sub query building block</h2>
-
+<h2 id="sub-query-building-block">Sub query building block</h2>
 <p>We can establish that no BusinessEntity has more than two addresses by the empty result set returned by:</p>
-
-<pre><code class="language-sql">select ba.BusinessEntityId, count(ba.AddressId)
-from person.BusinessEntity b
-join person.BusinessEntityAddress ba on ba.BusinessEntityId = b.BusinessEntityId
-group by ba.BusinessEntityId
-having count(ba.AddressId) &gt; 2;
-</code></pre>
-
-<p>We&rsquo;ll assume for the remainder of this article that  this query is our best attempt, and that
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sql" data-lang="sql"><span style="color:#66d9ef">select</span> ba.BusinessEntityId, <span style="color:#66d9ef">count</span>(ba.AddressId)
+<span style="color:#66d9ef">from</span> person.BusinessEntity b
+<span style="color:#66d9ef">join</span> person.BusinessEntityAddress ba <span style="color:#66d9ef">on</span> ba.BusinessEntityId <span style="color:#f92672">=</span> b.BusinessEntityId
+<span style="color:#66d9ef">group</span> <span style="color:#66d9ef">by</span> ba.BusinessEntityId
+<span style="color:#66d9ef">having</span> <span style="color:#66d9ef">count</span>(ba.AddressId) <span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">2</span>;
+</code></pre></div><p>We&rsquo;ll assume for the remainder of this article that  this query is our best attempt, and that
 it is a &ldquo;black box&rdquo; with which we cannot tamper, save for adjusting the count in the HAVING clause.</p>
-
 <p>Note that technically we do not need the additional join:</p>
-
-<pre><code class="language-sql">join person.BusinessEntityAddress ba on ba.BusinessEntityId = b.BusinessEntityId
-</code></pre>
-
-<p>however this ensures we do not consider addresses in isolation - we ensure all addresses actually have an existing business tied to them.</p>
-
-<h2 id="sub-query-with-count-of-zero-instead-of-nothing:0dc054d968169eec76f7161b9d98121b">Sub query with count of zero instead of nothing</h2>
-
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sql" data-lang="sql"><span style="color:#66d9ef">join</span> person.BusinessEntityAddress ba <span style="color:#66d9ef">on</span> ba.BusinessEntityId <span style="color:#f92672">=</span> b.BusinessEntityId
+</code></pre></div><p>however this ensures we do not consider addresses in isolation - we ensure all addresses actually have an existing business tied to them.</p>
+<h2 id="sub-query-with-count-of-zero-instead-of-nothing">Sub query with count of zero instead of nothing</h2>
 <p>Now we would like to improve this result a bit, by rather returning a count of zero instead of nothing.
 We do this by wrapping the above query in a super query:</p>
-
-<pre><code class="language-sql">select 
-count(businessEntitiesWithMoreThanTwoAddresses.BusinessEntityId) as NumberOfBusinessesWithMoreThanTwoAddresses
-from
-(select ba.BusinessEntityId, 
-count(ba.AddressId) as NumberOfAddresses
-from person.BusinessEntity b
-join person.BusinessEntityAddress ba on ba.BusinessEntityId = b.BusinessEntityId
-group by ba.BusinessEntityId
-having count(ba.AddressId) &gt; 2
-) as businessEntitiesWithMoreThanTwoAddresses;
-</code></pre>
-
-<p>Not too bad in terms of readability, and since we alias the sub query we always know where the result for the outer select column list comes from.
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sql" data-lang="sql"><span style="color:#66d9ef">select</span> 
+<span style="color:#66d9ef">count</span>(businessEntitiesWithMoreThanTwoAddresses.BusinessEntityId) <span style="color:#66d9ef">as</span> NumberOfBusinessesWithMoreThanTwoAddresses
+<span style="color:#66d9ef">from</span>
+(<span style="color:#66d9ef">select</span> ba.BusinessEntityId, 
+<span style="color:#66d9ef">count</span>(ba.AddressId) <span style="color:#66d9ef">as</span> NumberOfAddresses
+<span style="color:#66d9ef">from</span> person.BusinessEntity b
+<span style="color:#66d9ef">join</span> person.BusinessEntityAddress ba <span style="color:#66d9ef">on</span> ba.BusinessEntityId <span style="color:#f92672">=</span> b.BusinessEntityId
+<span style="color:#66d9ef">group</span> <span style="color:#66d9ef">by</span> ba.BusinessEntityId
+<span style="color:#66d9ef">having</span> <span style="color:#66d9ef">count</span>(ba.AddressId) <span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">2</span>
+) <span style="color:#66d9ef">as</span> businessEntitiesWithMoreThanTwoAddresses;
+</code></pre></div><p>Not too bad in terms of readability, and since we alias the sub query we always know where the result for the outer select column list comes from.
 But what if we would like to augment this query to also return the number of businesses with only one, and two addresses respectively?
 Or to cover all possabilities, the number of businesses with one, two and three or more addresses respectively.
 Let&rsquo;s try with the sub query approach:</p>
-
-<h2 id="combined-sub-query-approach:0dc054d968169eec76f7161b9d98121b">Combined sub query approach</h2>
-
-<pre><code class="language-sql">select 
-count(businessEntitiesWithOneAddress.BusinessEntityId) as NumberOfBusinessesWithOneAddress,
-count(businessEntitiesWithTwoAddresses.BusinessEntityId) as NumberOfBusinessesWithTwoAddresses,
-count(businessEntitiesWithMoreThanTwoAddresses.BusinessEntityId) as NumberOfBusinessesWithMoreThanTwoAddresses
-from
-(select ba.BusinessEntityId, 
-count(ba.AddressId) as NumberOfAddresses
-from person.BusinessEntity b
-join person.BusinessEntityAddress ba on ba.BusinessEntityId = b.BusinessEntityId
-group by ba.BusinessEntityId
-having count(ba.AddressId) = 1
-) as businessEntitiesWithOneAddress,
-(select ba.BusinessEntityId, 
-count(ba.AddressId) as NumberOfAddresses
-from person.BusinessEntity b
-join person.BusinessEntityAddress ba on ba.BusinessEntityId = b.BusinessEntityId
-group by ba.BusinessEntityId
-having count(ba.AddressId) = 2
-) as businessEntitiesWithTwoAddresses,
-(select ba.BusinessEntityId, 
-count(ba.AddressId) as NumberOfAddresses
-from person.BusinessEntity b
-join person.BusinessEntityAddress ba on ba.BusinessEntityId = b.BusinessEntityId
-group by ba.BusinessEntityId
-having count(ba.AddressId) &gt; 2
-) as businessEntitiesWithMoreThanTwoAddresses;
-</code></pre>
-
-<p>Hmm&hellip; We get zero for everything. Something has gone wrong.
+<h2 id="combined-sub-query-approach">Combined sub query approach</h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sql" data-lang="sql"><span style="color:#66d9ef">select</span> 
+<span style="color:#66d9ef">count</span>(businessEntitiesWithOneAddress.BusinessEntityId) <span style="color:#66d9ef">as</span> NumberOfBusinessesWithOneAddress,
+<span style="color:#66d9ef">count</span>(businessEntitiesWithTwoAddresses.BusinessEntityId) <span style="color:#66d9ef">as</span> NumberOfBusinessesWithTwoAddresses,
+<span style="color:#66d9ef">count</span>(businessEntitiesWithMoreThanTwoAddresses.BusinessEntityId) <span style="color:#66d9ef">as</span> NumberOfBusinessesWithMoreThanTwoAddresses
+<span style="color:#66d9ef">from</span>
+(<span style="color:#66d9ef">select</span> ba.BusinessEntityId, 
+<span style="color:#66d9ef">count</span>(ba.AddressId) <span style="color:#66d9ef">as</span> NumberOfAddresses
+<span style="color:#66d9ef">from</span> person.BusinessEntity b
+<span style="color:#66d9ef">join</span> person.BusinessEntityAddress ba <span style="color:#66d9ef">on</span> ba.BusinessEntityId <span style="color:#f92672">=</span> b.BusinessEntityId
+<span style="color:#66d9ef">group</span> <span style="color:#66d9ef">by</span> ba.BusinessEntityId
+<span style="color:#66d9ef">having</span> <span style="color:#66d9ef">count</span>(ba.AddressId) <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span>
+) <span style="color:#66d9ef">as</span> businessEntitiesWithOneAddress,
+(<span style="color:#66d9ef">select</span> ba.BusinessEntityId, 
+<span style="color:#66d9ef">count</span>(ba.AddressId) <span style="color:#66d9ef">as</span> NumberOfAddresses
+<span style="color:#66d9ef">from</span> person.BusinessEntity b
+<span style="color:#66d9ef">join</span> person.BusinessEntityAddress ba <span style="color:#66d9ef">on</span> ba.BusinessEntityId <span style="color:#f92672">=</span> b.BusinessEntityId
+<span style="color:#66d9ef">group</span> <span style="color:#66d9ef">by</span> ba.BusinessEntityId
+<span style="color:#66d9ef">having</span> <span style="color:#66d9ef">count</span>(ba.AddressId) <span style="color:#f92672">=</span> <span style="color:#ae81ff">2</span>
+) <span style="color:#66d9ef">as</span> businessEntitiesWithTwoAddresses,
+(<span style="color:#66d9ef">select</span> ba.BusinessEntityId, 
+<span style="color:#66d9ef">count</span>(ba.AddressId) <span style="color:#66d9ef">as</span> NumberOfAddresses
+<span style="color:#66d9ef">from</span> person.BusinessEntity b
+<span style="color:#66d9ef">join</span> person.BusinessEntityAddress ba <span style="color:#66d9ef">on</span> ba.BusinessEntityId <span style="color:#f92672">=</span> b.BusinessEntityId
+<span style="color:#66d9ef">group</span> <span style="color:#66d9ef">by</span> ba.BusinessEntityId
+<span style="color:#66d9ef">having</span> <span style="color:#66d9ef">count</span>(ba.AddressId) <span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">2</span>
+) <span style="color:#66d9ef">as</span> businessEntitiesWithMoreThanTwoAddresses;
+</code></pre></div><p>Hmm&hellip; We get zero for everything. Something has gone wrong.
 Running each super/sub query pair separately we obtain a number for the one and two address scenario, but nothing for the three or more one.
 Somehow, the zero result from the three or more address scenario is forcing the other two to become zero as well.
 Well, where else would two hole numbers and zero uniformly combined yeald zero?
-Multiplication of course, and observing how we unwittingly join the three subqueries with a comma (&ldquo;,&rdquo;) which is nothing but a
+Multiplication of course, and observing how we unwittingly join the three subqueries with a comma (&quot;,&quot;) which is nothing but a
 cartesian or cross join, everything start to make sense!
 The cross join is causing our result set to first be the number of rows returned by the first subquery,  but then these rows are &ldquo;multiplied&rdquo; in the first cross join with the two address subquery, at which point we are already off track, and finally, to make matters even
 worse, the last subquery returns zero rows, and anything multiplied by zero is of course again zero.</p>
-
-<h2 id="fixup-by-throwing-more-sub-queries-at-the-problem:0dc054d968169eec76f7161b9d98121b">Fixup by throwing more sub queries at the problem</h2>
-
+<h2 id="fixup-by-throwing-more-sub-queries-at-the-problem">Fixup by throwing more sub queries at the problem</h2>
 <p>Now, let&rsquo;s first remedy this situation by cross joining on only one row each time.
 Hold on, it is going to get a bit messy since in order to do this, we have to introduce yet another subquery.</p>
-
-<pre><code class="language-sql">select 
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sql" data-lang="sql"><span style="color:#66d9ef">select</span> 
 A.NumberOfBusinessesWithOneAddress,
 B.NumberOfBusinessesWithTwoAddresses,
-C.NumberOfBusinessesWithMoreThanTwoAddresses
-from
-(select 
-count(businessEntitiesWithOneAddress.BusinessEntityId) as NumberOfBusinessesWithOneAddress
-from
-(select ba.BusinessEntityId, 
-count(ba.AddressId) as NumberOfAddresses
-from person.BusinessEntity b
-join person.BusinessEntityAddress ba on ba.BusinessEntityId = b.BusinessEntityId
-group by ba.BusinessEntityId
-having count(ba.AddressId) = 1
-) as businessEntitiesWithOneAddress) as A,
-(select
-count(businessEntitiesWithTwoAddresses.BusinessEntityId) as NumberOfBusinessesWithTwoAddresses
-from
-(select ba.BusinessEntityId, 
-count(ba.AddressId) as NumberOfAddresses
-from person.BusinessEntity b
-join person.BusinessEntityAddress ba on ba.BusinessEntityId = b.BusinessEntityId
-group by ba.BusinessEntityId
-having count(ba.AddressId) = 2
-) as businessEntitiesWithTwoAddresses) as B,
-(select
-count(businessEntitiesWithMoreThanTwoAddresses.BusinessEntityId) as NumberOfBusinessesWithMoreThanTwoAddresses
-from
-(select ba.BusinessEntityId, 
-count(ba.AddressId) as NumberOfAddresses
-from person.BusinessEntity b
-join person.BusinessEntityAddress ba on ba.BusinessEntityId = b.BusinessEntityId
-group by ba.BusinessEntityId
-having count(ba.AddressId) &gt; 2
-) as businessEntitiesWithMoreThanTwoAddresses) as C;
-</code></pre>
-
-<p>Success, but at quite a complexity and readability cost.</p>
-
-<h2 id="first-cte-attempt:0dc054d968169eec76f7161b9d98121b">First CTE attempt</h2>
-
+<span style="color:#66d9ef">C</span>.NumberOfBusinessesWithMoreThanTwoAddresses
+<span style="color:#66d9ef">from</span>
+(<span style="color:#66d9ef">select</span> 
+<span style="color:#66d9ef">count</span>(businessEntitiesWithOneAddress.BusinessEntityId) <span style="color:#66d9ef">as</span> NumberOfBusinessesWithOneAddress
+<span style="color:#66d9ef">from</span>
+(<span style="color:#66d9ef">select</span> ba.BusinessEntityId, 
+<span style="color:#66d9ef">count</span>(ba.AddressId) <span style="color:#66d9ef">as</span> NumberOfAddresses
+<span style="color:#66d9ef">from</span> person.BusinessEntity b
+<span style="color:#66d9ef">join</span> person.BusinessEntityAddress ba <span style="color:#66d9ef">on</span> ba.BusinessEntityId <span style="color:#f92672">=</span> b.BusinessEntityId
+<span style="color:#66d9ef">group</span> <span style="color:#66d9ef">by</span> ba.BusinessEntityId
+<span style="color:#66d9ef">having</span> <span style="color:#66d9ef">count</span>(ba.AddressId) <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span>
+) <span style="color:#66d9ef">as</span> businessEntitiesWithOneAddress) <span style="color:#66d9ef">as</span> A,
+(<span style="color:#66d9ef">select</span>
+<span style="color:#66d9ef">count</span>(businessEntitiesWithTwoAddresses.BusinessEntityId) <span style="color:#66d9ef">as</span> NumberOfBusinessesWithTwoAddresses
+<span style="color:#66d9ef">from</span>
+(<span style="color:#66d9ef">select</span> ba.BusinessEntityId, 
+<span style="color:#66d9ef">count</span>(ba.AddressId) <span style="color:#66d9ef">as</span> NumberOfAddresses
+<span style="color:#66d9ef">from</span> person.BusinessEntity b
+<span style="color:#66d9ef">join</span> person.BusinessEntityAddress ba <span style="color:#66d9ef">on</span> ba.BusinessEntityId <span style="color:#f92672">=</span> b.BusinessEntityId
+<span style="color:#66d9ef">group</span> <span style="color:#66d9ef">by</span> ba.BusinessEntityId
+<span style="color:#66d9ef">having</span> <span style="color:#66d9ef">count</span>(ba.AddressId) <span style="color:#f92672">=</span> <span style="color:#ae81ff">2</span>
+) <span style="color:#66d9ef">as</span> businessEntitiesWithTwoAddresses) <span style="color:#66d9ef">as</span> B,
+(<span style="color:#66d9ef">select</span>
+<span style="color:#66d9ef">count</span>(businessEntitiesWithMoreThanTwoAddresses.BusinessEntityId) <span style="color:#66d9ef">as</span> NumberOfBusinessesWithMoreThanTwoAddresses
+<span style="color:#66d9ef">from</span>
+(<span style="color:#66d9ef">select</span> ba.BusinessEntityId, 
+<span style="color:#66d9ef">count</span>(ba.AddressId) <span style="color:#66d9ef">as</span> NumberOfAddresses
+<span style="color:#66d9ef">from</span> person.BusinessEntity b
+<span style="color:#66d9ef">join</span> person.BusinessEntityAddress ba <span style="color:#66d9ef">on</span> ba.BusinessEntityId <span style="color:#f92672">=</span> b.BusinessEntityId
+<span style="color:#66d9ef">group</span> <span style="color:#66d9ef">by</span> ba.BusinessEntityId
+<span style="color:#66d9ef">having</span> <span style="color:#66d9ef">count</span>(ba.AddressId) <span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">2</span>
+) <span style="color:#66d9ef">as</span> businessEntitiesWithMoreThanTwoAddresses) <span style="color:#66d9ef">as</span> <span style="color:#66d9ef">C</span>;
+</code></pre></div><p>Success, but at quite a complexity and readability cost.</p>
+<h2 id="first-cte-attempt">First CTE attempt</h2>
 <p>Let&rsquo;s see if we can simplify this into something more readable by using a few CTEs instead of so many subqueries.</p>
-
 <p>Our query will consist of 3 parts:</p>
-
 <ol>
 <li>First, the three innermost sub queries are stated as CTEs named businessEntitiesWithOneAddress, businessEntitiesWithTwoAddresses and businessEntitiesWithMoreThanTwoAddresses.</li>
 <li>Next, the encapsulating super queries that reduce the sub queries to  single values are also stated as CTEs named A, B and C.</li>
 <li>Finally we simply select from the aggregation CTEs A, B and C.</li>
 </ol>
-
-<pre><code class="language-sql">-- First, the three innermost sub queries are stated as CTEs named businessEntitiesWithOneAddress, businessEntitiesWithTwoAddresses and businessEntitiesWithMoreThanTwoAddresses.
-with  businessEntitiesWithOneAddress as
-(select ba.BusinessEntityId, 
-count(ba.AddressId) as NumberOfAddresses
-from person.BusinessEntity b
-join person.BusinessEntityAddress ba on ba.BusinessEntityId = b.BusinessEntityId
-group by ba.BusinessEntityId
-having count(ba.AddressId) = 1
-), businessEntitiesWithTwoAddresses as
-(select ba.BusinessEntityId, 
-count(ba.AddressId) as NumberOfAddresses
-from person.BusinessEntity b
-join person.BusinessEntityAddress ba on ba.BusinessEntityId = b.BusinessEntityId
-group by ba.BusinessEntityId
-having count(ba.AddressId) = 2
-), businessEntitiesWithMoreThanTwoAddresses  as
-(select ba.BusinessEntityId, 
-count(ba.AddressId) as NumberOfAddresses
-from person.BusinessEntity b
-join person.BusinessEntityAddress ba on ba.BusinessEntityId = b.BusinessEntityId
-group by ba.BusinessEntityId
-having count(ba.AddressId) &gt; 2
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sql" data-lang="sql"><span style="color:#75715e">-- First, the three innermost sub queries are stated as CTEs named businessEntitiesWithOneAddress, businessEntitiesWithTwoAddresses and businessEntitiesWithMoreThanTwoAddresses.
+</span><span style="color:#75715e"></span><span style="color:#66d9ef">with</span>  businessEntitiesWithOneAddress <span style="color:#66d9ef">as</span>
+(<span style="color:#66d9ef">select</span> ba.BusinessEntityId, 
+<span style="color:#66d9ef">count</span>(ba.AddressId) <span style="color:#66d9ef">as</span> NumberOfAddresses
+<span style="color:#66d9ef">from</span> person.BusinessEntity b
+<span style="color:#66d9ef">join</span> person.BusinessEntityAddress ba <span style="color:#66d9ef">on</span> ba.BusinessEntityId <span style="color:#f92672">=</span> b.BusinessEntityId
+<span style="color:#66d9ef">group</span> <span style="color:#66d9ef">by</span> ba.BusinessEntityId
+<span style="color:#66d9ef">having</span> <span style="color:#66d9ef">count</span>(ba.AddressId) <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span>
+), businessEntitiesWithTwoAddresses <span style="color:#66d9ef">as</span>
+(<span style="color:#66d9ef">select</span> ba.BusinessEntityId, 
+<span style="color:#66d9ef">count</span>(ba.AddressId) <span style="color:#66d9ef">as</span> NumberOfAddresses
+<span style="color:#66d9ef">from</span> person.BusinessEntity b
+<span style="color:#66d9ef">join</span> person.BusinessEntityAddress ba <span style="color:#66d9ef">on</span> ba.BusinessEntityId <span style="color:#f92672">=</span> b.BusinessEntityId
+<span style="color:#66d9ef">group</span> <span style="color:#66d9ef">by</span> ba.BusinessEntityId
+<span style="color:#66d9ef">having</span> <span style="color:#66d9ef">count</span>(ba.AddressId) <span style="color:#f92672">=</span> <span style="color:#ae81ff">2</span>
+), businessEntitiesWithMoreThanTwoAddresses  <span style="color:#66d9ef">as</span>
+(<span style="color:#66d9ef">select</span> ba.BusinessEntityId, 
+<span style="color:#66d9ef">count</span>(ba.AddressId) <span style="color:#66d9ef">as</span> NumberOfAddresses
+<span style="color:#66d9ef">from</span> person.BusinessEntity b
+<span style="color:#66d9ef">join</span> person.BusinessEntityAddress ba <span style="color:#66d9ef">on</span> ba.BusinessEntityId <span style="color:#f92672">=</span> b.BusinessEntityId
+<span style="color:#66d9ef">group</span> <span style="color:#66d9ef">by</span> ba.BusinessEntityId
+<span style="color:#66d9ef">having</span> <span style="color:#66d9ef">count</span>(ba.AddressId) <span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">2</span>
 ), 
 
--- Next, the encapsulating super queries that reduce the sub queries to  single values are also stated as CTEs named A, B and C.
-A as
-(select count(businessEntitiesWithOneAddress.BusinessEntityId) as NumberOfBusinessesWithOneAddress
-from businessEntitiesWithOneAddress
-), B as
-(select count(businessEntitiesWithTwoAddresses.BusinessEntityId) as NumberOfBusinessesWithTwoAddresses
-from businessEntitiesWithTwoAddresses
-), C as
-(select count(businessEntitiesWithMoreThanTwoAddresses.BusinessEntityId) as NumberOfBusinessesWithMoreThanTwoAddresses
-from businessEntitiesWithMoreThanTwoAddresses
+<span style="color:#75715e">-- Next, the encapsulating super queries that reduce the sub queries to  single values are also stated as CTEs named A, B and C.
+</span><span style="color:#75715e"></span>A <span style="color:#66d9ef">as</span>
+(<span style="color:#66d9ef">select</span> <span style="color:#66d9ef">count</span>(businessEntitiesWithOneAddress.BusinessEntityId) <span style="color:#66d9ef">as</span> NumberOfBusinessesWithOneAddress
+<span style="color:#66d9ef">from</span> businessEntitiesWithOneAddress
+), B <span style="color:#66d9ef">as</span>
+(<span style="color:#66d9ef">select</span> <span style="color:#66d9ef">count</span>(businessEntitiesWithTwoAddresses.BusinessEntityId) <span style="color:#66d9ef">as</span> NumberOfBusinessesWithTwoAddresses
+<span style="color:#66d9ef">from</span> businessEntitiesWithTwoAddresses
+), <span style="color:#66d9ef">C</span> <span style="color:#66d9ef">as</span>
+(<span style="color:#66d9ef">select</span> <span style="color:#66d9ef">count</span>(businessEntitiesWithMoreThanTwoAddresses.BusinessEntityId) <span style="color:#66d9ef">as</span> NumberOfBusinessesWithMoreThanTwoAddresses
+<span style="color:#66d9ef">from</span> businessEntitiesWithMoreThanTwoAddresses
 )
 
--- Finally we simply select from the aggregation CTEs A, B and C.
-select
+<span style="color:#75715e">-- Finally we simply select from the aggregation CTEs A, B and C.
+</span><span style="color:#75715e"></span><span style="color:#66d9ef">select</span>
 A.NumberOfBusinessesWithOneAddress,
 B.NumberOfBusinessesWithTwoAddresses,
-C.NumberOfBusinessesWithMoreThanTwoAddresses
-from A, B, C;
-</code></pre>
-
-<h2 id="is-this-not-so-much-more-readable:0dc054d968169eec76f7161b9d98121b">Is this not so much more readable?</h2>
-
+<span style="color:#66d9ef">C</span>.NumberOfBusinessesWithMoreThanTwoAddresses
+<span style="color:#66d9ef">from</span> A, B, <span style="color:#66d9ef">C</span>;
+</code></pre></div><h2 id="is-this-not-so-much-more-readable">Is this not so much more readable?</h2>
 <p>This last query (with CTEs only) is functionally equivalent   to the full query with only sub queries, yet, personally I find the CTE-based one
 significnatly more readable and understandable.
 For me there are many reasons for this, but I list a few:</p>
-
 <ol>
 <li>Instead of a nested style, the CTEs flow in a top to bottom manner.</li>
 <li>Each similar set of queries are grouped together.</li>
 <li>The CTEs are named upfront, so you have an idea of what is being done right from the start.</li>
 </ol>
-
-<h2 id="cte-support:0dc054d968169eec76f7161b9d98121b">CTE support</h2>
-
+<h2 id="cte-support">CTE support</h2>
 <p>CTE is well supported among database systems, and I was surprised to learn that even SqLite supports it!</p>
-
 <p>Wikipedia says:</p>
-
 <p>Recursive CTEs are also supported by</p>
-
 <ul>
 <li>Microsoft SQL Server,</li>
 <li>Firebird 2.1,</li>
@@ -395,174 +357,129 @@ For me there are many reasons for this, but I list a few:</p>
 <li>IBM Informix version 11.50+ and</li>
 <li>CUBRID.</li>
 </ul>
-
 <p>CTE support has been lacking from MySQL for some time now, however, derived tables can be used successfully to achieve standard or non recursive CTE functionality.
 The good news is that <a href="http://mysqlserverteam.com/mysql-8-0-labs-recursive-common-table-expressions-in-mysql-ctes/">full featured CTE support, including recursiveness</a> is not far off for MySQL.</p>
-
-<h2 id="but-can-we-not-just-join-better:0dc054d968169eec76f7161b9d98121b">But, can we not just join better?</h2>
-
+<h2 id="but-can-we-not-just-join-better">But, can we not just join better?</h2>
 <p>Now that I&rsquo;ve shown how the use of CTEs can eliminate sub queries, lets briefly return to the problem of the cartesian join.
 I really did not like the additional sub query, and it&rsquo;s additional CTE counterpart, for reducing the result sets into something that could
 cross join without problems (those A, B and C).
 Is there not perhaps a way to join without throwing anything away?</p>
-
 <p>Let&rsquo;s consider the <a href="http://sqlmag.com/t-sql/t-sql-join-types">possible join types</a>:</p>
-
 <ol>
 <li>CROSS JOIN :  We already saw this does not work.</li>
 <li>INNER JOIN : This will also not work since per definition our three sets are disjoint / contain no similar items.</li>
 <li>LEFT, RIGHT JOIN : We have the same problem; our sets are disjoint.</li>
 <li>FULL JOIN : Bingo! Full joins attempt to join on the join condition, but thereafter behaves like a LEFT and RIGHT JOIN combined; nothing is lost, and unmatched rows are still returned.</li>
 </ol>
-
 <p>Did you know about the full join? I will admit that although I knew there had to be something like it, I did not know / forgotten all about it.</p>
-
-<h2 id="sub-query-approach-simplified-with-a-full-join:0dc054d968169eec76f7161b9d98121b">Sub query approach simplified with a FULL JOIN</h2>
-
-<pre><code class="language-sql">select 
-count(businessEntitiesWithOneAddress.BusinessEntityId) as NumberOfBusinessesWithOneAddress,
-count(businessEntitiesWithTwoAddresses.BusinessEntityId) as NumberOfBusinessesWithTwoAddresses,
-count(businessEntitiesWithMoreThanTwoAddresses.BusinessEntityId) as NumberOfBusinessesWithMoreThanTwoAddresses
-from
-(select ba.BusinessEntityId, 
-count(ba.AddressId) as NumberOfAddresses
-from person.BusinessEntity b
-join person.BusinessEntityAddress ba on ba.BusinessEntityId = b.BusinessEntityId
-group by ba.BusinessEntityId
-having count(ba.AddressId) = 1
-) as businessEntitiesWithOneAddress 
-full join
-(select ba.BusinessEntityId, 
-count(ba.AddressId) as NumberOfAddresses
-from person.BusinessEntity b
-join person.BusinessEntityAddress ba on ba.BusinessEntityId = b.BusinessEntityId
-group by ba.BusinessEntityId
-having count(ba.AddressId) = 2
-) as businessEntitiesWithTwoAddresses 
-on
-businessEntitiesWithOneAddress.BusinessEntityId = 
+<h2 id="sub-query-approach-simplified-with-a-full-join">Sub query approach simplified with a FULL JOIN</h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sql" data-lang="sql"><span style="color:#66d9ef">select</span> 
+<span style="color:#66d9ef">count</span>(businessEntitiesWithOneAddress.BusinessEntityId) <span style="color:#66d9ef">as</span> NumberOfBusinessesWithOneAddress,
+<span style="color:#66d9ef">count</span>(businessEntitiesWithTwoAddresses.BusinessEntityId) <span style="color:#66d9ef">as</span> NumberOfBusinessesWithTwoAddresses,
+<span style="color:#66d9ef">count</span>(businessEntitiesWithMoreThanTwoAddresses.BusinessEntityId) <span style="color:#66d9ef">as</span> NumberOfBusinessesWithMoreThanTwoAddresses
+<span style="color:#66d9ef">from</span>
+(<span style="color:#66d9ef">select</span> ba.BusinessEntityId, 
+<span style="color:#66d9ef">count</span>(ba.AddressId) <span style="color:#66d9ef">as</span> NumberOfAddresses
+<span style="color:#66d9ef">from</span> person.BusinessEntity b
+<span style="color:#66d9ef">join</span> person.BusinessEntityAddress ba <span style="color:#66d9ef">on</span> ba.BusinessEntityId <span style="color:#f92672">=</span> b.BusinessEntityId
+<span style="color:#66d9ef">group</span> <span style="color:#66d9ef">by</span> ba.BusinessEntityId
+<span style="color:#66d9ef">having</span> <span style="color:#66d9ef">count</span>(ba.AddressId) <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span>
+) <span style="color:#66d9ef">as</span> businessEntitiesWithOneAddress 
+<span style="color:#66d9ef">full</span> <span style="color:#66d9ef">join</span>
+(<span style="color:#66d9ef">select</span> ba.BusinessEntityId, 
+<span style="color:#66d9ef">count</span>(ba.AddressId) <span style="color:#66d9ef">as</span> NumberOfAddresses
+<span style="color:#66d9ef">from</span> person.BusinessEntity b
+<span style="color:#66d9ef">join</span> person.BusinessEntityAddress ba <span style="color:#66d9ef">on</span> ba.BusinessEntityId <span style="color:#f92672">=</span> b.BusinessEntityId
+<span style="color:#66d9ef">group</span> <span style="color:#66d9ef">by</span> ba.BusinessEntityId
+<span style="color:#66d9ef">having</span> <span style="color:#66d9ef">count</span>(ba.AddressId) <span style="color:#f92672">=</span> <span style="color:#ae81ff">2</span>
+) <span style="color:#66d9ef">as</span> businessEntitiesWithTwoAddresses 
+<span style="color:#66d9ef">on</span>
+businessEntitiesWithOneAddress.BusinessEntityId <span style="color:#f92672">=</span> 
 businessEntitiesWithTwoAddresses.BusinessEntityId  
-full join
-(select ba.BusinessEntityId, 
-count(ba.AddressId) as NumberOfAddresses
-from person.BusinessEntity b
-join person.BusinessEntityAddress ba on ba.BusinessEntityId = b.BusinessEntityId
-group by ba.BusinessEntityId
-having count(ba.AddressId) &gt; 2
-) as businessEntitiesWithMoreThanTwoAddresses
-on
-businessEntitiesWithTwoAddresses.BusinessEntityId   = 
+<span style="color:#66d9ef">full</span> <span style="color:#66d9ef">join</span>
+(<span style="color:#66d9ef">select</span> ba.BusinessEntityId, 
+<span style="color:#66d9ef">count</span>(ba.AddressId) <span style="color:#66d9ef">as</span> NumberOfAddresses
+<span style="color:#66d9ef">from</span> person.BusinessEntity b
+<span style="color:#66d9ef">join</span> person.BusinessEntityAddress ba <span style="color:#66d9ef">on</span> ba.BusinessEntityId <span style="color:#f92672">=</span> b.BusinessEntityId
+<span style="color:#66d9ef">group</span> <span style="color:#66d9ef">by</span> ba.BusinessEntityId
+<span style="color:#66d9ef">having</span> <span style="color:#66d9ef">count</span>(ba.AddressId) <span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">2</span>
+) <span style="color:#66d9ef">as</span> businessEntitiesWithMoreThanTwoAddresses
+<span style="color:#66d9ef">on</span>
+businessEntitiesWithTwoAddresses.BusinessEntityId   <span style="color:#f92672">=</span> 
 businessEntitiesWithMoreThanTwoAddresses.BusinessEntityId;
-</code></pre>
-
-<p>Yes, we do away with one level of sub queries, but it&rsquo;s still not great.</p>
-
-<h2 id="cte-approach-simplified-with-full-join:0dc054d968169eec76f7161b9d98121b">CTE approach simplified with FULL JOIN</h2>
-
-<pre><code class="language-sql">with  businessEntitiesWithOneAddress as
-(select ba.BusinessEntityId, 
-count(ba.AddressId) as NumberOfAddresses
-from person.BusinessEntity b
-join person.BusinessEntityAddress ba on ba.BusinessEntityId = b.BusinessEntityId
-group by ba.BusinessEntityId
-having count(ba.AddressId) = 1
-), businessEntitiesWithTwoAddresses as
-(select ba.BusinessEntityId, 
-count(ba.AddressId) as NumberOfAddresses
-from person.BusinessEntity b
-join person.BusinessEntityAddress ba on ba.BusinessEntityId = b.BusinessEntityId
-group by ba.BusinessEntityId
-having count(ba.AddressId) = 2
-), businessEntitiesWithMoreThanTwoAddresses  as
-(select ba.BusinessEntityId, 
-count(ba.AddressId) as NumberOfAddresses
-from person.BusinessEntity b
-join person.BusinessEntityAddress ba on ba.BusinessEntityId = b.BusinessEntityId
-group by ba.BusinessEntityId
-having count(ba.AddressId) &gt; 2
+</code></pre></div><p>Yes, we do away with one level of sub queries, but it&rsquo;s still not great.</p>
+<h2 id="cte-approach-simplified-with-full-join">CTE approach simplified with FULL JOIN</h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sql" data-lang="sql"><span style="color:#66d9ef">with</span>  businessEntitiesWithOneAddress <span style="color:#66d9ef">as</span>
+(<span style="color:#66d9ef">select</span> ba.BusinessEntityId, 
+<span style="color:#66d9ef">count</span>(ba.AddressId) <span style="color:#66d9ef">as</span> NumberOfAddresses
+<span style="color:#66d9ef">from</span> person.BusinessEntity b
+<span style="color:#66d9ef">join</span> person.BusinessEntityAddress ba <span style="color:#66d9ef">on</span> ba.BusinessEntityId <span style="color:#f92672">=</span> b.BusinessEntityId
+<span style="color:#66d9ef">group</span> <span style="color:#66d9ef">by</span> ba.BusinessEntityId
+<span style="color:#66d9ef">having</span> <span style="color:#66d9ef">count</span>(ba.AddressId) <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span>
+), businessEntitiesWithTwoAddresses <span style="color:#66d9ef">as</span>
+(<span style="color:#66d9ef">select</span> ba.BusinessEntityId, 
+<span style="color:#66d9ef">count</span>(ba.AddressId) <span style="color:#66d9ef">as</span> NumberOfAddresses
+<span style="color:#66d9ef">from</span> person.BusinessEntity b
+<span style="color:#66d9ef">join</span> person.BusinessEntityAddress ba <span style="color:#66d9ef">on</span> ba.BusinessEntityId <span style="color:#f92672">=</span> b.BusinessEntityId
+<span style="color:#66d9ef">group</span> <span style="color:#66d9ef">by</span> ba.BusinessEntityId
+<span style="color:#66d9ef">having</span> <span style="color:#66d9ef">count</span>(ba.AddressId) <span style="color:#f92672">=</span> <span style="color:#ae81ff">2</span>
+), businessEntitiesWithMoreThanTwoAddresses  <span style="color:#66d9ef">as</span>
+(<span style="color:#66d9ef">select</span> ba.BusinessEntityId, 
+<span style="color:#66d9ef">count</span>(ba.AddressId) <span style="color:#66d9ef">as</span> NumberOfAddresses
+<span style="color:#66d9ef">from</span> person.BusinessEntity b
+<span style="color:#66d9ef">join</span> person.BusinessEntityAddress ba <span style="color:#66d9ef">on</span> ba.BusinessEntityId <span style="color:#f92672">=</span> b.BusinessEntityId
+<span style="color:#66d9ef">group</span> <span style="color:#66d9ef">by</span> ba.BusinessEntityId
+<span style="color:#66d9ef">having</span> <span style="color:#66d9ef">count</span>(ba.AddressId) <span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">2</span>
 )
-select 
-count(businessEntitiesWithOneAddress.BusinessEntityId) as NumberOfBusinessesWithOneAddress,
-count(businessEntitiesWithTwoAddresses.BusinessEntityId) as NumberOfBusinessesWithTwoAddresses,
-count(businessEntitiesWithMoreThanTwoAddresses.BusinessEntityId) as NumberOfBusinessesWithMoreThanTwoAddresses
-from businessEntitiesWithOneAddress
-full join businessEntitiesWithTwoAddresses
-on businessEntitiesWithOneAddress.BusinessEntityId = businessEntitiesWithTwoAddresses.BusinessEntityId
-full join businessEntitiesWithMoreThanTwoAddresses
-on businessEntitiesWithTwoAddresses.BusinessEntityId = businessEntitiesWithMoreThanTwoAddresses.BusinessEntityId
-</code></pre>
-
-<h2 id="simplest-solution:0dc054d968169eec76f7161b9d98121b">Simplest solution</h2>
-
+<span style="color:#66d9ef">select</span> 
+<span style="color:#66d9ef">count</span>(businessEntitiesWithOneAddress.BusinessEntityId) <span style="color:#66d9ef">as</span> NumberOfBusinessesWithOneAddress,
+<span style="color:#66d9ef">count</span>(businessEntitiesWithTwoAddresses.BusinessEntityId) <span style="color:#66d9ef">as</span> NumberOfBusinessesWithTwoAddresses,
+<span style="color:#66d9ef">count</span>(businessEntitiesWithMoreThanTwoAddresses.BusinessEntityId) <span style="color:#66d9ef">as</span> NumberOfBusinessesWithMoreThanTwoAddresses
+<span style="color:#66d9ef">from</span> businessEntitiesWithOneAddress
+<span style="color:#66d9ef">full</span> <span style="color:#66d9ef">join</span> businessEntitiesWithTwoAddresses
+<span style="color:#66d9ef">on</span> businessEntitiesWithOneAddress.BusinessEntityId <span style="color:#f92672">=</span> businessEntitiesWithTwoAddresses.BusinessEntityId
+<span style="color:#66d9ef">full</span> <span style="color:#66d9ef">join</span> businessEntitiesWithMoreThanTwoAddresses
+<span style="color:#66d9ef">on</span> businessEntitiesWithTwoAddresses.BusinessEntityId <span style="color:#f92672">=</span> businessEntitiesWithMoreThanTwoAddresses.BusinessEntityId
+</code></pre></div><h2 id="simplest-solution">Simplest solution</h2>
 <p>Finally, if we relax the requirement (which was self imposed in the first place) to have the results in one row,
 as well as not worrying about returning the count for the three or more scenario,
 we can simplify everything very nice like this:</p>
-
-<pre><code class="language-sql">with  businessEntitiesAddressCount as
-(select ba.BusinessEntityId, 
-count(ba.AddressId) as NumberOfAddresses
-from person.BusinessEntity b
-join person.BusinessEntityAddress ba on ba.BusinessEntityId = b.BusinessEntityId
-group by ba.BusinessEntityId
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sql" data-lang="sql"><span style="color:#66d9ef">with</span>  businessEntitiesAddressCount <span style="color:#66d9ef">as</span>
+(<span style="color:#66d9ef">select</span> ba.BusinessEntityId, 
+<span style="color:#66d9ef">count</span>(ba.AddressId) <span style="color:#66d9ef">as</span> NumberOfAddresses
+<span style="color:#66d9ef">from</span> person.BusinessEntity b
+<span style="color:#66d9ef">join</span> person.BusinessEntityAddress ba <span style="color:#66d9ef">on</span> ba.BusinessEntityId <span style="color:#f92672">=</span> b.BusinessEntityId
+<span style="color:#66d9ef">group</span> <span style="color:#66d9ef">by</span> ba.BusinessEntityId
 )
-select 
-count(BusinessEntityId) as NumberOfBusinesses,
+<span style="color:#66d9ef">select</span> 
+<span style="color:#66d9ef">count</span>(BusinessEntityId) <span style="color:#66d9ef">as</span> NumberOfBusinesses,
 NumberOfAddresses 
-from businessEntitiesAddressCount 
-group by NumberOfAddresses;
-</code></pre>
-
-<p>Best of all; we still get to use a wonderful CTE!</p>
-
-<h2 id="final-thoughts:0dc054d968169eec76f7161b9d98121b">Final Thoughts</h2>
-
+<span style="color:#66d9ef">from</span> businessEntitiesAddressCount 
+<span style="color:#66d9ef">group</span> <span style="color:#66d9ef">by</span> NumberOfAddresses;
+</code></pre></div><p>Best of all; we still get to use a wonderful CTE!</p>
+<h2 id="final-thoughts">Final Thoughts</h2>
 <p>The first time I realised that it is possible to nest queries arbitrarily it seemed like the sky would be the limit to what wonderfully complex and deep stuff one could do,
 all be it with a heavy performance penalty if you were not careful.
 As time went on and I wrote larger and larger queries, often times with many levels of nested sub queries, it became
 apparent that the readability of the code drastically reduced.
 In general purpose programming languages one could avoid deep nested structures quite successfully, but in SQL there seemed to be no way around it
 save for making use of temporary tables, or breaking the work up into smaller parts.</p>
-
 <p>When I found out about CTEs I was very impressed - what an elegant solution!
 Yes, a carefully thought out join can often times remove the need for a sub query or CTE, but in cases where sub query is required I now opt for the CTE approach instead.</p>
-
 <p>Some prominant SQL experts even <a href="http://modern-sql.com/use-case/literate-sql">equate the use of CTEs / the WITH clause to literate programming</a>, and I concur as far as readability and logical flow is concerned.
 There is much more to CTEs, especially when considering the recursive variaty, but that is a story for another time.</p>
-
 <p>It&rsquo;s been a bit of a ramble, but if you made it this far, you&rsquo;ll do well to give CTEs a try,
 and maybe even find it as useful as I do.</p>
 
   </section>
 </article>
 
-</main>
-
-
+        </main>
+      </div>
+    
 </div>
 
 <footer>
-  <div class="container">
-<div style="font-size:16px;margin:0 auto;width:300px" class="blockchain-btn"
-     data-address="1DNw8dEG14NazWDEQUkwPZJ2kfgoaSa7dv"
-     data-shared="false">
-    <div class="blockchain stage-begin">
-        <img src="https://blockchain.info/Resources/buttons/donate_64.png"/>
-    </div>
-    <div class="blockchain stage-loading" style="text-align:center">
-        <img src="https://blockchain.info/Resources/loading-large.gif"/>
-    </div>
-    <div class="blockchain stage-ready">
-         <p align="center">If you'd like to support this site and see the content here grow, please donate to Bitcoin address: <b>[[address]]</b></p>
-         <p align="center" class="qr-code"></p>
-    </div>
-    <div class="blockchain stage-paid">
-         Donation of <b>[[value]] BTC</b> Received. Thank You Very Much!
-    </div>
-    <div class="blockchain stage-error">
-        <font color="red">[[error]]</font>
-    </div>
-</div>
-  </div>
   <div class="container">
     <span class="copyright">&copy; 2016  Good Fast - <a rel="license" href="http://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a></span>
   </div>
@@ -571,3 +488,5 @@ and maybe even find it as useful as I do.</p>
 </body>
 </html>
 
+  </body>
+</html>

@@ -1,11 +1,30 @@
-<!DOCTYPE html>
+<!doctype html5>
+<html lang="en-us">
+  <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no"><meta name="theme-color" content="#2d2d2d">
+  <meta name="twitter:card" content="summary"><meta name="twitter:creator" content="@twitter user"><meta property="og:type" content="blog">
+  <meta property="og:title"content="Two big ideas of SQL: The What, not How, and querying with ease | Good Fast">
+  <meta property="og:url" content="https://blog.goodfast.info/">
+  <meta property="og:site_name" content="Base16">
+  
+  
+  <link rel="stylesheet" href="https://blog.goodfast.info/style.815a0436c85997db50e9ab6cf5ad0762bd92c602213b2b7975a922ef4117cabb227c29a9c1285d8036ee446b387e6eac5ead873e5571e7a9a14d672acc69b876.css" type="text/css"integrity="sha512-gVoENshZl9tQ6ats9a0HYr2SxgIhOyt5daki70EXyrsifCmpwShdgDbuRGs4fm6sXq2HPlVx56mhTWcqzGm4dg==" >
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Code+Pro:400,700" type="text/css">
+  <link rel="alternate" href="/index.xml" type="application/rss+xml" title="Good Fast">
+  <link rel="shortcut icon" type="image/x-icon" href="https://blog.goodfast.info/favicon.ico">
+  <title>Two big ideas of SQL: The What, not How, and querying with ease - Good Fast</title>
+</head>
+
+  <body>
+    <!DOCTYPE html>
 <html lang="en-us">
 <head>
 <meta charset="utf-8">
 <meta name="description" content="">
 <meta name="keywords" content="">
 <meta name="author" content="Kerneels Roos">
-<meta name="generator" content="Hugo 0.15" />
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="stylesheet" href="https://blog.goodfast.info/css/style.css" type="text/css">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Code+Pro:400,700" type="text/css">
@@ -57,9 +76,9 @@
 
 <div class="container">
 
-
-<main role="main" class="article">
-  
+      <div class="container">
+        <main role="main" class="article">
+          
 <article class="single" itemscope itemtype="http://schema.org/BlogPosting">
   <div class="meta">
 
@@ -105,101 +124,66 @@
   <h1 class="headline" itemprop="headline">Two big ideas of SQL: The What, not How, and querying with ease</h1>
     <div id="toc" class="well col-md-4 col-sm-6">
     <nav id="TableOfContents">
-<ul>
-<li>
-<ul>
-<li><a href="#the-what-rather-than-the-how:7167d0e820c7576947c6f743fb434a0c">The &ldquo;what&rdquo; rather than the &ldquo;how&rdquo;</a></li>
-<li><a href="#the-ability-to-ask-easily:7167d0e820c7576947c6f743fb434a0c">The ability to ask easily</a>
-<ul>
-<li><a href="#data-example-from-the-gdelt-data-set:7167d0e820c7576947c6f743fb434a0c">Data :   Example from the GDELT data set</a>
-<ul>
-<li><a href="#nix-solution:7167d0e820c7576947c6f743fb434a0c">*Nix Solution</a></li>
-<li><a href="#c-solution:7167d0e820c7576947c6f743fb434a0c">C Solution</a></li>
-<li><a href="#sql-solution:7167d0e820c7576947c6f743fb434a0c">SQL Solution</a></li>
-</ul></li>
-<li><a href="#debugging:7167d0e820c7576947c6f743fb434a0c">Debugging</a>
-<ul>
-<li><a href="#what-we-know:7167d0e820c7576947c6f743fb434a0c">What we know</a></li>
-</ul></li>
-<li><a href="#poking-around-in-the-data:7167d0e820c7576947c6f743fb434a0c">Poking around in the data</a>
-<ul>
-<li><a href="#edge-cases:7167d0e820c7576947c6f743fb434a0c">Edge cases</a></li>
-</ul></li>
-</ul></li>
-<li><a href="#ddl-and-dml:7167d0e820c7576947c6f743fb434a0c">DDL and DML</a></li>
-<li><a href="#conclusion:7167d0e820c7576947c6f743fb434a0c">Conclusion</a></li>
-</ul></li>
-</ul>
+  <ul>
+    <li><a href="#the-what-rather-than-the-how">The &ldquo;what&rdquo; rather than the &ldquo;how&rdquo;</a></li>
+    <li><a href="#the-ability-to-ask-easily">The ability to ask easily</a>
+      <ul>
+        <li><a href="#data----example-from-the-gdelt-data-set">Data :   Example from the GDELT data set</a></li>
+        <li><a href="#debugging">Debugging</a></li>
+        <li><a href="#poking-around-in-the-data">Poking around in the data</a></li>
+      </ul>
+    </li>
+    <li><a href="#ddl-and-dml">DDL and DML</a></li>
+    <li><a href="#conclusion">Conclusion</a></li>
+  </ul>
 </nav>
     </div>
   <section class="body" itemprop="articleBody">
-    
-
-<p>There are many factors that have contributed to the slow but steady rise of the popularity and ubiquity of SQL as a way to work with data.
-Among all these factors, the most significant one in my opinion is the concept of &ldquo;what&rdquo; rather than &ldquo;how&rdquo;.
+    <p>There are many factors that have contributed to the slow but steady rise of the popularity and ubiquity of SQL as a way to work with data.
+Among all these factors, the most significant one in my opinion is the concept of &ldquo;what&rdquo; rather than &ldquo;how&rdquo;. 
 The second factor of greatness of SQL for me is the ability to quickly and easily answer questions about data.</p>
-
 <p>I choose to start out with these two <em>big ideas</em> that to me, is fundamental to the language.</p>
-
-<h2 id="the-what-rather-than-the-how:7167d0e820c7576947c6f743fb434a0c">The &ldquo;what&rdquo; rather than the &ldquo;how&rdquo;</h2>
-
+<h2 id="the-what-rather-than-the-how">The &ldquo;what&rdquo; rather than the &ldquo;how&rdquo;</h2>
 <p>The &ldquo;what&rdquo; rather than &ldquo;how&rdquo; idea seems simple, but it contains within it far reaching implications.
 It is the idea of expressing &ldquo;what&rdquo; you want to achieve, rather than stipulating exactly &ldquo;how&rdquo; this should be achieved, leaving the &ldquo;how&rdquo; up to the system to decide.</p>
-
 <p>If you have had some experience solving problems by programming in a general purpose language such as C, C#, Java or Python, you should be familiar with the necessity to explain to the computer exactly how to do what you want it to do.
 Failing to correctly specify every step the computer should take can lead to the inability to compile your program, or the wrong output being produced, or no output at all, or at best the correct output but too late.
 This need for verbosity seems like a reasonable requirement, after all, the computer cannot guess what needs to happen, and you should find it natural that you have to tell it exactly what to do as well as how to do it.</p>
-
-<p>The need for total control and complete verbosity is perhaps most evident in  the domain of real time systems, where it is vital for the software not only to produce the correct result, but this result also needs to be produced at the exact correct time.
+<p>The need for total control and complete verbosity is perhaps most evident in  the domain of real time systems, where it is vital for the software not only to produce the correct result, but this result also needs to be produced at the exact correct time. 
 In these real time systems, it can be that the right result at the wrong time would be as disastrous as the wrong result or total failure.
 A common programming language for building real time applications is C, because C allows the developer to specify the what and how very precisely, making it possible to calculate the exact time each step would take to execute.
 So I got it into my head to try to do some things that are easy with SQL, in none other than C language. It turned out much harder than I thought, painful really, so read on for the gory details.</p>
-
-<h2 id="the-ability-to-ask-easily:7167d0e820c7576947c6f743fb434a0c">The ability to ask easily</h2>
-
+<h2 id="the-ability-to-ask-easily">The ability to ask easily</h2>
 <p>The next great idea of SQL is the ability to quickly and easily craft questions, or queries on data.
 I understand that SQL might look foreign and strange to someone who has never worked with it.
-I do invite that group of people to consider how much stranger, harder and more foreign other ways of answering
+I do invite that group of people to consider how much stranger, harder and more foreign other ways of answering 
 this kind of questions can be if you have to use general purpose programming languages;
 this post being  a case in point.</p>
-
-<h3 id="data-example-from-the-gdelt-data-set:7167d0e820c7576947c6f743fb434a0c">Data :   Example from the GDELT data set</h3>
-
+<h3 id="data----example-from-the-gdelt-data-set">Data :   Example from the GDELT data set</h3>
 <p>The <a href="gdelt">GDELT data set</a> is a very high resolution global collection of events, gathered from numerous online news agencies and publications.
 For <a href="gdelt1oneday">one days worth of data</a> from the GDELT project, we would simply like to know:</p>
-
 <ol>
 <li>How many data points, or events, is contained in the sample file.</li>
 <li>How many events had the actor 1 code of &lsquo;AFR&rsquo;, the code for Africa.</li>
 </ol>
-
 <p>The <a href="gdelt1header">header columns</a> is not part of the data file.
 We place the data and header file in a <code>./gdelt</code> directory after download.</p>
-
-<h4 id="nix-solution:7167d0e820c7576947c6f743fb434a0c">*Nix Solution</h4>
-
+<h4 id="nix-solution">*Nix Solution</h4>
 <p>While already well away cooking  up a C language solution, I remembered AWK, and the wc program.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"> $ wc -l gdelt/20190531.export.CSV
+ <span style="color:#ae81ff">176780</span>
 
-<pre><code class="language-bash"> $ wc -l gdelt/20190531.export.CSV
- 176780
-
-  $ gawk '{ if ($6 == &quot;AFR&quot;) sum += 1; } END { print sum; }' gdelt/20190531.export.CSV
- 1184
-</code></pre>
-
-<p>Here I used the <code>wc</code> or word count program, with the <code>-l</code> flag to count lines.
+  $ gawk <span style="color:#e6db74">&#39;{ if ($6 == &#34;AFR&#34;) sum += 1; } END { print sum; }&#39;</span> gdelt/20190531.export.CSV
+ <span style="color:#ae81ff">1184</span>
+</code></pre></div><p>Here I used the <code>wc</code> or word count program, with the <code>-l</code> flag to count lines.
 For the count of &lsquo;AFR&rsquo; valued actor codes I used the GNU version of <code>awk</code>, together with a tiny awk program for a conditional incrementing of a counter.
 We might want to stop here and conclude that we need go no further since we&rsquo;ve gotten our answer,
 but the truth is that we were quite fortunate in that there even exists a tool like <code>wc</code> and that
 conditionally counting the occurances of a particular value in a particular column is fairly straightforward with <code>awk</code>.</p>
-
 <p>Raising the bar ever so slightly by, for example wanting to know all the actor codes that appear in the file, along with the counts for each becomes tricky using awk.
 Furthermore, we need to  verify our answer above,  by computing  the same in a few more ways.</p>
-
-<h4 id="c-solution:7167d0e820c7576947c6f743fb434a0c">C Solution</h4>
-
+<h4 id="c-solution">C Solution</h4>
 <p>My C language solution is straightforward but quite a bit more verbose and detailed:</p>
-
 <ol>
 <li>Read  the data file line by line.</li>
 <li>For each line, increase the lines counter.</li>
@@ -207,142 +191,118 @@ Furthermore, we need to  verify our answer above,  by computing  the same in a f
 <li>If the actor 1 code column contains what we are looking for, increase the second counter.</li>
 <li>After all lines were read, print the results to the console.</li>
 </ol>
-
 <p>After some research, we can add some details on how to achieve our goal:</p>
-
 <ol>
 <li>Read  the data file line by line.
-
 <ul>
 <li>Open the file with the <code>fopen()</code> function from the <code>stdio</code> library.</li>
 <li>Read the file line by line with successive calls to <code>fgets()</code> function, also from <code>sdio</code>.</li>
-</ul></li>
+</ul>
+</li>
 <li>For each line, increase the lines counter.</li>
 <li>For each line, get the value of the column containing the actor 1 code.
-
 <ul>
 <li>Use the <code>strtok()</code> function, from the <code>strlib</code> library to tokenise on a given delimiter.</li>
 <li>The actor 1 code is in the fith column from the start of each line, where columns are seperated by the tab character.</li>
-</ul></li>
+</ul>
+</li>
 <li>If the actor 1 code column contains what we are looking for, increase the second counter.
-
 <ul>
 <li>Use the <code>strcmp()</code> function from <code>strlib</code> to compare two strings for equality.</li>
-</ul></li>
+</ul>
+</li>
 <li>After all lines were read, print the results to the console.
-
 <ul>
 <li>Use the <code>printf()</code> function with its very easy to use string interpolation system.</li>
-</ul></li>
+</ul>
+</li>
 </ol>
-
 <p>And here is the simplest first attempt C solution:</p>
-
-<pre><code class="language-c">#include &lt;stdio.h&gt;  // fopen, fclose, fgets
-#include &lt;string.h&gt;  // strtoc, strcmp
-
-int main() 
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;stdio.h&gt;  // fopen, fclose, fgets</span><span style="color:#75715e">
+</span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;string.h&gt;  // strtoc, strcmp</span><span style="color:#75715e">
+</span><span style="color:#75715e"></span>
+<span style="color:#66d9ef">int</span> <span style="color:#a6e22e">main</span>() 
 {
-   const char FILE_PATH[] = &quot;../gdelt/20190531.export.CSV&quot;;
-   const char DELIMITER[] = &quot;\t&quot;;
-   const char MATCH_TEXT[] = &quot;AFR&quot;;
-   const int MATCH_COLUMN_POS = 5; 
+   <span style="color:#66d9ef">const</span> <span style="color:#66d9ef">char</span> FILE_PATH[] <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;../gdelt/20190531.export.CSV&#34;</span>;
+   <span style="color:#66d9ef">const</span> <span style="color:#66d9ef">char</span> DELIMITER[] <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;</span><span style="color:#ae81ff">\t</span><span style="color:#e6db74">&#34;</span>;
+   <span style="color:#66d9ef">const</span> <span style="color:#66d9ef">char</span> MATCH_TEXT[] <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;AFR&#34;</span>;
+   <span style="color:#66d9ef">const</span> <span style="color:#66d9ef">int</span> MATCH_COLUMN_POS <span style="color:#f92672">=</span> <span style="color:#ae81ff">5</span>; 
 
-   int match_count = 0;
+   <span style="color:#66d9ef">int</span> match_count <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
 
-   FILE *fp;
-   const int BUFF_SIZE = 2048;
-   char buff[BUFF_SIZE];
+   FILE <span style="color:#f92672">*</span>fp;
+   <span style="color:#66d9ef">const</span> <span style="color:#66d9ef">int</span> BUFF_SIZE <span style="color:#f92672">=</span> <span style="color:#ae81ff">2048</span>;
+   <span style="color:#66d9ef">char</span> buff[BUFF_SIZE];
 
-   fp = fopen(FILE_PATH, &quot;r&quot;); 
-   if (fp == NULL) return -1; 
-   int lines_count = 0;
-   while (fgets(buff, BUFF_SIZE, (FILE*)fp)) {
-       lines_count++;
-       char *ptr = strtok(buff, DELIMITER);
+   fp <span style="color:#f92672">=</span> fopen(FILE_PATH, <span style="color:#e6db74">&#34;r&#34;</span>); 
+   <span style="color:#66d9ef">if</span> (fp <span style="color:#f92672">==</span> NULL) <span style="color:#66d9ef">return</span> <span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>; 
+   <span style="color:#66d9ef">int</span> lines_count <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
+   <span style="color:#66d9ef">while</span> (fgets(buff, BUFF_SIZE, (FILE<span style="color:#f92672">*</span>)fp)) {
+	   lines_count<span style="color:#f92672">++</span>;
+	   <span style="color:#66d9ef">char</span> <span style="color:#f92672">*</span>ptr <span style="color:#f92672">=</span> strtok(buff, DELIMITER);
 
-       // find the value of the ACTOR_CODE
-       for (int i=0; i&lt;MATCH_COLUMN_POS; i++)
-           ptr = strtok(NULL, DELIMITER);
+	   <span style="color:#75715e">// find the value of the ACTOR_CODE
+</span><span style="color:#75715e"></span>	   <span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">int</span> i<span style="color:#f92672">=</span><span style="color:#ae81ff">0</span>; i<span style="color:#f92672">&lt;</span>MATCH_COLUMN_POS; i<span style="color:#f92672">++</span>)
+		   ptr <span style="color:#f92672">=</span> strtok(NULL, DELIMITER);
 
-if (strcmp(ptr, MATCH_TEXT) == 0)
+<span style="color:#66d9ef">if</span> (strcmp(ptr, MATCH_TEXT) <span style="color:#f92672">==</span> <span style="color:#ae81ff">0</span>)
 {
-    match_count += 1;
+	match_count <span style="color:#f92672">+=</span> <span style="color:#ae81ff">1</span>;
 }
    }
-   printf(&quot;Total number of lines: %d\n&quot;, lines_count );
-   printf(&quot;Number of lines matching '%s' in column %d: %d\n&quot;, MATCH_TEXT, 
-           MATCH_COLUMN_POS,
-           match_count );
+   printf(<span style="color:#e6db74">&#34;Total number of lines: %d</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>, lines_count );
+   printf(<span style="color:#e6db74">&#34;Number of lines matching &#39;%s&#39; in column %d: %d</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>, MATCH_TEXT, 
+		   MATCH_COLUMN_POS,
+		   match_count );
    fclose(fp);
-   return 0;
+   <span style="color:#66d9ef">return</span> <span style="color:#ae81ff">0</span>;
 }
-</code></pre>
-
-<p>After compiling  with gcc ./query.c -o ./query, (gcc .\query.c -o .\query.exe on Windows) and running it, the output is:</p>
-
-<pre><code class="language-bash">Total number of lines: 176780
-Number of lines matching 'AFR' in column 5: 1184
-</code></pre>
-
-<p>Nice. This answer corresponds perfectly with the *nix solution,
+</code></pre></div><p>After compiling  with gcc ./query.c -o ./query, (gcc .\query.c -o .\query.exe on Windows) and running it, the output is:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">Total number of lines: <span style="color:#ae81ff">176780</span>
+Number of lines matching <span style="color:#e6db74">&#39;AFR&#39;</span> in column 5: <span style="color:#ae81ff">1184</span>
+</code></pre></div><p>Nice. This answer corresponds perfectly with the *nix solution,
 but  what a lot of work for answering such a trivial question!
 Clearly we cannot write programs each time we want to answer something like this.</p>
-
-<h4 id="sql-solution:7167d0e820c7576947c6f743fb434a0c">SQL Solution</h4>
-
+<h4 id="sql-solution">SQL Solution</h4>
 <p>As you might know, SQL is not a general purpose programming language, but rather a kind of mini language implemented in a larger database management system (or DBMS).
 Because of this, you cannot directly work with flat files, but have to  first load the files into the system.
 For my SQL solution I&rsquo;ll use <a href="sqlite">SQLite</a> as the SQL query engine; the DBMS.</p>
-
 <p>With the data and header file in the <code>./gdelt</code> directory, we get them loaded like this:</p>
-
-<pre><code class="language-sql">&gt; sqlite3 gdelt.md
-SQLite version 3.28.0 2019-04-16 19:49:53
-Enter &quot;.help&quot; for usage hints.
-sqlite&gt; .mode csv
-sqlite&gt; .timer on
-sqlite&gt; .separator &quot;\t&quot; &quot;\r\n&quot;
-sqlite&gt; .import ../gdelt/CSV.header.dailyupdates.txt oneday
-sqlite&gt; .import ../gdelt/20190531.export.CSV oneday
-</code></pre>
-
-<p>Here is the breakdown:</p>
-
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sql" data-lang="sql"><span style="color:#f92672">&gt;</span> sqlite3 gdelt.md
+SQLite <span style="color:#66d9ef">version</span> <span style="color:#ae81ff">3</span>.<span style="color:#ae81ff">28</span>.<span style="color:#ae81ff">0</span> <span style="color:#ae81ff">2019</span><span style="color:#f92672">-</span><span style="color:#ae81ff">04</span><span style="color:#f92672">-</span><span style="color:#ae81ff">16</span> <span style="color:#ae81ff">19</span>:<span style="color:#ae81ff">49</span>:<span style="color:#ae81ff">53</span>
+Enter <span style="color:#e6db74">&#34;.help&#34;</span> <span style="color:#66d9ef">for</span> <span style="color:#66d9ef">usage</span> hints.
+sqlite<span style="color:#f92672">&gt;</span> .<span style="color:#66d9ef">mode</span> csv
+sqlite<span style="color:#f92672">&gt;</span> .timer <span style="color:#66d9ef">on</span>
+sqlite<span style="color:#f92672">&gt;</span> .separator <span style="color:#e6db74">&#34;\t&#34;</span> <span style="color:#e6db74">&#34;\r\n&#34;</span>
+sqlite<span style="color:#f92672">&gt;</span> .import ..<span style="color:#f92672">/</span>gdelt<span style="color:#f92672">/</span>CSV.header.dailyupdates.txt oneday
+sqlite<span style="color:#f92672">&gt;</span> .import ..<span style="color:#f92672">/</span>gdelt<span style="color:#f92672">/</span><span style="color:#ae81ff">20190531</span>.export.CSV oneday
+</code></pre></div><p>Here is the breakdown:</p>
 <ol>
 <li>I start by invoking the sqlite3 interactive CLI program with a name of the file where we want our database to live.</li>
-<li>All the commands starting with period (&lsquo;.&rsquo;) are system related commands, and not SQL as such.</li>
+<li>All the commands starting with period ('.') are system related commands, and not SQL as such.</li>
 <li>The data file has no header info, but we do have a file with header info, which we load first.</li>
 <li>Loading the header file first conveniently creates the table <code>oneday</code>, which will hold the actual data. Later on we will show how to create tables from scrach.</li>
 <li>Loading the data file into the created table <code>oneday</code> does not re-create the table, but appends to it.</li>
 <li>The  command <code>.timer on</code> is not required but provides interesting timing info output.</li>
 <li>The data file is tab delimited, new line record seperated, and we let sqlite know about this with the command <code>.separator &quot;\t&quot; &quot;\r\n&quot;</code>.</li>
 </ol>
-
 <p>Now we are ready to answer our question using SQL!</p>
-
-<pre><code class="language-sql">sqlite&gt; select count(1) from oneday;
-176780
-Run Time: real 0.163 user 0.031250 sys 0.125000
-sqlite&gt; select count(1) from oneday where actor1code = 'AFR';
-1056
-Run Time: real 0.181 user 0.046875 sys 0.140625
-sqlite&gt;
-</code></pre>
-
-<p>Hmm&hellip; We arrive at the same total row or lines count, but the count for the matching actor 1 code values is very different.
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sql" data-lang="sql">sqlite<span style="color:#f92672">&gt;</span> <span style="color:#66d9ef">select</span> <span style="color:#66d9ef">count</span>(<span style="color:#ae81ff">1</span>) <span style="color:#66d9ef">from</span> oneday;
+<span style="color:#ae81ff">176780</span>
+Run Time: real <span style="color:#ae81ff">0</span>.<span style="color:#ae81ff">163</span> <span style="color:#66d9ef">user</span> <span style="color:#ae81ff">0</span>.<span style="color:#ae81ff">031250</span> sys <span style="color:#ae81ff">0</span>.<span style="color:#ae81ff">125000</span>
+sqlite<span style="color:#f92672">&gt;</span> <span style="color:#66d9ef">select</span> <span style="color:#66d9ef">count</span>(<span style="color:#ae81ff">1</span>) <span style="color:#66d9ef">from</span> oneday <span style="color:#66d9ef">where</span> actor1code <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;AFR&#39;</span>;
+<span style="color:#ae81ff">1056</span>
+Run Time: real <span style="color:#ae81ff">0</span>.<span style="color:#ae81ff">181</span> <span style="color:#66d9ef">user</span> <span style="color:#ae81ff">0</span>.<span style="color:#ae81ff">046875</span> sys <span style="color:#ae81ff">0</span>.<span style="color:#ae81ff">140625</span>
+sqlite<span style="color:#f92672">&gt;</span>
+</code></pre></div><p>Hmm&hellip; We arrive at the same total row or lines count, but the count for the matching actor 1 code values is very different.
 To figure out why this is the case is not trivial, but very instructive to illustrate even more the need for something like SQL and database systems, so stay with me.</p>
-
-<h3 id="debugging:7167d0e820c7576947c6f743fb434a0c">Debugging</h3>
-
-<p>Why do the figure for the actor 1 code column  equal to &lsquo;AFR&rsquo; correlate for the *nix and C solutions,
+<h3 id="debugging">Debugging</h3>
+<p>Why do the figure for the actor 1 code column  equal to &lsquo;AFR&rsquo; correlate for the *nix and C solutions, 
 yet differ for the SQL sqlite3 solution?
 Since the majority rules, the SQL sqlite3 solution must be incorect. What is this SQLite3 anyways - it&rsquo;s probably got a bug.
 Yet,  SQLite is probably the most widely deployed database system, primarily due to it being used on mobile platforms such as Android.
 Surely they would nnot use a broken thing!</p>
-
-<h4 id="what-we-know:7167d0e820c7576947c6f743fb434a0c">What we know</h4>
-
+<h4 id="what-we-know">What we know</h4>
 <ol>
 <li>All solutions correlate on the row / line / record count.</li>
 <li>The *nix and C language solution correlates on actor 1 code count.</li>
@@ -351,98 +311,63 @@ Surely they would nnot use a broken thing!</p>
 <li>SQLite is unlikely to have a bug causing the issue, but we might have loaded data wrongly somehow.</li>
 <li>It is unlikely that twoout of our three solutions would produce the same wrong result.</li>
 </ol>
-
-<h3 id="poking-around-in-the-data:7167d0e820c7576947c6f743fb434a0c">Poking around in the data</h3>
-
+<h3 id="poking-around-in-the-data">Poking around in the data</h3>
 <p>Since we have everything setup in SQLite already, let&rsquo;s query the data a bit more, in hope we find some clues to help us solve the dilemma.</p>
-
 <p>How many values are there for column <code>actor1code</code>?</p>
-
-<pre><code class="language-sql">sqlite&gt; select count(distinct actor1code) from oneday;
-2148
-</code></pre>
-
-<p>Is the count from before for the SQLite solution still the same?</p>
-
-<pre><code class="language-sql">sqlite&gt; select count(1) from oneday where actor1code like 'AFR';
-1056
-</code></pre>
-
-<p>Perhaps the comparison predicate in the <code>where</code> clause <code>actor1code = 'AFR'</code> has a problem.
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sql" data-lang="sql">sqlite<span style="color:#f92672">&gt;</span> <span style="color:#66d9ef">select</span> <span style="color:#66d9ef">count</span>(<span style="color:#66d9ef">distinct</span> actor1code) <span style="color:#66d9ef">from</span> oneday;
+<span style="color:#ae81ff">2148</span>
+</code></pre></div><p>Is the count from before for the SQLite solution still the same?</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sql" data-lang="sql">sqlite<span style="color:#f92672">&gt;</span> <span style="color:#66d9ef">select</span> <span style="color:#66d9ef">count</span>(<span style="color:#ae81ff">1</span>) <span style="color:#66d9ef">from</span> oneday <span style="color:#66d9ef">where</span> actor1code <span style="color:#66d9ef">like</span> <span style="color:#e6db74">&#39;AFR&#39;</span>;
+<span style="color:#ae81ff">1056</span>
+</code></pre></div><p>Perhaps the comparison predicate in the <code>where</code> clause <code>actor1code = 'AFR'</code> has a problem.
 Let us try some <code>LIKE</code> matching instead.</p>
-
-<pre><code class="language-sql">sqlite&gt; select count(1) from oneday where actor1code like '%AFR';
-1056
-sqlite&gt; select count(1) from oneday where actor1code like '%AFR%';
-1241
-sqlite&gt; select count(1) from oneday where actor1code like 'AFR%';
-1139
-</code></pre>
-
-<p>Nope, this is not helping much, andsomething else is going on.</p>
-
-<h4 id="edge-cases:7167d0e820c7576947c6f743fb434a0c">Edge cases</h4>
-
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sql" data-lang="sql">sqlite<span style="color:#f92672">&gt;</span> <span style="color:#66d9ef">select</span> <span style="color:#66d9ef">count</span>(<span style="color:#ae81ff">1</span>) <span style="color:#66d9ef">from</span> oneday <span style="color:#66d9ef">where</span> actor1code <span style="color:#66d9ef">like</span> <span style="color:#e6db74">&#39;%AFR&#39;</span>;
+<span style="color:#ae81ff">1056</span>
+sqlite<span style="color:#f92672">&gt;</span> <span style="color:#66d9ef">select</span> <span style="color:#66d9ef">count</span>(<span style="color:#ae81ff">1</span>) <span style="color:#66d9ef">from</span> oneday <span style="color:#66d9ef">where</span> actor1code <span style="color:#66d9ef">like</span> <span style="color:#e6db74">&#39;%AFR%&#39;</span>;
+<span style="color:#ae81ff">1241</span>
+sqlite<span style="color:#f92672">&gt;</span> <span style="color:#66d9ef">select</span> <span style="color:#66d9ef">count</span>(<span style="color:#ae81ff">1</span>) <span style="color:#66d9ef">from</span> oneday <span style="color:#66d9ef">where</span> actor1code <span style="color:#66d9ef">like</span> <span style="color:#e6db74">&#39;AFR%&#39;</span>;
+<span style="color:#ae81ff">1139</span>
+</code></pre></div><p>Nope, this is not helping much, andsomething else is going on.</p>
+<h4 id="edge-cases">Edge cases</h4>
 <p>It&rsquo;s always a good idea to consider some edge cases in the data.
 One such edge case is blank values, so let&rsquo;s check for them in the actor 1 column:</p>
-
-<pre><code class="language-sql">sqlite&gt; select count(1) from oneday where actor1code = '';
-16475
-</code></pre>
-
-<p>We have seen that the SQLite solution under counts, or, <strong>gasp</strong> BOTH the AWK *nix solution AND the C language one over counts, and do it the same.
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sql" data-lang="sql">sqlite<span style="color:#f92672">&gt;</span> <span style="color:#66d9ef">select</span> <span style="color:#66d9ef">count</span>(<span style="color:#ae81ff">1</span>) <span style="color:#66d9ef">from</span> oneday <span style="color:#66d9ef">where</span> actor1code <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;&#39;</span>;
+<span style="color:#ae81ff">16475</span>
+</code></pre></div><p>We have seen that the SQLite solution under counts, or, <strong>gasp</strong> BOTH the AWK *nix solution AND the C language one over counts, and do it the same.
 Since both the AWK and the C language solution produced the same result, let&rsquo;s see if we can find the blanks count of above with AWK:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"> $ gawk <span style="color:#e6db74">&#39;{ if ($6 == &#34;&#34;) sum += 1; } END { print sum; }&#39;</span> ./gdelt/20190531.export.CSV
 
-<pre><code class="language-bash"> $ gawk '{ if ($6 == &quot;&quot;) sum += 1; } END { print sum; }' ./gdelt/20190531.export.CSV
-
-</code></pre>
-
-<p>Well, it produced no output, so gawk wasn&rsquo;t able to count blanks&hellip;.
+</code></pre></div><p>Well, it produced no output, so gawk wasn&rsquo;t able to count blanks&hellip;.
 I bet the C language solution will do exactly the same!</p>
-
 <p>Now the actor 1 code of &lsquo;AFR&rsquo; is quite special, but we know from the documentation of GDELT and also from the header columns, that there is also an actor 2 code column, and it follows right after all the actor 1 columns.
 How many rows are there where the column actor1code is blank, and the actor2code is &lsquo;AFR&rsquo;:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sql" data-lang="sql">sqlite<span style="color:#f92672">&gt;</span> <span style="color:#66d9ef">select</span> <span style="color:#66d9ef">count</span>(<span style="color:#ae81ff">1</span>) <span style="color:#66d9ef">from</span> oneday <span style="color:#66d9ef">where</span> actor1code <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;AFR&#39;</span>;
+<span style="color:#ae81ff">1056</span>
 
-<pre><code class="language-sql">sqlite&gt; select count(1) from oneday where actor1code = 'AFR';
-1056
+sqlite<span style="color:#f92672">&gt;</span> <span style="color:#66d9ef">select</span> <span style="color:#66d9ef">count</span>(<span style="color:#ae81ff">1</span>) <span style="color:#66d9ef">from</span> oneday <span style="color:#66d9ef">where</span> actor1code <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;&#39;</span> <span style="color:#66d9ef">and</span> actor2code <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;AFR&#39;</span>;
+<span style="color:#ae81ff">128</span>
 
-sqlite&gt; select count(1) from oneday where actor1code = '' and actor2code = 'AFR';
-128
-
-sqlite&gt; select count(1) from oneday where actor1code = '' and actor2code = 'AFR' or actor1code = 'AFR';
-1184
-</code></pre>
-
-<p>Now that is interesting.  The C and AWK solutions count, in column 6 where actor 1 code should live, the sum of the columns where actor 1 code is &lsquo;AFR&rsquo;, plus the number of
+sqlite<span style="color:#f92672">&gt;</span> <span style="color:#66d9ef">select</span> <span style="color:#66d9ef">count</span>(<span style="color:#ae81ff">1</span>) <span style="color:#66d9ef">from</span> oneday <span style="color:#66d9ef">where</span> actor1code <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;&#39;</span> <span style="color:#66d9ef">and</span> actor2code <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;AFR&#39;</span> <span style="color:#66d9ef">or</span> actor1code <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;AFR&#39;</span>;
+<span style="color:#ae81ff">1184</span>
+</code></pre></div><p>Now that is interesting.  The C and AWK solutions count, in column 6 where actor 1 code should live, the sum of the columns where actor 1 code is &lsquo;AFR&rsquo;, plus the number of 
 rows where actor 1 code is blank AND actor 2 code is &lsquo;AFR&rsquo;.</p>
-
 <p>Before I touch that C solution again, let&rsquo;s do something easier, and search a bit online; my money is on the <code>strtok()</code> function: I think it works different to what we assumed&hellip;</p>
-
 <p>And yes! Indeed! A fellow Internet citizen <a href="strtok_skipping">came across this already</a>.</p>
-
 <p>We could now proceed and fix up the C solution, but by now I&rsquo;ve kind of lost interest, and I&rsquo;m truely thankful I do not have to code C for a living - it must be very, very hard.
 None the less, perhaps for the love of Linux, let&rsquo;s at least get AWK right.</p>
-
-<pre><code class="language-bash">$ gawk 'BEGIN {FS = &quot;\t&quot;} { if ($6 == &quot;AFR&quot;) sum += 1; } END { print sum; }' gdelt/20190531.export.CSV
-1056
-</code></pre>
-
-<p>Yay for AWK, yay for the Unix tradition, yay for Linux!
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ gawk <span style="color:#e6db74">&#39;BEGIN {FS = &#34;\t&#34;} { if ($6 == &#34;AFR&#34;) sum += 1; } END { print sum; }&#39;</span> gdelt/20190531.export.CSV
+<span style="color:#ae81ff">1056</span>
+</code></pre></div><p>Yay for AWK, yay for the Unix tradition, yay for Linux!
 We explicitly set the field seperator (FS), same as for the SQLite solution.</p>
-
-<h2 id="ddl-and-dml:7167d0e820c7576947c6f743fb434a0c">DDL and DML</h2>
-
+<h2 id="ddl-and-dml">DDL and DML</h2>
 <p>You may have heard the acronym DDL and DML before.
-The objectives of SQL can be categorised into two broad groups. The first group  of objectives is  related to the definition of artifacts to organise and access data.
-This group is commonly referred to as the data definition language (or DDL) statements .
+The objectives of SQL can be categorised into two broad groups. The first group  of objectives is  related to the definition of artifacts to organise and access data. 
+This group is commonly referred to as the data definition language (or DDL) statements . 
 The second group of objectives relates to manipulation; the creation, the modification and the deletion of data.
 This group is commonly refered to as the data manipulation language (or DML) statements.</p>
-
 <p>Outside the DDL and DML groups there usually exists additional statements concerned with particulars of the  actual SQL-based system, such as those intended for administration and maintenance.
 For SQLite examples of these more admin-type keywords and functions are the ones starting with &lsquo;.&rsquo; as illustrated above when we loaded the CSV file.</p>
-
-<h2 id="conclusion:7167d0e820c7576947c6f743fb434a0c">Conclusion</h2>
-
+<h2 id="conclusion">Conclusion</h2>
 <ul>
 <li>Answering even the simplest of questions about data, using only imperative programming like C is tough and error prone.</li>
 <li>The Unix tradition has many, many jewels; AWK and wc two nice examples, and knowing about these can give us an edge.</li>
@@ -454,34 +379,12 @@ For SQLite examples of these more admin-type keywords and functions are the ones
   </section>
 </article>
 
-</main>
-
-
+        </main>
+      </div>
+    
 </div>
 
 <footer>
-  <div class="container">
-<div style="font-size:16px;margin:0 auto;width:300px" class="blockchain-btn"
-     data-address="1DNw8dEG14NazWDEQUkwPZJ2kfgoaSa7dv"
-     data-shared="false">
-    <div class="blockchain stage-begin">
-        <img src="https://blockchain.info/Resources/buttons/donate_64.png"/>
-    </div>
-    <div class="blockchain stage-loading" style="text-align:center">
-        <img src="https://blockchain.info/Resources/loading-large.gif"/>
-    </div>
-    <div class="blockchain stage-ready">
-         <p align="center">If you'd like to support this site and see the content here grow, please donate to Bitcoin address: <b>[[address]]</b></p>
-         <p align="center" class="qr-code"></p>
-    </div>
-    <div class="blockchain stage-paid">
-         Donation of <b>[[value]] BTC</b> Received. Thank You Very Much!
-    </div>
-    <div class="blockchain stage-error">
-        <font color="red">[[error]]</font>
-    </div>
-</div>
-  </div>
   <div class="container">
     <span class="copyright">&copy; 2019  Good Fast - <a rel="license" href="http://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a></span>
   </div>
@@ -490,3 +393,5 @@ For SQLite examples of these more admin-type keywords and functions are the ones
 </body>
 </html>
 
+  </body>
+</html>

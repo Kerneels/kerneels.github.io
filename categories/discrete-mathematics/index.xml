@@ -1,52 +1,22 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Discrete Mathematics on Good Fast</title>
+    <title>discrete mathematics on Good Fast</title>
     <link>https://blog.goodfast.info/categories/discrete-mathematics/</link>
-    <description>Recent content in Discrete Mathematics on Good Fast</description>
+    <description>Recent content in discrete mathematics on Good Fast</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Sun, 23 Jun 2019 22:26:20 +0000</lastBuildDate>
-    <atom:link href="https://blog.goodfast.info/categories/discrete-mathematics/index.xml" rel="self" type="application/rss+xml" />
-    
+    <lastBuildDate>Sun, 23 Jun 2019 22:26:20 +0000</lastBuildDate><atom:link href="https://blog.goodfast.info/categories/discrete-mathematics/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Bar-sized factorial</title>
       <link>https://blog.goodfast.info/post/big-factorial/</link>
       <pubDate>Sun, 23 Jun 2019 22:26:20 +0000</pubDate>
       
       <guid>https://blog.goodfast.info/post/big-factorial/</guid>
-      <description>&lt;p&gt;What&amp;rsquo;s the first five digits of 1,000,000! or 1 million factorial?
-Let&amp;rsquo;s ask Haskell:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-haskell&#34;&gt;Prelude&amp;gt; take 5 $ show $ product [1..1000000] 
-&amp;quot;82639&amp;quot; 
-(1043.56 secs, 1,444,511,743,624 bytes) 
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Neat!&lt;/p&gt;
-
-&lt;p&gt;But you might ask, how many digits is this rather large number, of 1 bar factorial? Let&amp;rsquo;s ask again:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-haskell&#34;&gt;Prelude&amp;gt; length $ show $ product [1..1000000] 
-5565709 
-(1103.04 secs, 1,444,845,773,000 bytes) 
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Wow! 5.5 million digits! Way more than all the electrons in the universe.&lt;/p&gt;
-
-&lt;p&gt;Those second timings is how long it took to compute, and bytes used is sort of like the amount of memory used, but not at once, more like in batches and then garbage collected.&lt;/p&gt;
-
-&lt;p&gt;I set it off, then left it running on spare compute in the background; hardly noticed anything.&lt;/p&gt;
-
-&lt;p&gt;What is the world coming too when you can compute stuff like that with one line of code&amp;hellip;?&lt;/p&gt;
-
-&lt;p&gt;Haskell is something else; definitely the most interesting and powerful language I&amp;rsquo;ve come across thus far.&lt;/p&gt;
-
-&lt;p&gt;To be perfectly honest, it is about the third or fourth time round  for me, trying to learn and actually use Haskell.
-Thus far I&amp;rsquo;m rather impressed.&lt;/p&gt;
-
-&lt;p&gt;Things are starting to click&amp;hellip;&lt;/p&gt;
-</description>
+      <description>What&amp;rsquo;s the first five digits of 1,000,000! or 1 million factorial? Let&amp;rsquo;s ask Haskell:
+Prelude&amp;gt; take 5 $ show $ product [1..1000000] &amp;#34;82639&amp;#34; (1043.56 secs, 1,444,511,743,624 bytes) Neat!
+But you might ask, how many digits is this rather large number, of 1 bar factorial? Let&amp;rsquo;s ask again:
+Prelude&amp;gt; length $ show $ product [1..1000000] 5565709 (1103.04 secs, 1,444,845,773,000 bytes) Wow! 5.5 million digits! Way more than all the electrons in the universe.</description>
     </item>
     
     <item>
@@ -55,139 +25,8 @@ Thus far I&amp;rsquo;m rather impressed.&lt;/p&gt;
       <pubDate>Sun, 23 Jun 2019 08:25:20 +0000</pubDate>
       
       <guid>https://blog.goodfast.info/post/permutations-combinations/</guid>
-      <description>
-
-&lt;p&gt;With a recent, unusually high Power Ball jackpot of ZAR ~220 million, we could not help discussing one&amp;rsquo;s chances for actually hitting the jackpot as a bit of nice office banter.&lt;/p&gt;
-
-&lt;p&gt;Despite your personal take on the Power Ball and Lotto,  we can turn it into a nice mathematical puzzle, and sanatise the gambling aspect away. Yeah, we can do that, because we are into maths, programming and data!
-For the uninitiated among us, the way it works is simple really.
-You choose 5 numbers, from a set of  numbers ranging from 1 to 50,
-and one number from a set of numbers from 1 to 20 - the &amp;ldquo;Power Ball&amp;rdquo;.
-Order does not matter.&lt;/p&gt;
-
-&lt;p&gt;So, how do we calculate how many possible options is available to you?
-I use the term &amp;ldquo;options&amp;rdquo; deliberately, since the proper maths terms is actually &amp;ldquo;combinations&amp;rdquo;.
-Note that the maths terminology is contrary to commons sense: where order of selection matters, maths-speak calls it a permutation, and where order does not matter, a combination.
-Confusing, since we generally do not speak of the permutation of the security alarm code!
-Away with maths terminology! OK, only until the end of this post.&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;For picking number one, you can choose from 50 options.&lt;/li&gt;
-&lt;li&gt;For number two, from 49 options.&lt;/li&gt;
-&lt;li&gt;For number three, from 48 options, and so on&lt;/li&gt;
-&lt;li&gt;At number five only 46 options remain to choose from.&lt;/li&gt;
-&lt;li&gt;For picking the Power Ball, there are always 20 options.&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;So we end up with this:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;NumberOfPowerBallDraws = 50 * 49 * 48 * 47 * 46 * 20 
-NumberOfPowerBallDraws  = 5085024000 
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Hmm, that is very big, too big  wouldn&amp;rsquo;t you say?
-At those odds, jackpots would be very seldom.&lt;/p&gt;
-
-&lt;p&gt;What is wrong?
-Well, suppose we chose option 1 for our first choice, and then option 2 for our second, that is all fine, but what if we then chose option 2 for our first choice, and option 1 for our second?
-In our equation above, both those would be valid start choices, but in actual fact, since order does not matter, those are the same choices according to the definition of the game: we are double counting.
-So how badly are we double counting?
-Well, as badly as you can choose to order five numbers in a row, so that order matters, and that is kind of what we figured out in our mistake above, giving:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;WaysToOrderFiveNumbers = 1 * 2 * 3 * 4 * 5 
-WaysToOrderFiveNumbers = 120 
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Finally,  to fix our error, we reduce our previous answer by this factor, to get:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;CorrectNumberOfPowerBallDraws = NumberOfPowerBallDraws / WaysToOrderFiveNumbers 
-
-CorrectNumberOfPowerBallDraws = 5085024000 / 120 
-
-CorrectNumberOfPowerBallDraws = 42375200 
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Is this correct now? Yeah, go ahead and Google it!&lt;/p&gt;
-
-&lt;p&gt;OK, back to the maths terms, because  it helps us actually.&lt;/p&gt;
-
-&lt;p&gt;The multiplication of N numbers, from 1 to N is called factorial, and denoted $N!$, with $0!$ defined as 1.
-A permutations is an ordered selection of  k items from a set of N items, given by:&lt;/p&gt;
-
-&lt;p&gt;$$
-P(N,k) = N! / (N - k)!
-$$&lt;/p&gt;
-
-&lt;p&gt;A combination is an unordered selection of k items from a set of N items, and given by:&lt;/p&gt;
-
-&lt;p&gt;$$
-C(N,k) = N! / (N - k)! * k!
-$$&lt;/p&gt;
-
-&lt;p&gt;It all boils down to: don&amp;rsquo;t play Power Ball, or any other such lotteries since the odds are firmly stacked against you.&lt;/p&gt;
-
-&lt;h2 id=&#34;solutions-in-a-couple-of-languages:b6bf697cd8bd4495824c64b2e031761c&#34;&gt;Solutions in a couple of languages&lt;/h2&gt;
-
-&lt;p&gt;Here are a couple of ways to calculate the figure above.&lt;/p&gt;
-
-&lt;h3 id=&#34;python:b6bf697cd8bd4495824c64b2e031761c&#34;&gt;Python&lt;/h3&gt;
-
-&lt;p&gt;Using the names from the analysis above, we get a rather long solution:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;import functools as ft # for reduce
-
-# n: the number of options, p: how many &amp;quot;power ball&amp;quot; options there are, k: the number of allowed numbers that can be chosen
-def numberOfPowerBallDraws(n,p,k):
-    return ft.reduce(lambda a,b: a*b, range(n-k+1,n+1)) * p
-
-def waysToOrderKNumbers(k):
-    return ft.reduce(lambda a,b: a*b, range(1,k+1))
-
-def correctNumberOfPowerBallDraws(n,p,k):
-    return numberOfPowerBallDraws(n,p,k) / waysToOrderKNumbers(k)
-
-p, n, k = 20, 50, 5
-print(correctNumberOfPowerBallDraws(n,p,k))
-# output 42375200.0
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Some points to note:&lt;/p&gt;
-
-&lt;ol&gt;
-&lt;li&gt;The  function &lt;code&gt;range(a,b)&lt;/code&gt; produce a closed, open interval from a through b, so b itself is not included.&lt;/li&gt;
-&lt;li&gt;The &lt;code&gt;reduce&lt;/code&gt; function needs to be imported from functools since it is not part of the base Python system in the REPL anymore.&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;p&gt;We can simplify the code into one line, which is less readable but more concise:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;import functools as ft
-p, n, k = 20, 50, 5
-ft.reduce(lambda a,b: a*b, range(n-k+1,n+1)) * p / ft.reduce(lambda a,b: a*b, range(1,k+1))
-# output 42375200.0
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Noticing that we multiply lists in two places, we can simplify even more by adding a &lt;code&gt;mul(r)&lt;/code&gt; product function like this.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;import functools as ft
-
-def mul(r): return ft.reduce(lambda a,b: a*b, r)
-
-p, n, k = 20, 50, 5
-mul(range(n-k+1,n+1)) * p / mul(range(1,k+1))
-# output 42375200.0
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Much better, but still to me at least, not as clean as it could be.&lt;/p&gt;
-
-&lt;h3 id=&#34;haskell:b6bf697cd8bd4495824c64b2e031761c&#34;&gt;Haskell&lt;/h3&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-haskell&#34;&gt;Prelude&amp;gt; let draws n p k = product [n, (n-1) .. (n-k+1)] * p / product [1 .. k]
-Prelude&amp;gt; draws 50 20 5
--- outputs 4.23752e7
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;In my opinion, the simplest, most straightforward, most beautiful code.&lt;/p&gt;
-</description>
+      <description>With a recent, unusually high Power Ball jackpot of ZAR ~220 million, we could not help discussing one&amp;rsquo;s chances for actually hitting the jackpot as a bit of nice office banter.
+Despite your personal take on the Power Ball and Lotto,ï¿½ we can turn it into a nice mathematical puzzle, and sanatise the gambling aspect away. Yeah, we can do that, because we are into maths, programming and data! For the uninitiated among us, the way it works is simple really.</description>
     </item>
     
   </channel>

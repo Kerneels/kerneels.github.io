@@ -1,0 +1,326 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Tags on Good Fast</title>
+    <link>https://blog.goodfast.info/tags/</link>
+    <description>Recent content in Tags on Good Fast</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Wed, 24 Jul 2019 21:45:07 +0200</lastBuildDate><atom:link href="https://blog.goodfast.info/tags/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>AWK</title>
+      <link>https://blog.goodfast.info/tags/awk/</link>
+      <pubDate>Wed, 24 Jul 2019 21:45:07 +0200</pubDate>
+      
+      <guid>https://blog.goodfast.info/tags/awk/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>big ideas</title>
+      <link>https://blog.goodfast.info/tags/big-ideas/</link>
+      <pubDate>Wed, 24 Jul 2019 21:45:07 +0200</pubDate>
+      
+      <guid>https://blog.goodfast.info/tags/big-ideas/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>C</title>
+      <link>https://blog.goodfast.info/tags/c/</link>
+      <pubDate>Wed, 24 Jul 2019 21:45:07 +0200</pubDate>
+      
+      <guid>https://blog.goodfast.info/tags/c/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>GDELT</title>
+      <link>https://blog.goodfast.info/tags/gdelt/</link>
+      <pubDate>Wed, 24 Jul 2019 21:45:07 +0200</pubDate>
+      
+      <guid>https://blog.goodfast.info/tags/gdelt/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>SQL</title>
+      <link>https://blog.goodfast.info/tags/sql/</link>
+      <pubDate>Wed, 24 Jul 2019 21:45:07 +0200</pubDate>
+      
+      <guid>https://blog.goodfast.info/tags/sql/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>SQLite</title>
+      <link>https://blog.goodfast.info/tags/sqlite/</link>
+      <pubDate>Wed, 24 Jul 2019 21:45:07 +0200</pubDate>
+      
+      <guid>https://blog.goodfast.info/tags/sqlite/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>cyber Security</title>
+      <link>https://blog.goodfast.info/tags/cyber-security/</link>
+      <pubDate>Tue, 27 Jun 2017 14:14:17 +0200</pubDate>
+      
+      <guid>https://blog.goodfast.info/tags/cyber-security/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>malware</title>
+      <link>https://blog.goodfast.info/tags/malware/</link>
+      <pubDate>Tue, 27 Jun 2017 14:14:17 +0200</pubDate>
+      
+      <guid>https://blog.goodfast.info/tags/malware/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>online presence</title>
+      <link>https://blog.goodfast.info/tags/online-presence/</link>
+      <pubDate>Tue, 27 Jun 2017 14:14:17 +0200</pubDate>
+      
+      <guid>https://blog.goodfast.info/tags/online-presence/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>privacy</title>
+      <link>https://blog.goodfast.info/tags/privacy/</link>
+      <pubDate>Tue, 27 Jun 2017 14:14:17 +0200</pubDate>
+      
+      <guid>https://blog.goodfast.info/tags/privacy/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>security patches</title>
+      <link>https://blog.goodfast.info/tags/security-patches/</link>
+      <pubDate>Tue, 27 Jun 2017 14:14:17 +0200</pubDate>
+      
+      <guid>https://blog.goodfast.info/tags/security-patches/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>social media</title>
+      <link>https://blog.goodfast.info/tags/social-media/</link>
+      <pubDate>Tue, 27 Jun 2017 14:14:17 +0200</pubDate>
+      
+      <guid>https://blog.goodfast.info/tags/social-media/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>recursive cte</title>
+      <link>https://blog.goodfast.info/tags/recursive-cte/</link>
+      <pubDate>Thu, 08 Jun 2017 08:31:17 +0200</pubDate>
+      
+      <guid>https://blog.goodfast.info/tags/recursive-cte/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>stored procedure</title>
+      <link>https://blog.goodfast.info/tags/stored-procedure/</link>
+      <pubDate>Thu, 08 Jun 2017 08:31:17 +0200</pubDate>
+      
+      <guid>https://blog.goodfast.info/tags/stored-procedure/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>trigger</title>
+      <link>https://blog.goodfast.info/tags/trigger/</link>
+      <pubDate>Thu, 08 Jun 2017 08:31:17 +0200</pubDate>
+      
+      <guid>https://blog.goodfast.info/tags/trigger/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>view</title>
+      <link>https://blog.goodfast.info/tags/view/</link>
+      <pubDate>Thu, 08 Jun 2017 08:31:17 +0200</pubDate>
+      
+      <guid>https://blog.goodfast.info/tags/view/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>algorithms</title>
+      <link>https://blog.goodfast.info/tags/algorithms/</link>
+      <pubDate>Wed, 12 Oct 2016 22:01:20 +0200</pubDate>
+      
+      <guid>https://blog.goodfast.info/tags/algorithms/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>bitwise operators</title>
+      <link>https://blog.goodfast.info/tags/bitwise-operators/</link>
+      <pubDate>Wed, 12 Oct 2016 22:01:20 +0200</pubDate>
+      
+      <guid>https://blog.goodfast.info/tags/bitwise-operators/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>brute force</title>
+      <link>https://blog.goodfast.info/tags/brute-force/</link>
+      <pubDate>Wed, 12 Oct 2016 22:01:20 +0200</pubDate>
+      
+      <guid>https://blog.goodfast.info/tags/brute-force/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>C#</title>
+      <link>https://blog.goodfast.info/tags/c#/</link>
+      <pubDate>Wed, 12 Oct 2016 22:01:20 +0200</pubDate>
+      
+      <guid>https://blog.goodfast.info/tags/c#/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>knapsack problem</title>
+      <link>https://blog.goodfast.info/tags/knapsack-problem/</link>
+      <pubDate>Wed, 12 Oct 2016 22:01:20 +0200</pubDate>
+      
+      <guid>https://blog.goodfast.info/tags/knapsack-problem/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>TDD</title>
+      <link>https://blog.goodfast.info/tags/tdd/</link>
+      <pubDate>Wed, 12 Oct 2016 22:01:20 +0200</pubDate>
+      
+      <guid>https://blog.goodfast.info/tags/tdd/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>cartesian join </title>
+      <link>https://blog.goodfast.info/tags/cartesian-join/</link>
+      <pubDate>Sun, 09 Oct 2016 21:26:17 +0200</pubDate>
+      
+      <guid>https://blog.goodfast.info/tags/cartesian-join/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>cte</title>
+      <link>https://blog.goodfast.info/tags/cte/</link>
+      <pubDate>Sun, 09 Oct 2016 21:26:17 +0200</pubDate>
+      
+      <guid>https://blog.goodfast.info/tags/cte/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>full join</title>
+      <link>https://blog.goodfast.info/tags/full-join/</link>
+      <pubDate>Sun, 09 Oct 2016 21:26:17 +0200</pubDate>
+      
+      <guid>https://blog.goodfast.info/tags/full-join/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>sub query</title>
+      <link>https://blog.goodfast.info/tags/sub-query/</link>
+      <pubDate>Sun, 09 Oct 2016 21:26:17 +0200</pubDate>
+      
+      <guid>https://blog.goodfast.info/tags/sub-query/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>alias</title>
+      <link>https://blog.goodfast.info/tags/alias/</link>
+      <pubDate>Tue, 19 Jan 2016 21:26:17 +0200</pubDate>
+      
+      <guid>https://blog.goodfast.info/tags/alias/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>bash</title>
+      <link>https://blog.goodfast.info/tags/bash/</link>
+      <pubDate>Tue, 19 Jan 2016 21:26:17 +0200</pubDate>
+      
+      <guid>https://blog.goodfast.info/tags/bash/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>git</title>
+      <link>https://blog.goodfast.info/tags/git/</link>
+      <pubDate>Tue, 19 Jan 2016 21:26:17 +0200</pubDate>
+      
+      <guid>https://blog.goodfast.info/tags/git/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>merge</title>
+      <link>https://blog.goodfast.info/tags/merge/</link>
+      <pubDate>Tue, 19 Jan 2016 21:26:17 +0200</pubDate>
+      
+      <guid>https://blog.goodfast.info/tags/merge/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>rebase</title>
+      <link>https://blog.goodfast.info/tags/rebase/</link>
+      <pubDate>Tue, 19 Jan 2016 21:26:17 +0200</pubDate>
+      
+      <guid>https://blog.goodfast.info/tags/rebase/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>clustered index</title>
+      <link>https://blog.goodfast.info/tags/clustered-index/</link>
+      <pubDate>Fri, 21 Nov 2014 00:00:00 +0000</pubDate>
+      
+      <guid>https://blog.goodfast.info/tags/clustered-index/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>heaps</title>
+      <link>https://blog.goodfast.info/tags/heaps/</link>
+      <pubDate>Fri, 21 Nov 2014 00:00:00 +0000</pubDate>
+      
+      <guid>https://blog.goodfast.info/tags/heaps/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>nonclustered index</title>
+      <link>https://blog.goodfast.info/tags/nonclustered-index/</link>
+      <pubDate>Fri, 21 Nov 2014 00:00:00 +0000</pubDate>
+      
+      <guid>https://blog.goodfast.info/tags/nonclustered-index/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>physical layout</title>
+      <link>https://blog.goodfast.info/tags/physical-layout/</link>
+      <pubDate>Fri, 21 Nov 2014 00:00:00 +0000</pubDate>
+      
+      <guid>https://blog.goodfast.info/tags/physical-layout/</guid>
+      <description></description>
+    </item>
+    
+  </channel>
+</rss>

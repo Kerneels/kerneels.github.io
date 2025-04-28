@@ -1,11 +1,30 @@
-<!DOCTYPE html>
+<!doctype html5>
+<html lang="en-us">
+  <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no"><meta name="theme-color" content="#2d2d2d">
+  <meta name="twitter:card" content="summary"><meta name="twitter:creator" content="@twitter user"><meta property="og:type" content="blog">
+  <meta property="og:title"content="now make it fast | Good Fast">
+  <meta property="og:url" content="https://blog.goodfast.info/">
+  <meta property="og:site_name" content="Base16">
+  
+  
+  <link rel="stylesheet" href="https://blog.goodfast.info/style.815a0436c85997db50e9ab6cf5ad0762bd92c602213b2b7975a922ef4117cabb227c29a9c1285d8036ee446b387e6eac5ead873e5571e7a9a14d672acc69b876.css" type="text/css"integrity="sha512-gVoENshZl9tQ6ats9a0HYr2SxgIhOyt5daki70EXyrsifCmpwShdgDbuRGs4fm6sXq2HPlVx56mhTWcqzGm4dg==" >
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Code+Pro:400,700" type="text/css">
+  <link rel="alternate" href="/index.xml" type="application/rss+xml" title="Good Fast">
+  <link rel="shortcut icon" type="image/x-icon" href="https://blog.goodfast.info/favicon.ico">
+  <title>now make it fast - Good Fast</title>
+</head>
+
+  <body>
+    <!DOCTYPE html>
 <html lang="en-us">
 <head>
 <meta charset="utf-8">
 <meta name="description" content="">
 <meta name="keywords" content="">
 <meta name="author" content="Kerneels Roos">
-<meta name="generator" content="Hugo 0.15" />
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="stylesheet" href="https://blog.goodfast.info/css/style.css" type="text/css">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Code+Pro:400,700" type="text/css">
@@ -57,9 +76,9 @@
 
 <div class="container">
 
-
-<main role="main" class="article">
-  
+      <div class="container">
+        <main role="main" class="article">
+          
 <article class="single" itemscope itemtype="http://schema.org/BlogPosting">
   <div class="meta">
 
@@ -101,57 +120,46 @@
   <h1 class="headline" itemprop="headline">now make it fast</h1>
     <div id="toc" class="well col-md-4 col-sm-6">
     <nav id="TableOfContents">
-<ul>
-<li>
-<ul>
-<li><a href="#it-s-out-there-somewhere-but-has-it-order:810306c57b772cfaef22459bbb55c3d7">It&rsquo;s out there&hellip; Somewhere&hellip; But has it order?</a></li>
-<li><a href="#some-terminology:810306c57b772cfaef22459bbb55c3d7">Some terminology</a>
-<ul>
-<li><a href="#clustered-index-the-sorted-one:810306c57b772cfaef22459bbb55c3d7">Clustered index - the sorted one</a></li>
-<li><a href="#heap-the-unsorted-one:810306c57b772cfaef22459bbb55c3d7">Heap - the unsorted one</a></li>
-<li><a href="#nonclustered-index-the-real-index:810306c57b772cfaef22459bbb55c3d7">Nonclustered index - the real index</a></li>
-<li><a href="#clustering-key-how-the-clustered-index-is-clustered-or-sorted:810306c57b772cfaef22459bbb55c3d7">Clustering key - how the clustered index is clustered, or sorted</a></li>
-</ul></li>
-<li><a href="#implications-of-heap-vs-clustered-index-for-dml:810306c57b772cfaef22459bbb55c3d7">Implications of heap vs. clustered index for DML</a>
-<ul>
-<li><a href="#the-single-index-primary-key-as-clustering-key-scenario:810306c57b772cfaef22459bbb55c3d7">The single index, primary key as clustering key scenario.</a>
-<ul>
-<li><a href="#insert:810306c57b772cfaef22459bbb55c3d7">INSERT</a></li>
-<li><a href="#select-update-and-delete:810306c57b772cfaef22459bbb55c3d7">SELECT, UPDATE and DELETE</a></li>
-</ul></li>
-</ul></li>
-<li><a href="#welcome-to-the-real-world-where-tree-climbing-is-to-be-avoided-the-multiple-indexes-scenario:810306c57b772cfaef22459bbb55c3d7">Welcome to the real world, where tree climbing is to be avoided - the multiple indexes scenario</a></li>
-<li><a href="#summary-and-closing-thoughts-optimising-performance-is-an-interesting-and-very-relevant-problem:810306c57b772cfaef22459bbb55c3d7">Summary and closing thoughts - Optimising performance is an  interesting and very relevant problem</a></li>
-</ul></li>
-</ul>
+  <ul>
+    <li><a href="#its-out-there-somewhere-but-has-it-order">It&rsquo;s out there&hellip; Somewhere&hellip; But has it order?</a></li>
+    <li><a href="#some-terminology">Some terminology</a>
+      <ul>
+        <li><a href="#clustered-index---the-sorted-one">Clustered index - the sorted one</a></li>
+        <li><a href="#heap---the-unsorted-one">Heap - the unsorted one</a></li>
+        <li><a href="#nonclustered-index---the-real-index">Nonclustered index - the real index</a></li>
+        <li><a href="#clustering-key---how-the-clustered-index-is-clustered-or-sorted">Clustering key - how the clustered index is clustered, or sorted</a></li>
+      </ul>
+    </li>
+    <li><a href="#implications-of-heap-vs-clustered-index-for-dml">Implications of heap vs. clustered index for DML</a>
+      <ul>
+        <li><a href="#the-single-index-primary-key-as-clustering-key-scenario">The single index, primary key as clustering key scenario.</a></li>
+      </ul>
+    </li>
+    <li><a href="#welcome-to-the-real-world-where-tree-climbing-is-to-be-avoided---the-multiple-indexes-scenario">Welcome to the real world, where tree climbing is to be avoided - the multiple indexes scenario</a></li>
+    <li><a href="#summary-and-closing-thoughts---optimising-performance-is-an--interesting-and-very-relevant-problem">Summary and closing thoughts - Optimising performance is an  interesting and very relevant problem</a></li>
+  </ul>
 </nav>
     </div>
   <section class="body" itemprop="articleBody">
-    
-
-<p>&ldquo;He began to copy one of our tables, which contained partial user information, including email IDs, hashed passwords, and last tested URL. His copy operation
-    locked the database table, which raised alerts on our monitoring system. On receiving the alerts, we checked the logs, saw an unrecognized IP, and blocked
-    it right away. In that time, the hacker had been able to retrieve only a
-    portion of the data.&rdquo;
-    &ndash; From the postmortem of the
-    <a href="http://www.browserstack.com/attack-and-downtime-on-9-November">Browser Stack hack of 9th November, 2014 at 23:30 GMT</a></p>
-
+    <pre><code>&quot;He began to copy one of our tables, which contained partial user information, including email IDs, hashed passwords, and last tested URL. His copy operation
+locked the database table, which raised alerts on our monitoring system. On receiving the alerts, we checked the logs, saw an unrecognized IP, and blocked
+it right away. In that time, the hacker had been able to retrieve only a
+portion of the data.&quot;
+</code></pre>
+<p>&ndash; From the postmortem of the <a href="http://www.browserstack.com/attack-and-downtime-on-9-November">Browser Stack hack of 9th November, 2014 at 23:30 GMT</a></p>
 <p>Since relational database management systems (RDBMS) have been
 <a href="http://en.wikipedia.org/wiki/Micro_DBMS">used in production environments since 1970 (Micro DBMS)</a>, and the theory on which they run was
 developed in the preceding decade,and perfected in the three remaining decades
 of the previous century (long  ago), it was not surprising  that, as  a subject,
 it received very little attention
 in our curriculum - at least where I studied.</p>
-
 <p>To further degrade the already <em>apparently</em> low relevance  of the poor subject, we
 had to cope with a very thick and overly theoretical textbook we could not yet appreciate,
 and subscribe to, if you wanted to be cool and smart, to the snooty perception
 held by many peers that the lowly database was useful, but entirely boring.</p>
-
 <p>A database was considered the type of thing  you rigged up for a family member in Access in a
 few hours. Any larger system was the domain of &lsquo;informatics&rsquo; - the
 less inspired, more practical brother field of study to the sexy &lsquo;computer science&rsquo; with its focus on AI, advanced programming in C++, the  new Java and the emerging world of Linux and Open Source.</p>
-
 <p>Stepping outside into the real world, and the rest was history - databases
 everywhere, for everything!
 In my working career since 2001, every single business system I worked on had
@@ -162,7 +170,6 @@ structures for efficiency was a task I chose to ignore. I reasoned along the
 lines of it is the DBA&rsquo;s / RDBMS&rsquo;s work, or
 the mostly false assumption that computers are fast and how much data will
 the system  realistically have anyways?</p>
-
 <p>Really? Is that professional, to say this far will I go and no further,
 while you as the programmer is directly responsible for those
 horribly slow queries?
@@ -176,42 +183,34 @@ millions in the case of the web&hellip;
 All that wasted time, all that wasted energy, all the trees&hellip;
 Don&rsquo;t think about it too much.
 You feel pretty bad by now don&rsquo;t you&hellip;</p>
-
 <p>Well, I have more bad news for you. At the end of this article you are going to feel even worse, because you
 are going to see how simple it is to start to turn things around.</p>
-
 <p>Dramatics aside, we will have a quick look at the  choices  for table
 physical layout and ponder the implications on performance.</p>
-
 <p>Be warned that we will of course only scratch the surface of SQL performance  optimisation
 on SQL Server, and that this article is aimed at software developers
-with limited skill in this area, so I&rsquo;m going to explain a bit
-- i.e. sit down, this might
-take a while.</p>
-
+with limited skill in this area, so I&rsquo;m going to explain a bit</p>
+<ul>
+<li>i.e. sit down, this might
+take a while.</li>
+</ul>
 <p>Many folks have written fine articles on this subject, and I&rsquo;ll refer to
 some of those as we go along.</p>
-
 <p>My primary justification for writing this article is that I&rsquo;d like to cement
 this stuff in my mind, and the best way for me is to write it all out. I hope
 you can gain something from this also, and please comment if you disagree or
 whatever.</p>
-
-<h2 id="it-s-out-there-somewhere-but-has-it-order:810306c57b772cfaef22459bbb55c3d7">It&rsquo;s out there&hellip; Somewhere&hellip; But has it order?</h2>
-
+<h2 id="its-out-there-somewhere-but-has-it-order">It&rsquo;s out there&hellip; Somewhere&hellip; But has it order?</h2>
 <p>Contrary to popular current belief, the data isn&rsquo;t somewhere in a [cloud]
 but it actually resides on one or more  physical storage media (think disk
 drives), and
 importantly, it&rsquo;s laid down either sorted or just as it was received - for all
 practical purposes, unsorted.</p>
-
 <p>You probably knew this already, but I needed that sentence
 because it contained the word <em>cloud</em> so that I had an excuse to quote
 Stallman on cloud computing from 2008:</p>
-
 <pre><code>&quot;It's stupidity. It's worse than stupidity: it's a marketing hype campaign,&quot;
 </code></pre>
-
 <p>Back to tables&hellip; It is probably because SQL Server&rsquo;s default is to choose the
 physically sorted way of laying down the data, when you define a primary key on
 a new table, that this table organisation
@@ -221,9 +220,7 @@ ordered layout of records is a great fit most of the time, it is not the best
 layout in all cases (more on that later).
 However, keep in mind there is wisdom in the choice of this default none
 the less.</p>
-
-<h2 id="some-terminology:810306c57b772cfaef22459bbb55c3d7">Some terminology</h2>
-
+<h2 id="some-terminology">Some terminology</h2>
 <p>For the purpose  of the discussion we&rsquo;ll stick to the most widely used
 terminology in the SQL Server world and call the ordered layout of records a
 <em>clustered index</em>, and the
@@ -231,9 +228,7 @@ layout without any physical ordering a <em>heap table</em>, or simply a heap.
 The structure  existing purely to speed up locating records  we will refer to
 as a <em>nonclustered index</em>, and how the <em>clustered index</em>
 should be ordered we will call the <em>clustering key</em>.</p>
-
-<h3 id="clustered-index-the-sorted-one:810306c57b772cfaef22459bbb55c3d7">Clustered index - the sorted one</h3>
-
+<h3 id="clustered-index---the-sorted-one">Clustered index - the sorted one</h3>
 <p>The term clustered index is unfortunate, and probably the reason a
 lot of people develop a blurred notion of cluster vs. non clustered, and table
 vs. index.
@@ -249,42 +244,31 @@ Either way, Viewed as an ordered tabular representation of data, or an index exi
 efficient access to itself - the important point is the physical sorted
 layout, and that the most efficient way to retrieve records from it is via the
 index that is itself given the primary key.</p>
-
-<h3 id="heap-the-unsorted-one:810306c57b772cfaef22459bbb55c3d7">Heap - the unsorted one</h3>
-
+<h3 id="heap---the-unsorted-one">Heap - the unsorted one</h3>
 <p>A heap is simpler to understand.  Think of a file that grows by repeatedly appending new
 lines to it without trying to maintain any kind of order.
 Obviously, for efficient access to the data in a heap we need one or more
 nonclustered indexes targeting the heap&rsquo;s data, and built up from one or more components
 of that data.</p>
-
 <p>When comparing clustered indexes with heaps we will assume that at least for
 the primary key, a nonclustered index is defined on the heap that would make the clustered
 index and heap nearly equally  efficient when retrieving a record, given a single primary key value.</p>
-
-<h3 id="nonclustered-index-the-real-index:810306c57b772cfaef22459bbb55c3d7">Nonclustered index - the real index</h3>
-
+<h3 id="nonclustered-index---the-real-index">Nonclustered index - the real index</h3>
 <p>The term <em>nonclustered index</em> we will use to refer to the structure
 that exists primarily to provide   indexed lookup to clustered indexes and heaps
 alike.  In SQL Server a heap or clustered index can have many nonclustered
 indexes targeting it.</p>
-
-<h3 id="clustering-key-how-the-clustered-index-is-clustered-or-sorted:810306c57b772cfaef22459bbb55c3d7">Clustering key - how the clustered index is clustered, or sorted</h3>
-
+<h3 id="clustering-key---how-the-clustered-index-is-clustered-or-sorted">Clustering key - how the clustered index is clustered, or sorted</h3>
 <p>Apart from the notion of a primary key, for a clustered index, the <em>clustering
 key</em> defines the subset of columns that instruct the system on how to cluster
 or sort the records.
 A clustering key should be chosen to be as unique  as possible, but uniqueness
 is not required (unlike for the primary key),since the system will add four bytes  called the uniquifier to
 the clustering key if it is not indicated as being unique already.</p>
-
-<h2 id="implications-of-heap-vs-clustered-index-for-dml:810306c57b772cfaef22459bbb55c3d7">Implications of heap vs. clustered index for DML</h2>
-
+<h2 id="implications-of-heap-vs-clustered-index-for-dml">Implications of heap vs. clustered index for DML</h2>
 <p>To compare the efficiency implications of DML statements on these two broad ways of physical data layout we have to look closer
 at the nature of the operations we would like to perform.</p>
-
 <p>It is fairly intuitive  to reason about  this if we keep in mind:</p>
-
 <ul>
 <li>The physical layout of a heap vs. a
 clustered index.</li>
@@ -292,15 +276,12 @@ clustered index.</li>
 <li>Is the operation on one or on multiple records.</li>
 <li>What piece of data is required for the fastest retrieval of records.</li>
 </ul>
-
-<h3 id="the-single-index-primary-key-as-clustering-key-scenario:810306c57b772cfaef22459bbb55c3d7">The single index, primary key as clustering key scenario.</h3>
-
+<h3 id="the-single-index-primary-key-as-clustering-key-scenario">The single index, primary key as clustering key scenario.</h3>
 <p>It turns out that it is generally the best choice to use a clustered index
 instead of a heap, for the scenario where you need only one index on
 one or more indexing columns. For this scenario, a clustered index takes up
 less space, performs better overall, and releases space better when records
 get deleted.</p>
-
 <p>The short answer to why this is the case is that for a clustered index, the
 data is the index, so lookups on the clustering key finds the relevant records
 directly (after climbing the index B-tree), and alterations affecting the clustering key requires alterations to
@@ -311,27 +292,21 @@ row corresponding to the clustering key, and
 then the RID is used to fetch the record from the heap.
 In addition to this, although alterations involving the index key might not require much work on the heap,
 the nonclustered index needs to be updated - again a two-step process.</p>
-
 <p>Nevertheless, there is a great case to be made for choosing a heap over a
 clustered index, which we&rsquo;ll get to shortly, but for the scenario as explained
 above (one index on the clustering key), a clustered index is the better choice.</p>
-
 <p>See this <a href="http://technet.microsoft.com/en-us/library/cc917672.aspx">Microsoft best practices</a> white paper, but be
 warned that it is proving the superiority of choosing a clustered index in
 favor of a heap in a scenario
 where a clustered index is the  best choice.
 Do not be fooled by this article into thinking heaps are overall inferior to
 clustered indexes, as a casual reading might lead you into believing.</p>
-
 <p>Let&rsquo;s look at the various DML operations quickly on clusterd index and heap&hellip;</p>
-
-<h4 id="insert:810306c57b772cfaef22459bbb55c3d7">INSERT</h4>
-
+<h4 id="insert">INSERT</h4>
 <p><em>INSERT</em> into a heap is simply a case of appending where there is space
 available in a data page (or creating a new page at the end). After this, a
 second write operation is required - insertion of the index key into the
 B-tree  of the nonclustered index.</p>
-
 <p>Now for a clustered index, the new record
 must be inserted in the correct location. If this correct location is on a
 data page that is full, that page needs to be split in two .
@@ -340,11 +315,9 @@ a clustered index there is no second write operation to maintain the index -
 the data and index are one. Note that this might even turn out to make a
 clustered index perform better overall since it only requires one write
 operation.</p>
-
 <p>Any additional nonclustered indexes on a clustered index or heap would take
 roughly the same time to update or keep in sync with the actual data, so we
 can ignore their maintenance penalty when comparing.</p>
-
 <p>But surely we should be able to gain performance with inserts by choosing
 either of the two table layouts,   given that heaps
 and clustered indexes differ so fundamentally?
@@ -353,10 +326,8 @@ options still require that indexes be kept up to date. If we were to choose a
 heap and define absolutely no nonclustered index on it we will gain the fastest
 insert performance since inserting would simply be adding data on anywhere
 where there is space.</p>
-
 <p>There is actually a great use case for this: logs and other archival type of
 storage that do not require immediate querying.</p>
-
 <p>But optimisation is a tricky problem, since even for this use case, if many
 concurrent inserts are expected, it might   very well be better to choose a
 clustered index instead, on some non unique but range-like clustering key that
@@ -364,13 +335,10 @@ will jump around a bit, to
 achieve an effect of inserting in different locations to prevent everything
 from trying to insert in the same data page all the time (as would be the
 case for a heap).</p>
-
-<h4 id="select-update-and-delete:810306c57b772cfaef22459bbb55c3d7">SELECT, UPDATE and DELETE</h4>
-
+<h4 id="select-update-and-delete">SELECT, UPDATE and DELETE</h4>
 <p><em>SELECT</em>, <em>UPDATE</em> and <em>DELETE</em> first requires locating where the records to
 operate on need to be physically
 found, followed by the actual action on the data.</p>
-
 <p>Assuming that the operation simply applies to data given a single primary key
 value that is the clustering key, the finding
 or first part of this operation
@@ -380,13 +348,11 @@ ready to be retrieved, while for a heap, after climbing the tree of the
 nonclustered index, you only get the RID, and then require a second
 operation to (all be it directly) get at the data in the heap - one additional
 level of indirection.</p>
-
 <p>There is an option to <em>include</em> columns of the heap or clustered index in the
 nonclustered indexes. The effect of this is that, after climbing the tree of
 the nonclustered index, those <em>included</em> column&rsquo;s data is immediately
 available - a mini clustered index in the form of a nonclustered index with
 included columns. All very straight forward and unambiguous  wouldn&rsquo;t you say?</p>
-
 <p>Except for <em>SELECT</em>, the efficiency of the second part, the action part of the operation
 can vary much more between heap and clustered index.
 For <em>UPDATE</em>, if the column being updated happens to be one or more of the
@@ -396,39 +362,30 @@ do page splits.
 This in turn mean that potentially, large amounts of data need to be copied around.
 For a heap this is never the case, and the columns  can simply be updated in
 place - order is of no importance.</p>
-
 <p>For both heap and clustered index, if any of the columns are part of any
 defined nonclustered indexes then altering them might have nonclustered index
 maintenance time as a further performance penalty.</p>
-
 <p>Fortunately, for both heap and clustered index, if the columns being updated are not part
 of the clustering key the efficiency of the action part of the operation is nearly similar.</p>
-
 <p>Performing a <em>DELETE</em> on a heap or clustered index should be simply a case of marking that record
 as deleted and making the space available for potential future inserts. For a
 clustered index, no index maintenance is yet again needed while for the heap,
 the nonclustered index needs updating.</p>
-
-<h2 id="welcome-to-the-real-world-where-tree-climbing-is-to-be-avoided-the-multiple-indexes-scenario:810306c57b772cfaef22459bbb55c3d7">Welcome to the real world, where tree climbing is to be avoided - the multiple indexes scenario</h2>
-
+<h2 id="welcome-to-the-real-world-where-tree-climbing-is-to-be-avoided---the-multiple-indexes-scenario">Welcome to the real world, where tree climbing is to be avoided - the multiple indexes scenario</h2>
 <p>The single index, primary key as clustering key and lookup scenario described earlier
 might appear  early on, and a lot in most models, but very soon you
 will also want to efficiently query on other columns on wider  (more columns)
 and deeper (more rows) tables.</p>
-
 <p>To prevent full table scans, you start adding nonclustered indexes,
 and this is where heaps start to become the more attractive alternative.</p>
-
 <p>Suppose for a moment that your  table (let&rsquo;s call it table <em>T</em>) that became wide and deep overnight is a
 clustered index, and the primary key (<em>K</em>) is also the clustering key.</p>
-
 <p>Each additional nonclustered index (<em>N1</em>, <em>N2</em>, &hellip;) on <em>T</em> will store in its leaf nodes the
 values of <em>K</em>.
 This means that a query on <em>T</em> utilising  some nonclustered index <em>N</em>  results
 in a tree climb of <em>N</em> that yields some value of <em>K</em>. Following this we
 require another tree climb of the clustered index that
 is <em>T</em>, given a value for <em>K</em>, and only then is the actual data reached.</p>
-
 <p>On the other hand, suppose  now that your wide and deep table  <em>H</em> is a heap
 instead, with one or more nonclustered indexes <em>N1</em>, <em>N2</em>, &hellip; and so on.
 This time, each nonclustered index <em>N</em> will store at the leaf node the RID
@@ -436,21 +393,19 @@ of the relevant row, and not simply  yet another key into a further index.
 This means that if some query on <em>H</em> utilise one of the nonclustered indexes,
 only one tree climb of that nonclustered index is required, after which the
 RID is obtained, and unlike a clustering key, a RID represents the
-physical position of the record in the heap, and thus can be directly accessed
-- no further tree climbing required.</p>
-
+physical position of the record in the heap, and thus can be directly accessed</p>
+<ul>
+<li>no further tree climbing required.</li>
+</ul>
 <p>For a more in-depth look at this, and some hard numbers comprising a
 compelling case,  do yourself a favor and read Markus
 Wienand&rsquo;s fine article,
 <a href="http://use-the-index-luke.com/blog/2014-01/unreasonable-defaults-primary-key-clustering-key">Unreasonable Defaults: Primary Key as Clustering
 Key</a>.</p>
-
-<h2 id="summary-and-closing-thoughts-optimising-performance-is-an-interesting-and-very-relevant-problem:810306c57b772cfaef22459bbb55c3d7">Summary and closing thoughts - Optimising performance is an  interesting and very relevant problem</h2>
-
+<h2 id="summary-and-closing-thoughts---optimising-performance-is-an--interesting-and-very-relevant-problem">Summary and closing thoughts - Optimising performance is an  interesting and very relevant problem</h2>
 <pre><code>&quot;Premature optimisation is the root of all evil&quot;
  -- Donald E. Knuth
 </code></pre>
-
 <p>As much as I concur with that statement, especially how it applies to code, I do think that a good understanding
 of the options available to you when turning a data model into an actual
 database schema can proactively prevent vicious      cycles of poor performing
@@ -461,9 +416,7 @@ better your understanding of the internals, the more likely you are to get it
 right first time,
 and the more it will start to happen that you are writing a query and you
 suddenly realise that a specific index would benefit that query tremendously.</p>
-
 <p>I&rsquo;ve rambled a bit, but to summarise:</p>
-
 <ul>
 <li>There are two main choices for the physical layout of data for tables.</li>
 <li>If only one index on the primary key is required it&rsquo;s probably the best to choose a clustered index.</li>
@@ -471,7 +424,6 @@ suddenly realise that a specific index would benefit that query tremendously.</p
 <li>For best insert performance on high  loads choose a heap with no nonclustered indexes.</li>
 <li>Use the include columns feature of nonclustered indexes.</li>
 </ul>
-
 <p>Today there are exciting new alternative data storage technologies like fully
 in memory databases, distributed systems such  as Hadoop, Google&rsquo;s BigTable
 approach, and document oriented noSQL
@@ -481,64 +433,36 @@ have and will continue to be applied more and more, but if the last decade is
 anything to go by,  the relational database is going to stick around for quite
 some time still, so investing time into learning how to optimise it is
 time well spent.</p>
-
 <p>The reason for SQL systems remaining central to all serious data storage
 applications  is not by accident. There is a theoretical reason, routed in the
 so-called CAP theorem.
 For an overview of how the CAP theorem restricted the growth and adoption of
 noSQL systems, have a look at
 <a href="http://use-the-index-luke.com/blog/2013-04/whats-left-of-nosql">What’s left of NoSQL?</a>.</p>
-
 <p>An interesting response to this is FoundationDB (see
 <a href="http://www.theregister.co.uk/Print/2012/11/22/foundationdb_fear_of_cap_theorem/">NoSQL&rsquo;s CAP theorem busters: We don&rsquo;t drop ACID</a>).</p>
-
 <p>An exciting emerging trend is to harness the strengths of both the traditional
 RDBMS and the more recent big data distributed, more normalised data storage
 technologies. For an interesting application of this, see
 <a href="http://msdn.microsoft.com/en-gb/magazine/dn802606.aspx">Use Updatable Tables for Responsive Real-Time Reporting</a>.</p>
-
 <p>I hope this short info burst tickled your interest enough that you will go
 ahead and look into all of it a bit more.
 Personally I have been pleasantly surprised by the depth of this subject area.</p>
-
 <p>I can highly recommend the book
 <a href="http://sql-performance-explained.com/?utm_source=UTIL&amp;utm_medium=main&amp;utm_campaign=second">SQL Performance Optimisation</a> for an in-depth look at this
 subject, and the
 <a href="http://use-the-index-luke.com/">Use The Index Luke</a> site.</p>
-
 <p>This article also appears on <a href="http://www.inivit.com/blog/">Inivit&rsquo;s blog</a> along with some other fine posts from former colleagues.</p>
 
   </section>
 </article>
 
-</main>
-
-
+        </main>
+      </div>
+    
 </div>
 
 <footer>
-  <div class="container">
-<div style="font-size:16px;margin:0 auto;width:300px" class="blockchain-btn"
-     data-address="1DNw8dEG14NazWDEQUkwPZJ2kfgoaSa7dv"
-     data-shared="false">
-    <div class="blockchain stage-begin">
-        <img src="https://blockchain.info/Resources/buttons/donate_64.png"/>
-    </div>
-    <div class="blockchain stage-loading" style="text-align:center">
-        <img src="https://blockchain.info/Resources/loading-large.gif"/>
-    </div>
-    <div class="blockchain stage-ready">
-         <p align="center">If you'd like to support this site and see the content here grow, please donate to Bitcoin address: <b>[[address]]</b></p>
-         <p align="center" class="qr-code"></p>
-    </div>
-    <div class="blockchain stage-paid">
-         Donation of <b>[[value]] BTC</b> Received. Thank You Very Much!
-    </div>
-    <div class="blockchain stage-error">
-        <font color="red">[[error]]</font>
-    </div>
-</div>
-  </div>
   <div class="container">
     <span class="copyright">&copy; 2014  Good Fast - <a rel="license" href="http://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a></span>
   </div>
@@ -547,3 +471,5 @@ subject, and the
 </body>
 </html>
 
+  </body>
+</html>

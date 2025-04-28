@@ -1,11 +1,31 @@
-<!DOCTYPE html>
+<!doctype html5>
+<html lang="en-us">
+  <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no"><meta name="description" content="Technical article explaining how to solve a tic-tac-toe variant with bit boards and bitwise operators." >
+    <meta property="og:description" content="Technical article explaining how to solve a tic-tac-toe variant with bit boards and bitwise operators." ><meta name="keywords" content="codejam,bitwise,bit board"><meta name="author" content="Kerneels Roos"><meta name="theme-color" content="#2d2d2d">
+  <meta name="twitter:card" content="summary"><meta name="twitter:creator" content="@twitter user"><meta property="og:type" content="blog">
+  <meta property="og:title"content="Wizen up a bit : solve problems bitwize | Good Fast">
+  <meta property="og:url" content="https://blog.goodfast.info/">
+  <meta property="og:site_name" content="Base16">
+  
+  
+  <link rel="stylesheet" href="https://blog.goodfast.info/style.815a0436c85997db50e9ab6cf5ad0762bd92c602213b2b7975a922ef4117cabb227c29a9c1285d8036ee446b387e6eac5ead873e5571e7a9a14d672acc69b876.css" type="text/css"integrity="sha512-gVoENshZl9tQ6ats9a0HYr2SxgIhOyt5daki70EXyrsifCmpwShdgDbuRGs4fm6sXq2HPlVx56mhTWcqzGm4dg==" >
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Code+Pro:400,700" type="text/css">
+  <link rel="alternate" href="/index.xml" type="application/rss+xml" title="Good Fast">
+  <link rel="shortcut icon" type="image/x-icon" href="https://blog.goodfast.info/favicon.ico">
+  <title>Wizen up a bit : solve problems bitwize - Good Fast</title>
+</head>
+
+  <body>
+    <!DOCTYPE html>
 <html lang="en-us">
 <head>
 <meta charset="utf-8">
 <meta name="description" content="Technical article explaining how to solve a tic-tac-toe variant with bit boards and bitwise operators.">
 <meta name="keywords" content="codejam,bitwise,bit board">
 <meta name="author" content="Kerneels Roos">
-<meta name="generator" content="Hugo 0.15" />
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="stylesheet" href="https://blog.goodfast.info/css/style.css" type="text/css">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Code+Pro:400,700" type="text/css">
@@ -57,9 +77,9 @@
 
 <div class="container">
 
-
-<main role="main" class="article">
-  
+      <div class="container">
+        <main role="main" class="article">
+          
 <article class="single" itemscope itemtype="http://schema.org/BlogPosting">
   <div class="meta">
 
@@ -89,285 +109,216 @@
   <h1 class="headline" itemprop="headline">Wizen up a bit : solve problems bitwize</h1>
     <div id="toc" class="well col-md-4 col-sm-6">
     <nav id="TableOfContents">
-<ul>
-<li>
-<ul>
-<li><a href="#the-back-story:d352b201a1938ed46d030d55323cc26d">The back story</a></li>
-<li><a href="#bit-boards:d352b201a1938ed46d030d55323cc26d">Bit boards</a></li>
-<li><a href="#decision-and-output:d352b201a1938ed46d030d55323cc26d">Decision and output</a></li>
-<li><a href="#the-real-magic-bitwise-operators-and-shifts:d352b201a1938ed46d030d55323cc26d">The real magic: bitwise operators and shifts</a></li>
-<li><a href="#conclusion:d352b201a1938ed46d030d55323cc26d">Conclusion</a></li>
-<li><a href="#full-program:d352b201a1938ed46d030d55323cc26d">Full program</a></li>
-</ul></li>
-</ul>
+  <ul>
+    <li><a href="#the-back-story">The back story</a></li>
+    <li><a href="#bit-boards">Bit boards</a></li>
+    <li><a href="#decision-and-output">Decision and output</a></li>
+    <li><a href="#the-real-magic-bitwise-operators-and-shifts">The real magic: bitwise operators and shifts</a></li>
+    <li><a href="#conclusion">Conclusion</a></li>
+    <li><a href="#full-program">Full program</a></li>
+  </ul>
 </nav>
     </div>
   <section class="body" itemprop="articleBody">
-    
-
-<p>I&rsquo;m rather obsessed with bits. All sorts of bits, at various times, but in particular, the digital bit of the Binary system. Notice the capitalization of &ldquo;Binary&rdquo; - it is intended.
+    <p>I&rsquo;m rather obsessed with bits. All sorts of bits, at various times, but in particular, the digital bit of the Binary system. Notice the capitalization of &ldquo;Binary&rdquo; - it is intended.
 Efficient bit representations of information is purity ; ever more compact representations elegance itself,
 so for this post I invite you to come with me, way back to 2013, when a nice couple of  <a href="https://en.wikipedia.org/wiki/Bitwise_operation">bitwise</a> operations flaunted their power and expressiveness.</p>
-
 <p>It&rsquo;s tough for me when a value that will only ever require N distinct states gets over represented by vastly more bits than is needed.
 A 4-byte integer to store a human age, a UUID, with it&rsquo;s crazy 16 bytes, and the list goes on and on: we can do better!
 Think of the real, actual small value, arriving inside the 64-bit CPU register, and the wasteful runs of zeros.
 Think of it, happening billions and billions of times a second.
 We can only hope that somewhere along the way, things get packed in a bit to mitigate those wasted runs of zeros.</p>
-
 <p>Once I read that using a short, or 2-byte database column type or variable is actually not more performant than just using a 4-byte integer.
 Due to the fact that the smallest addressable space is anyways 4 bytes large, it took exactly the same resources to process 4, 2 or even a 1 byte word.
 The exact context of that claim escapes me.
 I put it down to my confirmation bias, operating sub consciously, blocking it out.
 I like my confirmation bias working for me like that.</p>
-
-<h2 id="the-back-story:d352b201a1938ed46d030d55323cc26d">The back story</h2>
-
+<h2 id="the-back-story">The back story</h2>
 <p>It was the weekend of the Google CodeJam qualifier.
 Having heard of it some weeks before, I planned to check out the rules properly, and do some practice problems. It never happened.
 Arriving home in the afternoon on the Saturday, I thought I did not have much of a chance at it due to the time constraint, but I could not help myself giving it a go anyways.
 So it happened. Pacing around in my flat, beer in hand, I chose <a href="https://code.google.com/codejam/contest/2270488/dashboard#s=p0">this little problem</a> to solve.
 It was a sort of tic-tac-toe variant, but only the board state identifier part.</p>
-
 <p>Given a 4-x-4 board, determine if either player is in the winning position, or if a tie occurred.
-The &rsquo;T&rsquo; symbol being neutral in that it could count in either player&rsquo;s favor.</p>
-
+The &lsquo;T&rsquo; symbol being neutral in that it could count in either player&rsquo;s favor.</p>
 <p>Yes, you can loop over the elements or throw a Linq expression at it, but hey, we can have more fun than that, with bit masks and bit shifts.
 This was bit mask land, and I was in my element!
 For more details about the problem, visit the <a href="https://code.google.com/codejam/contest/2270488/dashboard#s=p0">problem statement</a>.</p>
-
-<h2 id="bit-boards:d352b201a1938ed46d030d55323cc26d">Bit boards</h2>
-
+<h2 id="bit-boards">Bit boards</h2>
 <p>We choose an integer, 4 bytes, to store a bit mask of the player O, player X, how a column looks, how each of the two diagonals look and so on. We could have used a 2-byte unsigned  short instead of an int, sadly we didn&rsquo;t. Well, got to leave something for next time.</p>
-
-<pre><code class="language-C#">        public static int column, diagonal1, diagonal2, fullboard;
-</code></pre>
-
-<p>and</p>
-
-<pre><code class="language-C#">            int xboard = 0, oboard = 0, tboard = 0;
-</code></pre>
-
-<p>We assign the static patterns we&rsquo;ll use for column, the two diagonals and the full board:</p>
-
-<pre><code class="language-C#">            column = Convert.ToInt32(&quot;1000100010001&quot;, 2);
-            diagonal1 = Convert.ToInt32(&quot;1000010000100001&quot;, 2);
-            diagonal2 = Convert.ToInt32(&quot;0001001001001000&quot;, 2);
-            fullboard = Convert.ToInt32(&quot;1111111111111111&quot;, 2);
-</code></pre>
-
-<p>I&rsquo;m not going to bother you with file IO, so we skip to where we set the X, O and T boards:</p>
-
-<pre><code class="language-C#">                        xboard = StringBoardToBitBoard(line, 'X');
-                        oboard = StringBoardToBitBoard(line, 'O');
-                        tboard = StringBoardToBitBoard(line, 'T');
-</code></pre>
-
-<p>Function StringBoardToBitBoard does exactly what  you would imagine - it assigns a &lsquo;1&rsquo; in the bit position if the char occurs and a &lsquo;0&rsquo; otherwise - see below for the full program.</p>
-
-<h2 id="decision-and-output:d352b201a1938ed46d030d55323cc26d">Decision and output</h2>
-
-<pre><code class="language-C#">                        if (Won(xboard, tboard))
-                            sw.WriteLine(&quot;Case #{0}: X won&quot;, i);
-                        else if (Won(oboard, tboard))
-                            sw.WriteLine(&quot;Case #{0}: O won&quot;, i);
-                        else if (((xboard | oboard | tboard) &amp; fullboard) == fullboard)
-                            sw.WriteLine(&quot;Case #{0}: Draw&quot;, i);
-                        else
-                            sw.WriteLine(&quot;Case #{0}: Game has not completed&quot;, i);
-</code></pre>
-
-<h2 id="the-real-magic-bitwise-operators-and-shifts:d352b201a1938ed46d030d55323cc26d">The real magic: bitwise operators and shifts</h2>
-
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-C#" data-lang="C#">        <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">int</span> column, diagonal1, diagonal2, fullboard;
+</code></pre></div><p>and</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-C#" data-lang="C#">            <span style="color:#66d9ef">int</span> xboard = <span style="color:#ae81ff">0</span>, oboard = <span style="color:#ae81ff">0</span>, tboard = <span style="color:#ae81ff">0</span>;
+</code></pre></div><p>We assign the static patterns we&rsquo;ll use for column, the two diagonals and the full board:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-C#" data-lang="C#">            column = Convert.ToInt32(<span style="color:#e6db74">&#34;1000100010001&#34;</span>, <span style="color:#ae81ff">2</span>);
+            diagonal1 = Convert.ToInt32(<span style="color:#e6db74">&#34;1000010000100001&#34;</span>, <span style="color:#ae81ff">2</span>);
+            diagonal2 = Convert.ToInt32(<span style="color:#e6db74">&#34;0001001001001000&#34;</span>, <span style="color:#ae81ff">2</span>);
+            fullboard = Convert.ToInt32(<span style="color:#e6db74">&#34;1111111111111111&#34;</span>, <span style="color:#ae81ff">2</span>);
+</code></pre></div><p>I&rsquo;m not going to bother you with file IO, so we skip to where we set the X, O and T boards:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-C#" data-lang="C#">                        xboard = StringBoardToBitBoard(line, <span style="color:#e6db74">&#39;X&#39;</span>);
+                        oboard = StringBoardToBitBoard(line, <span style="color:#e6db74">&#39;O&#39;</span>);
+                        tboard = StringBoardToBitBoard(line, <span style="color:#e6db74">&#39;T&#39;</span>);
+</code></pre></div><p>Function StringBoardToBitBoard does exactly what  you would imagine - it assigns a &lsquo;1&rsquo; in the bit position if the char occurs and a &lsquo;0&rsquo; otherwise - see below for the full program.</p>
+<h2 id="decision-and-output">Decision and output</h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-C#" data-lang="C#">                        <span style="color:#66d9ef">if</span> (Won(xboard, tboard))
+                            sw.WriteLine(<span style="color:#e6db74">&#34;Case #{0}: X won&#34;</span>, i);
+                        <span style="color:#66d9ef">else</span> <span style="color:#66d9ef">if</span> (Won(oboard, tboard))
+                            sw.WriteLine(<span style="color:#e6db74">&#34;Case #{0}: O won&#34;</span>, i);
+                        <span style="color:#66d9ef">else</span> <span style="color:#66d9ef">if</span> (((xboard | oboard | tboard) &amp; fullboard) == fullboard)
+                            sw.WriteLine(<span style="color:#e6db74">&#34;Case #{0}: Draw&#34;</span>, i);
+                        <span style="color:#66d9ef">else</span>
+                            sw.WriteLine(<span style="color:#e6db74">&#34;Case #{0}: Game has not completed&#34;</span>, i);
+</code></pre></div><h2 id="the-real-magic-bitwise-operators-and-shifts">The real magic: bitwise operators and shifts</h2>
 <p>And finally, let&rsquo;s have a look at the elegant part; function Won and friends:</p>
-
-<pre><code class="language-C#">        public static bool Won(int board, int tboard)
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-C#" data-lang="C#">        <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">bool</span> Won(<span style="color:#66d9ef">int</span> board, <span style="color:#66d9ef">int</span> tboard)
         {
-            board |= tboard;  // apply the T position
-            return LinesMatch(board) || ColumnsMatch(board) || DiagonalsMatch(board);
+            board |= tboard;  <span style="color:#75715e">// apply the T position
+</span><span style="color:#75715e"></span>            <span style="color:#66d9ef">return</span> LinesMatch(board) || ColumnsMatch(board) || DiagonalsMatch(board);
         }
-</code></pre>
-
-<p>makes sense doesn&rsquo;t it; you win if you have a line, a column or a diagonal.</p>
-
-<pre><code class="language-C#">        public static bool LinesMatch(int board)
+</code></pre></div><p>makes sense doesn&rsquo;t it; you win if you have a line, a column or a diagonal.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-C#" data-lang="C#">        <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">bool</span> LinesMatch(<span style="color:#66d9ef">int</span> board)
         {
-            return board == (board | 15)
-                || board == (board | (15 &lt;&lt; 4))
-                || board == (board | (15 &lt;&lt; 8))
-                || board == (board | (15 &lt;&lt; 12));
+            <span style="color:#66d9ef">return</span> board == (board | <span style="color:#ae81ff">15</span>)
+                || board == (board | (<span style="color:#ae81ff">15</span> &lt;&lt; <span style="color:#ae81ff">4</span>))
+                || board == (board | (<span style="color:#ae81ff">15</span> &lt;&lt; <span style="color:#ae81ff">8</span>))
+                || board == (board | (<span style="color:#ae81ff">15</span> &lt;&lt; <span style="color:#ae81ff">12</span>));
         }
-</code></pre>
-
-<p>You have a lines match if your board position
+</code></pre></div><p>You have a lines match if your board position
 is logical OR-ed (the &lsquo;|&rsquo; operator)  with any of the line representations, and still is equal to itself.
-For the 4 line representations we could have used constants, to avoid the bit shift (&rsquo;&lt;&lt;&lsquo;) but defining them; that would be too laborious, but would probably have been better.
+For the 4 line representations we could have used constants, to avoid the bit shift ('&laquo;') but defining them; that would be too laborious, but would probably have been better.
 Also, the 15 magic number in there, for the first lines representation; should really live in a constant.</p>
-
 <p>In the same way, but slightly different, the columns and diagonals are checked:</p>
-
-<pre><code class="language-C#">        public static bool ColumnsMatch(int board)
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-C#" data-lang="C#">        <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">bool</span> ColumnsMatch(<span style="color:#66d9ef">int</span> board)
         {
-            return
+            <span style="color:#66d9ef">return</span>
                 board == (board | column)
-                || board == (board | (column &lt;&lt; 1))
-                || board == (board | (column &lt;&lt; 2))
-                || board == (board | (column &lt;&lt; 3));
+                || board == (board | (column &lt;&lt; <span style="color:#ae81ff">1</span>))
+                || board == (board | (column &lt;&lt; <span style="color:#ae81ff">2</span>))
+                || board == (board | (column &lt;&lt; <span style="color:#ae81ff">3</span>));
         }
-        public static bool DiagonalsMatch(int board)
+        <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">bool</span> DiagonalsMatch(<span style="color:#66d9ef">int</span> board)
         {
-            return board == (board | diagonal1)
+            <span style="color:#66d9ef">return</span> board == (board | diagonal1)
                 || board == (board | diagonal2);
         }
-</code></pre>
-
-<p>The diagonals checking could have happened all at once, why is this possible?</p>
-
-<h2 id="conclusion:d352b201a1938ed46d030d55323cc26d">Conclusion</h2>
-
+</code></pre></div><p>The diagonals checking could have happened all at once, why is this possible?</p>
+<h2 id="conclusion">Conclusion</h2>
 <p>Well, contrary to the confusion to what a casual glance of the code might  evoke in you, it&rsquo;s really not terribly convoluted, but possibly slightly so.
 The heart of the program is only one loop over the input set, while the win checking is a small constant set of finite bit operations, and bit operations can definitely be implemented as single machine instructions.
 It surely ran fast on the small and large inputs, and so this question I got right.</p>
-
 <p>Not realizing that one only needed to get some of the problems correct in order to qualify for the actual contest, I happily shut down my computer and went to sleep.
 Yay, I managed to do one of the CodeJam qualifier challenges, but there were no time to do all of them!
 The next week when I realized my mistake, I was upset. I just had to get one or two more right and I could possibly have qualified!</p>
-
 <p>Less is more.  The saxophonist  <a href="https://en.wikipedia.org/wiki/Jan_Garbarek">Jan Garbarek</a> has been credited with his &ldquo;generous use of silence&rdquo;.
 I like that. May it be that, when people survey our code and data representations, may it be that they would reflect upon how few bits was used, or how few lines of code were written&hellip;</p>
+<h2 id="full-program">Full program</h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-C#" data-lang="C#"><span style="color:#66d9ef">using</span> System;
+<span style="color:#66d9ef">using</span> System.IO;
+<span style="color:#66d9ef">using</span> System.Collections.Generic;
+<span style="color:#66d9ef">using</span> System.Linq;
+<span style="color:#66d9ef">using</span> System.Text;
+<span style="color:#66d9ef">using</span> System.Threading.Tasks;
 
-<h2 id="full-program:d352b201a1938ed46d030d55323cc26d">Full program</h2>
-
-<pre><code class="language-C#">using System;
-using System.IO;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace ConsoleApplication1
+<span style="color:#66d9ef">namespace</span> ConsoleApplication1
 {
-    class Program
+    <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Program</span>
     {
-        public static int column, diagonal1, diagonal2, fullboard;
+        <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">int</span> column, diagonal1, diagonal2, fullboard;
 
-        static void Main(string[] args)
+        <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> Main(<span style="color:#66d9ef">string</span>[] args)
         {
-            column = Convert.ToInt32(&quot;1000100010001&quot;, 2);
-            diagonal1 = Convert.ToInt32(&quot;1000010000100001&quot;, 2);
-            diagonal2 = Convert.ToInt32(&quot;0001001001001000&quot;, 2);
-            fullboard = Convert.ToInt32(&quot;1111111111111111&quot;, 2);
+            column = Convert.ToInt32(<span style="color:#e6db74">&#34;1000100010001&#34;</span>, <span style="color:#ae81ff">2</span>);
+            diagonal1 = Convert.ToInt32(<span style="color:#e6db74">&#34;1000010000100001&#34;</span>, <span style="color:#ae81ff">2</span>);
+            diagonal2 = Convert.ToInt32(<span style="color:#e6db74">&#34;0001001001001000&#34;</span>, <span style="color:#ae81ff">2</span>);
+            fullboard = Convert.ToInt32(<span style="color:#e6db74">&#34;1111111111111111&#34;</span>, <span style="color:#ae81ff">2</span>);
 
-            int xboard = 0, oboard = 0, tboard = 0;
+            <span style="color:#66d9ef">int</span> xboard = <span style="color:#ae81ff">0</span>, oboard = <span style="color:#ae81ff">0</span>, tboard = <span style="color:#ae81ff">0</span>;
 
-            try
+            <span style="color:#66d9ef">try</span>
             {
-                string infile = &quot;A-large.in&quot;, outfile = &quot;A-large.out&quot;, line = &quot;&quot;;
-                using (StreamReader sr = new StreamReader(infile))
+                <span style="color:#66d9ef">string</span> infile = <span style="color:#e6db74">&#34;A-large.in&#34;</span>, outfile = <span style="color:#e6db74">&#34;A-large.out&#34;</span>, line = <span style="color:#e6db74">&#34;&#34;</span>;
+                <span style="color:#66d9ef">using</span> (StreamReader sr = <span style="color:#66d9ef">new</span> StreamReader(infile))
                 {
-                    using (StreamWriter sw = new StreamWriter(outfile))
+                    <span style="color:#66d9ef">using</span> (StreamWriter sw = <span style="color:#66d9ef">new</span> StreamWriter(outfile))
                     {
-                    int numberOfProblems = Int32.Parse(sr.ReadLine());
-                    for (int i = 1; i &lt;= numberOfProblems; i++)
+                    <span style="color:#66d9ef">int</span> numberOfProblems = Int32.Parse(sr.ReadLine());
+                    <span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">int</span> i = <span style="color:#ae81ff">1</span>; i &lt;= numberOfProblems; i++)
                     {
                         line = sr.ReadLine();
                         line += sr.ReadLine();
                         line += sr.ReadLine();
                         line += sr.ReadLine();
 
-                        xboard = StringBoardToBitBoard(line, 'X');
-                        oboard = StringBoardToBitBoard(line, 'O');
-                        tboard = StringBoardToBitBoard(line, 'T');
-                        if (Won(xboard, tboard))
-                            sw.WriteLine(&quot;Case #{0}: X won&quot;, i);
-                        else if (Won(oboard, tboard))
-                            sw.WriteLine(&quot;Case #{0}: O won&quot;, i);
-                        else if (((xboard | oboard | tboard) &amp; fullboard) == fullboard)
-                            sw.WriteLine(&quot;Case #{0}: Draw&quot;, i);
-                        else
-                            sw.WriteLine(&quot;Case #{0}: Game has not completed&quot;, i);
+                        xboard = StringBoardToBitBoard(line, <span style="color:#e6db74">&#39;X&#39;</span>);
+                        oboard = StringBoardToBitBoard(line, <span style="color:#e6db74">&#39;O&#39;</span>);
+                        tboard = StringBoardToBitBoard(line, <span style="color:#e6db74">&#39;T&#39;</span>);
+                        <span style="color:#66d9ef">if</span> (Won(xboard, tboard))
+                            sw.WriteLine(<span style="color:#e6db74">&#34;Case #{0}: X won&#34;</span>, i);
+                        <span style="color:#66d9ef">else</span> <span style="color:#66d9ef">if</span> (Won(oboard, tboard))
+                            sw.WriteLine(<span style="color:#e6db74">&#34;Case #{0}: O won&#34;</span>, i);
+                        <span style="color:#66d9ef">else</span> <span style="color:#66d9ef">if</span> (((xboard | oboard | tboard) &amp; fullboard) == fullboard)
+                            sw.WriteLine(<span style="color:#e6db74">&#34;Case #{0}: Draw&#34;</span>, i);
+                        <span style="color:#66d9ef">else</span>
+                            sw.WriteLine(<span style="color:#e6db74">&#34;Case #{0}: Game has not completed&#34;</span>, i);
 
                         line = sr.ReadLine();
                     }
                     }
-                    //Console.WriteLine(line);
-                }
+                    <span style="color:#75715e">//Console.WriteLine(line);
+</span><span style="color:#75715e"></span>                }
             }
-            catch (Exception e)
+            <span style="color:#66d9ef">catch</span> (Exception e)
             {
 
             }
         }
 
-        public static bool Won(int board, int tboard)
+        <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">bool</span> Won(<span style="color:#66d9ef">int</span> board, <span style="color:#66d9ef">int</span> tboard)
         {
-            board |= tboard;  // apply the T position
-            return LinesMatch(board) || ColumnsMatch(board) || DiagonalsMatch(board);
+            board |= tboard;  <span style="color:#75715e">// apply the T position
+</span><span style="color:#75715e"></span>            <span style="color:#66d9ef">return</span> LinesMatch(board) || ColumnsMatch(board) || DiagonalsMatch(board);
         }
-        public static bool LinesMatch(int board)
+        <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">bool</span> LinesMatch(<span style="color:#66d9ef">int</span> board)
         {
-            return board == (board | 15)
-                || board == (board | (15 &lt;&lt; 4))
-                || board == (board | (15 &lt;&lt; 8))
-                || board == (board | (15 &lt;&lt; 12));
+            <span style="color:#66d9ef">return</span> board == (board | <span style="color:#ae81ff">15</span>)
+                || board == (board | (<span style="color:#ae81ff">15</span> &lt;&lt; <span style="color:#ae81ff">4</span>))
+                || board == (board | (<span style="color:#ae81ff">15</span> &lt;&lt; <span style="color:#ae81ff">8</span>))
+                || board == (board | (<span style="color:#ae81ff">15</span> &lt;&lt; <span style="color:#ae81ff">12</span>));
         }
-        public static bool ColumnsMatch(int board)
+        <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">bool</span> ColumnsMatch(<span style="color:#66d9ef">int</span> board)
         {
-            return
+            <span style="color:#66d9ef">return</span>
                 board == (board | column)
-                || board == (board | (column &lt;&lt; 1))
-                || board == (board | (column &lt;&lt; 2))
-                || board == (board | (column &lt;&lt; 3));
+                || board == (board | (column &lt;&lt; <span style="color:#ae81ff">1</span>))
+                || board == (board | (column &lt;&lt; <span style="color:#ae81ff">2</span>))
+                || board == (board | (column &lt;&lt; <span style="color:#ae81ff">3</span>));
         }
-        public static bool DiagonalsMatch(int board)
+        <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">bool</span> DiagonalsMatch(<span style="color:#66d9ef">int</span> board)
         {
-            return board == (board | diagonal1)
+            <span style="color:#66d9ef">return</span> board == (board | diagonal1)
                 || board == (board | diagonal2);
         }
 
-        public static int StringBoardToBitBoard(string stringBoard, char oneChar)
+        <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">int</span> StringBoardToBitBoard(<span style="color:#66d9ef">string</span> stringBoard, <span style="color:#66d9ef">char</span> oneChar)
         {
-            string bitBoard = new String(stringBoard.Select(
-                x =&gt; x == oneChar ? '1' : '0')
+            <span style="color:#66d9ef">string</span> bitBoard = <span style="color:#66d9ef">new</span> String(stringBoard.Select(
+                x =&gt; x == oneChar ? <span style="color:#e6db74">&#39;1&#39;</span> : <span style="color:#e6db74">&#39;0&#39;</span>)
                 .ToArray());
-            return Convert.ToInt32(bitBoard, 2);
+            <span style="color:#66d9ef">return</span> Convert.ToInt32(bitBoard, <span style="color:#ae81ff">2</span>);
         }
     }
 }
 
-</code></pre>
-
+</code></pre></div>
   </section>
 </article>
 
-</main>
-
-
+        </main>
+      </div>
+    
 </div>
 
 <footer>
-  <div class="container">
-<div style="font-size:16px;margin:0 auto;width:300px" class="blockchain-btn"
-     data-address="1DNw8dEG14NazWDEQUkwPZJ2kfgoaSa7dv"
-     data-shared="false">
-    <div class="blockchain stage-begin">
-        <img src="https://blockchain.info/Resources/buttons/donate_64.png"/>
-    </div>
-    <div class="blockchain stage-loading" style="text-align:center">
-        <img src="https://blockchain.info/Resources/loading-large.gif"/>
-    </div>
-    <div class="blockchain stage-ready">
-         <p align="center">If you'd like to support this site and see the content here grow, please donate to Bitcoin address: <b>[[address]]</b></p>
-         <p align="center" class="qr-code"></p>
-    </div>
-    <div class="blockchain stage-paid">
-         Donation of <b>[[value]] BTC</b> Received. Thank You Very Much!
-    </div>
-    <div class="blockchain stage-error">
-        <font color="red">[[error]]</font>
-    </div>
-</div>
-  </div>
   <div class="container">
     <span class="copyright">&copy; 2017  Good Fast - <a rel="license" href="http://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a></span>
   </div>
@@ -376,3 +327,5 @@ namespace ConsoleApplication1
 </body>
 </html>
 
+  </body>
+</html>

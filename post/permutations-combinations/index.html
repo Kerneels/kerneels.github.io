@@ -1,11 +1,31 @@
-<!DOCTYPE html>
+<!doctype html5>
+<html lang="en-us">
+  <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no"><meta name="description" content="Article explaining how to reason about, and compute the number of draws in a lottery system" >
+    <meta property="og:description" content="Article explaining how to reason about, and compute the number of draws in a lottery system" ><meta name="keywords" content="permutations,combinations,factorial,python,haskell,lottery"><meta name="author" content="Kerneels Roos"><meta name="theme-color" content="#2d2d2d">
+  <meta name="twitter:card" content="summary"><meta name="twitter:creator" content="@twitter user"><meta property="og:type" content="blog">
+  <meta property="og:title"content="Permutations and combinations, and ways to calculate the number of draws in a lottery | Good Fast">
+  <meta property="og:url" content="https://blog.goodfast.info/">
+  <meta property="og:site_name" content="Base16">
+  
+  
+  <link rel="stylesheet" href="https://blog.goodfast.info/style.815a0436c85997db50e9ab6cf5ad0762bd92c602213b2b7975a922ef4117cabb227c29a9c1285d8036ee446b387e6eac5ead873e5571e7a9a14d672acc69b876.css" type="text/css"integrity="sha512-gVoENshZl9tQ6ats9a0HYr2SxgIhOyt5daki70EXyrsifCmpwShdgDbuRGs4fm6sXq2HPlVx56mhTWcqzGm4dg==" >
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Code+Pro:400,700" type="text/css">
+  <link rel="alternate" href="/index.xml" type="application/rss+xml" title="Good Fast">
+  <link rel="shortcut icon" type="image/x-icon" href="https://blog.goodfast.info/favicon.ico">
+  <title>Permutations and combinations, and ways to calculate the number of draws in a lottery - Good Fast</title>
+</head>
+
+  <body>
+    <!DOCTYPE html>
 <html lang="en-us">
 <head>
 <meta charset="utf-8">
 <meta name="description" content="Article explaining how to reason about, and compute the number of draws in a lottery system">
 <meta name="keywords" content="permutations,combinations,factorial,python,haskell,lottery">
 <meta name="author" content="Kerneels Roos">
-<meta name="generator" content="Hugo 0.15" />
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="stylesheet" href="https://blog.goodfast.info/css/style.css" type="text/css">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Code+Pro:400,700" type="text/css">
@@ -57,9 +77,9 @@
 
 <div class="container">
 
-
-<main role="main" class="article">
-  
+      <div class="container">
+        <main role="main" class="article">
+          
 <article class="single" itemscope itemtype="http://schema.org/BlogPosting">
   <div class="meta">
 
@@ -81,35 +101,28 @@
   <h1 class="headline" itemprop="headline">Permutations and combinations, and ways to calculate the number of draws in a lottery</h1>
     <div id="toc" class="well col-md-4 col-sm-6">
     <nav id="TableOfContents">
-<ul>
-<li>
-<ul>
-<li><a href="#solutions-in-a-couple-of-languages:b6bf697cd8bd4495824c64b2e031761c">Solutions in a couple of languages</a>
-<ul>
-<li><a href="#python:b6bf697cd8bd4495824c64b2e031761c">Python</a></li>
-<li><a href="#haskell:b6bf697cd8bd4495824c64b2e031761c">Haskell</a></li>
-</ul></li>
-</ul></li>
-</ul>
+  <ul>
+    <li><a href="#solutions-in-a-couple-of-languages">Solutions in a couple of languages</a>
+      <ul>
+        <li><a href="#python">Python</a></li>
+        <li><a href="#haskell">Haskell</a></li>
+      </ul>
+    </li>
+  </ul>
 </nav>
     </div>
   <section class="body" itemprop="articleBody">
-    
-
-<p>With a recent, unusually high Power Ball jackpot of ZAR ~220 million, we could not help discussing one&rsquo;s chances for actually hitting the jackpot as a bit of nice office banter.</p>
-
+    <p>With a recent, unusually high Power Ball jackpot of ZAR ~220 million, we could not help discussing one&rsquo;s chances for actually hitting the jackpot as a bit of nice office banter.</p>
 <p>Despite your personal take on the Power Ball and Lotto,  we can turn it into a nice mathematical puzzle, and sanatise the gambling aspect away. Yeah, we can do that, because we are into maths, programming and data!
-For the uninitiated among us, the way it works is simple really.
-You choose 5 numbers, from a set of  numbers ranging from 1 to 50,
-and one number from a set of numbers from 1 to 20 - the &ldquo;Power Ball&rdquo;.
+For the uninitiated among us, the way it works is simple really. 
+You choose 5 numbers, from a set of  numbers ranging from 1 to 50, 
+and one number from a set of numbers from 1 to 20 - the &ldquo;Power Ball&rdquo;. 
 Order does not matter.</p>
-
-<p>So, how do we calculate how many possible options is available to you?
-I use the term &ldquo;options&rdquo; deliberately, since the proper maths terms is actually &ldquo;combinations&rdquo;.
-Note that the maths terminology is contrary to commons sense: where order of selection matters, maths-speak calls it a permutation, and where order does not matter, a combination.
-Confusing, since we generally do not speak of the permutation of the security alarm code!
+<p>So, how do we calculate how many possible options is available to you? 
+I use the term &ldquo;options&rdquo; deliberately, since the proper maths terms is actually &ldquo;combinations&rdquo;. 
+Note that the maths terminology is contrary to commons sense: where order of selection matters, maths-speak calls it a permutation, and where order does not matter, a combination. 
+Confusing, since we generally do not speak of the permutation of the security alarm code! 
 Away with maths terminology! OK, only until the end of this post.</p>
-
 <ul>
 <li>For picking number one, you can choose from 50 options.</li>
 <li>For number two, from 49 options.</li>
@@ -117,147 +130,89 @@ Away with maths terminology! OK, only until the end of this post.</p>
 <li>At number five only 46 options remain to choose from.</li>
 <li>For picking the Power Ball, there are always 20 options.</li>
 </ul>
-
 <p>So we end up with this:</p>
-
-<pre><code>NumberOfPowerBallDraws = 50 * 49 * 48 * 47 * 46 * 20 
+<pre tabindex="0"><code>NumberOfPowerBallDraws = 50 * 49 * 48 * 47 * 46 * 20 
 NumberOfPowerBallDraws  = 5085024000 
-</code></pre>
-
-<p>Hmm, that is very big, too big  wouldn&rsquo;t you say?
+</code></pre><p>Hmm, that is very big, too big  wouldn&rsquo;t you say? 
 At those odds, jackpots would be very seldom.</p>
-
-<p>What is wrong?
-Well, suppose we chose option 1 for our first choice, and then option 2 for our second, that is all fine, but what if we then chose option 2 for our first choice, and option 1 for our second?
-In our equation above, both those would be valid start choices, but in actual fact, since order does not matter, those are the same choices according to the definition of the game: we are double counting.
-So how badly are we double counting?
+<p>What is wrong? 
+Well, suppose we chose option 1 for our first choice, and then option 2 for our second, that is all fine, but what if we then chose option 2 for our first choice, and option 1 for our second? 
+In our equation above, both those would be valid start choices, but in actual fact, since order does not matter, those are the same choices according to the definition of the game: we are double counting. 
+So how badly are we double counting? 
 Well, as badly as you can choose to order five numbers in a row, so that order matters, and that is kind of what we figured out in our mistake above, giving:</p>
-
-<pre><code>WaysToOrderFiveNumbers = 1 * 2 * 3 * 4 * 5 
+<pre tabindex="0"><code>WaysToOrderFiveNumbers = 1 * 2 * 3 * 4 * 5 
 WaysToOrderFiveNumbers = 120 
-</code></pre>
-
-<p>Finally,  to fix our error, we reduce our previous answer by this factor, to get:</p>
-
-<pre><code>CorrectNumberOfPowerBallDraws = NumberOfPowerBallDraws / WaysToOrderFiveNumbers 
+</code></pre><p>Finally,  to fix our error, we reduce our previous answer by this factor, to get:</p>
+<pre tabindex="0"><code>CorrectNumberOfPowerBallDraws = NumberOfPowerBallDraws / WaysToOrderFiveNumbers 
 
 CorrectNumberOfPowerBallDraws = 5085024000 / 120 
 
 CorrectNumberOfPowerBallDraws = 42375200 
-</code></pre>
-
-<p>Is this correct now? Yeah, go ahead and Google it!</p>
-
+</code></pre><p>Is this correct now? Yeah, go ahead and Google it!</p>
 <p>OK, back to the maths terms, because  it helps us actually.</p>
-
-<p>The multiplication of N numbers, from 1 to N is called factorial, and denoted $N!$, with $0!$ defined as 1.
+<p>The multiplication of N numbers, from 1 to N is called factorial, and denoted $N!$, with $0!$ defined as 1. 
 A permutations is an ordered selection of  k items from a set of N items, given by:</p>
-
 <p>$$
-P(N,k) = N! / (N - k)!
+P(N,k) = N! / (N - k)! 
 $$</p>
-
 <p>A combination is an unordered selection of k items from a set of N items, and given by:</p>
-
 <p>$$
-C(N,k) = N! / (N - k)! * k!
+C(N,k) = N! / (N - k)! * k! 
 $$</p>
-
 <p>It all boils down to: don&rsquo;t play Power Ball, or any other such lotteries since the odds are firmly stacked against you.</p>
-
-<h2 id="solutions-in-a-couple-of-languages:b6bf697cd8bd4495824c64b2e031761c">Solutions in a couple of languages</h2>
-
+<h2 id="solutions-in-a-couple-of-languages">Solutions in a couple of languages</h2>
 <p>Here are a couple of ways to calculate the figure above.</p>
-
-<h3 id="python:b6bf697cd8bd4495824c64b2e031761c">Python</h3>
-
+<h3 id="python">Python</h3>
 <p>Using the names from the analysis above, we get a rather long solution:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#f92672">import</span> functools <span style="color:#66d9ef">as</span> ft <span style="color:#75715e"># for reduce</span>
 
-<pre><code class="language-python">import functools as ft # for reduce
+<span style="color:#75715e"># n: the number of options, p: how many &#34;power ball&#34; options there are, k: the number of allowed numbers that can be chosen</span>
+<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">numberOfPowerBallDraws</span>(n,p,k):
+    <span style="color:#66d9ef">return</span> ft<span style="color:#f92672">.</span>reduce(<span style="color:#66d9ef">lambda</span> a,b: a<span style="color:#f92672">*</span>b, range(n<span style="color:#f92672">-</span>k<span style="color:#f92672">+</span><span style="color:#ae81ff">1</span>,n<span style="color:#f92672">+</span><span style="color:#ae81ff">1</span>)) <span style="color:#f92672">*</span> p
 
-# n: the number of options, p: how many &quot;power ball&quot; options there are, k: the number of allowed numbers that can be chosen
-def numberOfPowerBallDraws(n,p,k):
-    return ft.reduce(lambda a,b: a*b, range(n-k+1,n+1)) * p
+<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">waysToOrderKNumbers</span>(k):
+    <span style="color:#66d9ef">return</span> ft<span style="color:#f92672">.</span>reduce(<span style="color:#66d9ef">lambda</span> a,b: a<span style="color:#f92672">*</span>b, range(<span style="color:#ae81ff">1</span>,k<span style="color:#f92672">+</span><span style="color:#ae81ff">1</span>))
 
-def waysToOrderKNumbers(k):
-    return ft.reduce(lambda a,b: a*b, range(1,k+1))
+<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">correctNumberOfPowerBallDraws</span>(n,p,k):
+    <span style="color:#66d9ef">return</span> numberOfPowerBallDraws(n,p,k) <span style="color:#f92672">/</span> waysToOrderKNumbers(k)
 
-def correctNumberOfPowerBallDraws(n,p,k):
-    return numberOfPowerBallDraws(n,p,k) / waysToOrderKNumbers(k)
-
-p, n, k = 20, 50, 5
+p, n, k <span style="color:#f92672">=</span> <span style="color:#ae81ff">20</span>, <span style="color:#ae81ff">50</span>, <span style="color:#ae81ff">5</span>
 print(correctNumberOfPowerBallDraws(n,p,k))
-# output 42375200.0
-</code></pre>
-
-<p>Some points to note:</p>
-
+<span style="color:#75715e"># output 42375200.0</span>
+</code></pre></div><p>Some points to note:</p>
 <ol>
 <li>The  function <code>range(a,b)</code> produce a closed, open interval from a through b, so b itself is not included.</li>
 <li>The <code>reduce</code> function needs to be imported from functools since it is not part of the base Python system in the REPL anymore.</li>
 </ol>
-
 <p>We can simplify the code into one line, which is less readable but more concise:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#f92672">import</span> functools <span style="color:#66d9ef">as</span> ft
+p, n, k <span style="color:#f92672">=</span> <span style="color:#ae81ff">20</span>, <span style="color:#ae81ff">50</span>, <span style="color:#ae81ff">5</span>
+ft<span style="color:#f92672">.</span>reduce(<span style="color:#66d9ef">lambda</span> a,b: a<span style="color:#f92672">*</span>b, range(n<span style="color:#f92672">-</span>k<span style="color:#f92672">+</span><span style="color:#ae81ff">1</span>,n<span style="color:#f92672">+</span><span style="color:#ae81ff">1</span>)) <span style="color:#f92672">*</span> p <span style="color:#f92672">/</span> ft<span style="color:#f92672">.</span>reduce(<span style="color:#66d9ef">lambda</span> a,b: a<span style="color:#f92672">*</span>b, range(<span style="color:#ae81ff">1</span>,k<span style="color:#f92672">+</span><span style="color:#ae81ff">1</span>))
+<span style="color:#75715e"># output 42375200.0</span>
+</code></pre></div><p>Noticing that we multiply lists in two places, we can simplify even more by adding a <code>mul(r)</code> product function like this.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#f92672">import</span> functools <span style="color:#66d9ef">as</span> ft
 
-<pre><code class="language-python">import functools as ft
-p, n, k = 20, 50, 5
-ft.reduce(lambda a,b: a*b, range(n-k+1,n+1)) * p / ft.reduce(lambda a,b: a*b, range(1,k+1))
-# output 42375200.0
-</code></pre>
+<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">mul</span>(r): <span style="color:#66d9ef">return</span> ft<span style="color:#f92672">.</span>reduce(<span style="color:#66d9ef">lambda</span> a,b: a<span style="color:#f92672">*</span>b, r)
 
-<p>Noticing that we multiply lists in two places, we can simplify even more by adding a <code>mul(r)</code> product function like this.</p>
-
-<pre><code class="language-python">import functools as ft
-
-def mul(r): return ft.reduce(lambda a,b: a*b, r)
-
-p, n, k = 20, 50, 5
-mul(range(n-k+1,n+1)) * p / mul(range(1,k+1))
-# output 42375200.0
-</code></pre>
-
-<p>Much better, but still to me at least, not as clean as it could be.</p>
-
-<h3 id="haskell:b6bf697cd8bd4495824c64b2e031761c">Haskell</h3>
-
-<pre><code class="language-haskell">Prelude&gt; let draws n p k = product [n, (n-1) .. (n-k+1)] * p / product [1 .. k]
-Prelude&gt; draws 50 20 5
--- outputs 4.23752e7
-</code></pre>
-
-<p>In my opinion, the simplest, most straightforward, most beautiful code.</p>
+p, n, k <span style="color:#f92672">=</span> <span style="color:#ae81ff">20</span>, <span style="color:#ae81ff">50</span>, <span style="color:#ae81ff">5</span>
+mul(range(n<span style="color:#f92672">-</span>k<span style="color:#f92672">+</span><span style="color:#ae81ff">1</span>,n<span style="color:#f92672">+</span><span style="color:#ae81ff">1</span>)) <span style="color:#f92672">*</span> p <span style="color:#f92672">/</span> mul(range(<span style="color:#ae81ff">1</span>,k<span style="color:#f92672">+</span><span style="color:#ae81ff">1</span>))
+<span style="color:#75715e"># output 42375200.0</span>
+</code></pre></div><p>Much better, but still to me at least, not as clean as it could be.</p>
+<h3 id="haskell">Haskell</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-haskell" data-lang="haskell"><span style="color:#66d9ef">Prelude</span><span style="color:#f92672">&gt;</span> <span style="color:#66d9ef">let</span> draws n p k <span style="color:#f92672">=</span> product [n, (n<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>) <span style="color:#f92672">..</span> (n<span style="color:#f92672">-</span>k<span style="color:#f92672">+</span><span style="color:#ae81ff">1</span>)] <span style="color:#f92672">*</span> p <span style="color:#f92672">/</span> product [<span style="color:#ae81ff">1</span> <span style="color:#f92672">..</span> k]
+<span style="color:#66d9ef">Prelude</span><span style="color:#f92672">&gt;</span> draws <span style="color:#ae81ff">50</span> <span style="color:#ae81ff">20</span> <span style="color:#ae81ff">5</span>
+<span style="color:#75715e">-- outputs 4.23752e7</span>
+</code></pre></div><p>In my opinion, the simplest, most straightforward, most beautiful code.</p>
 
   </section>
 </article>
 
-</main>
-
-
+        </main>
+      </div>
+    
 </div>
 
 <footer>
-  <div class="container">
-<div style="font-size:16px;margin:0 auto;width:300px" class="blockchain-btn"
-     data-address="1DNw8dEG14NazWDEQUkwPZJ2kfgoaSa7dv"
-     data-shared="false">
-    <div class="blockchain stage-begin">
-        <img src="https://blockchain.info/Resources/buttons/donate_64.png"/>
-    </div>
-    <div class="blockchain stage-loading" style="text-align:center">
-        <img src="https://blockchain.info/Resources/loading-large.gif"/>
-    </div>
-    <div class="blockchain stage-ready">
-         <p align="center">If you'd like to support this site and see the content here grow, please donate to Bitcoin address: <b>[[address]]</b></p>
-         <p align="center" class="qr-code"></p>
-    </div>
-    <div class="blockchain stage-paid">
-         Donation of <b>[[value]] BTC</b> Received. Thank You Very Much!
-    </div>
-    <div class="blockchain stage-error">
-        <font color="red">[[error]]</font>
-    </div>
-</div>
-  </div>
   <div class="container">
     <span class="copyright">&copy; 2019  Good Fast - <a rel="license" href="http://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a></span>
   </div>
@@ -266,3 +221,5 @@ Prelude&gt; draws 50 20 5
 </body>
 </html>
 
+  </body>
+</html>

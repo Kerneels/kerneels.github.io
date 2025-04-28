@@ -1,0 +1,299 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Categories on Good Fast</title>
+    <link>https://blog.goodfast.info/categories/</link>
+    <description>Recent content in Categories on Good Fast</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Fri, 05 Feb 2021 10:26:20 +0000</lastBuildDate><atom:link href="https://blog.goodfast.info/categories/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>anomalies</title>
+      <link>https://blog.goodfast.info/categories/anomalies/</link>
+      <pubDate>Fri, 05 Feb 2021 10:26:20 +0000</pubDate>
+      
+      <guid>https://blog.goodfast.info/categories/anomalies/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>data analysis</title>
+      <link>https://blog.goodfast.info/categories/data-analysis/</link>
+      <pubDate>Fri, 05 Feb 2021 10:26:20 +0000</pubDate>
+      
+      <guid>https://blog.goodfast.info/categories/data-analysis/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>debugging</title>
+      <link>https://blog.goodfast.info/categories/debugging/</link>
+      <pubDate>Fri, 05 Feb 2021 10:26:20 +0000</pubDate>
+      
+      <guid>https://blog.goodfast.info/categories/debugging/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>methods</title>
+      <link>https://blog.goodfast.info/categories/methods/</link>
+      <pubDate>Fri, 05 Feb 2021 10:26:20 +0000</pubDate>
+      
+      <guid>https://blog.goodfast.info/categories/methods/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>sql</title>
+      <link>https://blog.goodfast.info/categories/sql/</link>
+      <pubDate>Fri, 05 Feb 2021 10:26:20 +0000</pubDate>
+      
+      <guid>https://blog.goodfast.info/categories/sql/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>database</title>
+      <link>https://blog.goodfast.info/categories/database/</link>
+      <pubDate>Wed, 24 Jul 2019 21:45:07 +0200</pubDate>
+      
+      <guid>https://blog.goodfast.info/categories/database/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>programming</title>
+      <link>https://blog.goodfast.info/categories/programming/</link>
+      <pubDate>Wed, 24 Jul 2019 21:45:07 +0200</pubDate>
+      
+      <guid>https://blog.goodfast.info/categories/programming/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>querying</title>
+      <link>https://blog.goodfast.info/categories/querying/</link>
+      <pubDate>Wed, 24 Jul 2019 21:45:07 +0200</pubDate>
+      
+      <guid>https://blog.goodfast.info/categories/querying/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>SQLite</title>
+      <link>https://blog.goodfast.info/categories/sqlite/</link>
+      <pubDate>Wed, 24 Jul 2019 21:45:07 +0200</pubDate>
+      
+      <guid>https://blog.goodfast.info/categories/sqlite/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>discrete mathematics</title>
+      <link>https://blog.goodfast.info/categories/discrete-mathematics/</link>
+      <pubDate>Sun, 23 Jun 2019 22:26:20 +0000</pubDate>
+      
+      <guid>https://blog.goodfast.info/categories/discrete-mathematics/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>hierarchies</title>
+      <link>https://blog.goodfast.info/categories/hierarchies/</link>
+      <pubDate>Tue, 26 Sep 2017 08:31:17 +0200</pubDate>
+      
+      <guid>https://blog.goodfast.info/categories/hierarchies/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>optimization</title>
+      <link>https://blog.goodfast.info/categories/optimization/</link>
+      <pubDate>Tue, 26 Sep 2017 08:31:17 +0200</pubDate>
+      
+      <guid>https://blog.goodfast.info/categories/optimization/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>performance</title>
+      <link>https://blog.goodfast.info/categories/performance/</link>
+      <pubDate>Tue, 26 Sep 2017 08:31:17 +0200</pubDate>
+      
+      <guid>https://blog.goodfast.info/categories/performance/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>procedures</title>
+      <link>https://blog.goodfast.info/categories/procedures/</link>
+      <pubDate>Tue, 26 Sep 2017 08:31:17 +0200</pubDate>
+      
+      <guid>https://blog.goodfast.info/categories/procedures/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>t-sql</title>
+      <link>https://blog.goodfast.info/categories/t-sql/</link>
+      <pubDate>Tue, 26 Sep 2017 08:31:17 +0200</pubDate>
+      
+      <guid>https://blog.goodfast.info/categories/t-sql/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>transativity</title>
+      <link>https://blog.goodfast.info/categories/transativity/</link>
+      <pubDate>Tue, 26 Sep 2017 08:31:17 +0200</pubDate>
+      
+      <guid>https://blog.goodfast.info/categories/transativity/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>bitwise</title>
+      <link>https://blog.goodfast.info/categories/bitwise/</link>
+      <pubDate>Wed, 20 Sep 2017 08:31:17 +0200</pubDate>
+      
+      <guid>https://blog.goodfast.info/categories/bitwise/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>c#</title>
+      <link>https://blog.goodfast.info/categories/c#/</link>
+      <pubDate>Wed, 20 Sep 2017 08:31:17 +0200</pubDate>
+      
+      <guid>https://blog.goodfast.info/categories/c#/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>code contest</title>
+      <link>https://blog.goodfast.info/categories/code-contest/</link>
+      <pubDate>Wed, 20 Sep 2017 08:31:17 +0200</pubDate>
+      
+      <guid>https://blog.goodfast.info/categories/code-contest/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>minimalism</title>
+      <link>https://blog.goodfast.info/categories/minimalism/</link>
+      <pubDate>Wed, 20 Sep 2017 08:31:17 +0200</pubDate>
+      
+      <guid>https://blog.goodfast.info/categories/minimalism/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>best practice</title>
+      <link>https://blog.goodfast.info/categories/best-practice/</link>
+      <pubDate>Tue, 27 Jun 2017 14:14:17 +0200</pubDate>
+      
+      <guid>https://blog.goodfast.info/categories/best-practice/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>cyber security</title>
+      <link>https://blog.goodfast.info/categories/cyber-security/</link>
+      <pubDate>Tue, 27 Jun 2017 14:14:17 +0200</pubDate>
+      
+      <guid>https://blog.goodfast.info/categories/cyber-security/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>privacy</title>
+      <link>https://blog.goodfast.info/categories/privacy/</link>
+      <pubDate>Tue, 27 Jun 2017 14:14:17 +0200</pubDate>
+      
+      <guid>https://blog.goodfast.info/categories/privacy/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>simplification</title>
+      <link>https://blog.goodfast.info/categories/simplification/</link>
+      <pubDate>Thu, 08 Jun 2017 08:31:17 +0200</pubDate>
+      
+      <guid>https://blog.goodfast.info/categories/simplification/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>algorithms</title>
+      <link>https://blog.goodfast.info/categories/algorithms/</link>
+      <pubDate>Wed, 12 Oct 2016 22:01:20 +0200</pubDate>
+      
+      <guid>https://blog.goodfast.info/categories/algorithms/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>complexity</title>
+      <link>https://blog.goodfast.info/categories/complexity/</link>
+      <pubDate>Wed, 12 Oct 2016 22:01:20 +0200</pubDate>
+      
+      <guid>https://blog.goodfast.info/categories/complexity/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>computer science</title>
+      <link>https://blog.goodfast.info/categories/computer-science/</link>
+      <pubDate>Wed, 12 Oct 2016 22:01:20 +0200</pubDate>
+      
+      <guid>https://blog.goodfast.info/categories/computer-science/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>optimisation</title>
+      <link>https://blog.goodfast.info/categories/optimisation/</link>
+      <pubDate>Wed, 12 Oct 2016 22:01:20 +0200</pubDate>
+      
+      <guid>https://blog.goodfast.info/categories/optimisation/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>readability</title>
+      <link>https://blog.goodfast.info/categories/readability/</link>
+      <pubDate>Sun, 09 Oct 2016 21:26:17 +0200</pubDate>
+      
+      <guid>https://blog.goodfast.info/categories/readability/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>source control</title>
+      <link>https://blog.goodfast.info/categories/source-control/</link>
+      <pubDate>Tue, 19 Jan 2016 21:26:17 +0200</pubDate>
+      
+      <guid>https://blog.goodfast.info/categories/source-control/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>version control</title>
+      <link>https://blog.goodfast.info/categories/version-control/</link>
+      <pubDate>Tue, 19 Jan 2016 21:26:17 +0200</pubDate>
+      
+      <guid>https://blog.goodfast.info/categories/version-control/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>workflow</title>
+      <link>https://blog.goodfast.info/categories/workflow/</link>
+      <pubDate>Tue, 19 Jan 2016 21:26:17 +0200</pubDate>
+      
+      <guid>https://blog.goodfast.info/categories/workflow/</guid>
+      <description></description>
+    </item>
+    
+  </channel>
+</rss>

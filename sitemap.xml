@@ -1,70 +1,256 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+  xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
-    <loc>https://blog.goodfast.info/</loc>
+    <loc>https://blog.goodfast.info/categories/anomalies/</loc>
     <lastmod>2021-02-05T10:26:20+00:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
+  </url><url>
+    <loc>https://blog.goodfast.info/categories/</loc>
+    <lastmod>2021-02-05T10:26:20+00:00</lastmod>
+  </url><url>
+    <loc>https://blog.goodfast.info/categories/data-analysis/</loc>
+    <lastmod>2021-02-05T10:26:20+00:00</lastmod>
+  </url><url>
+    <loc>https://blog.goodfast.info/categories/debugging/</loc>
+    <lastmod>2021-02-05T10:26:20+00:00</lastmod>
+  </url><url>
     <loc>https://blog.goodfast.info/post/find-differences-fast/</loc>
     <lastmod>2021-02-05T10:26:20+00:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
+    <loc>https://blog.goodfast.info/</loc>
+    <lastmod>2021-02-05T10:26:20+00:00</lastmod>
+  </url><url>
+    <loc>https://blog.goodfast.info/categories/methods/</loc>
+    <lastmod>2021-02-05T10:26:20+00:00</lastmod>
+  </url><url>
+    <loc>https://blog.goodfast.info/post/</loc>
+    <lastmod>2021-02-05T10:26:20+00:00</lastmod>
+  </url><url>
+    <loc>https://blog.goodfast.info/categories/sql/</loc>
+    <lastmod>2021-02-05T10:26:20+00:00</lastmod>
+  </url><url>
+    <loc>https://blog.goodfast.info/tags/awk/</loc>
+    <lastmod>2019-07-24T21:45:07+02:00</lastmod>
+  </url><url>
+    <loc>https://blog.goodfast.info/tags/big-ideas/</loc>
+    <lastmod>2019-07-24T21:45:07+02:00</lastmod>
+  </url><url>
+    <loc>https://blog.goodfast.info/tags/c/</loc>
+    <lastmod>2019-07-24T21:45:07+02:00</lastmod>
+  </url><url>
+    <loc>https://blog.goodfast.info/categories/database/</loc>
+    <lastmod>2019-07-24T21:45:07+02:00</lastmod>
+  </url><url>
+    <loc>https://blog.goodfast.info/tags/gdelt/</loc>
+    <lastmod>2019-07-24T21:45:07+02:00</lastmod>
+  </url><url>
+    <loc>https://blog.goodfast.info/categories/programming/</loc>
+    <lastmod>2019-07-24T21:45:07+02:00</lastmod>
+  </url><url>
+    <loc>https://blog.goodfast.info/categories/querying/</loc>
+    <lastmod>2019-07-24T21:45:07+02:00</lastmod>
+  </url><url>
+    <loc>https://blog.goodfast.info/tags/sql/</loc>
+    <lastmod>2019-07-24T21:45:07+02:00</lastmod>
+  </url><url>
+    <loc>https://blog.goodfast.info/tags/sqlite/</loc>
+    <lastmod>2019-07-24T21:45:07+02:00</lastmod>
+  </url><url>
+    <loc>https://blog.goodfast.info/categories/sqlite/</loc>
+    <lastmod>2019-07-24T21:45:07+02:00</lastmod>
+  </url><url>
+    <loc>https://blog.goodfast.info/tags/</loc>
+    <lastmod>2019-07-24T21:45:07+02:00</lastmod>
+  </url><url>
     <loc>https://blog.goodfast.info/post/what-not-how/</loc>
     <lastmod>2019-07-24T21:45:07+02:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>https://blog.goodfast.info/post/big-factorial/</loc>
     <lastmod>2019-06-23T22:26:20+00:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
+    <loc>https://blog.goodfast.info/categories/discrete-mathematics/</loc>
+    <lastmod>2019-06-23T22:26:20+00:00</lastmod>
+  </url><url>
     <loc>https://blog.goodfast.info/post/permutations-combinations/</loc>
     <lastmod>2019-06-23T08:25:20+00:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
+    <loc>https://blog.goodfast.info/categories/hierarchies/</loc>
+    <lastmod>2017-09-26T08:31:17+02:00</lastmod>
+  </url><url>
     <loc>https://blog.goodfast.info/post/transitive-closures/</loc>
     <lastmod>2017-09-26T08:31:17+02:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
+    <loc>https://blog.goodfast.info/categories/optimization/</loc>
+    <lastmod>2017-09-26T08:31:17+02:00</lastmod>
+  </url><url>
+    <loc>https://blog.goodfast.info/categories/performance/</loc>
+    <lastmod>2017-09-26T08:31:17+02:00</lastmod>
+  </url><url>
+    <loc>https://blog.goodfast.info/categories/procedures/</loc>
+    <lastmod>2017-09-26T08:31:17+02:00</lastmod>
+  </url><url>
+    <loc>https://blog.goodfast.info/categories/t-sql/</loc>
+    <lastmod>2017-09-26T08:31:17+02:00</lastmod>
+  </url><url>
+    <loc>https://blog.goodfast.info/categories/transativity/</loc>
+    <lastmod>2017-09-26T08:31:17+02:00</lastmod>
+  </url><url>
+    <loc>https://blog.goodfast.info/categories/bitwise/</loc>
+    <lastmod>2017-09-20T08:31:17+02:00</lastmod>
+  </url><url>
+    <loc>https://blog.goodfast.info/categories/c#/</loc>
+    <lastmod>2017-09-20T08:31:17+02:00</lastmod>
+  </url><url>
+    <loc>https://blog.goodfast.info/categories/code-contest/</loc>
+    <lastmod>2017-09-20T08:31:17+02:00</lastmod>
+  </url><url>
+    <loc>https://blog.goodfast.info/categories/minimalism/</loc>
+    <lastmod>2017-09-20T08:31:17+02:00</lastmod>
+  </url><url>
     <loc>https://blog.goodfast.info/post/wizen-up-a-bit/</loc>
     <lastmod>2017-09-20T08:31:17+02:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>https://blog.goodfast.info/post/outsmart-cyber-crims/</loc>
     <lastmod>2017-06-27T14:14:17+02:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
+    <loc>https://blog.goodfast.info/categories/best-practice/</loc>
+    <lastmod>2017-06-27T14:14:17+02:00</lastmod>
+  </url><url>
+    <loc>https://blog.goodfast.info/tags/cyber-security/</loc>
+    <lastmod>2017-06-27T14:14:17+02:00</lastmod>
+  </url><url>
+    <loc>https://blog.goodfast.info/categories/cyber-security/</loc>
+    <lastmod>2017-06-27T14:14:17+02:00</lastmod>
+  </url><url>
+    <loc>https://blog.goodfast.info/tags/malware/</loc>
+    <lastmod>2017-06-27T14:14:17+02:00</lastmod>
+  </url><url>
+    <loc>https://blog.goodfast.info/tags/online-presence/</loc>
+    <lastmod>2017-06-27T14:14:17+02:00</lastmod>
+  </url><url>
+    <loc>https://blog.goodfast.info/tags/privacy/</loc>
+    <lastmod>2017-06-27T14:14:17+02:00</lastmod>
+  </url><url>
+    <loc>https://blog.goodfast.info/categories/privacy/</loc>
+    <lastmod>2017-06-27T14:14:17+02:00</lastmod>
+  </url><url>
+    <loc>https://blog.goodfast.info/tags/security-patches/</loc>
+    <lastmod>2017-06-27T14:14:17+02:00</lastmod>
+  </url><url>
+    <loc>https://blog.goodfast.info/tags/social-media/</loc>
+    <lastmod>2017-06-27T14:14:17+02:00</lastmod>
+  </url><url>
+    <loc>https://blog.goodfast.info/tags/recursive-cte/</loc>
+    <lastmod>2017-06-08T08:31:17+02:00</lastmod>
+  </url><url>
+    <loc>https://blog.goodfast.info/categories/simplification/</loc>
+    <lastmod>2017-06-08T08:31:17+02:00</lastmod>
+  </url><url>
     <loc>https://blog.goodfast.info/post/speed-up-views-through-custom-materialization/</loc>
     <lastmod>2017-06-08T08:31:17+02:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
+    <loc>https://blog.goodfast.info/tags/stored-procedure/</loc>
+    <lastmod>2017-06-08T08:31:17+02:00</lastmod>
+  </url><url>
+    <loc>https://blog.goodfast.info/tags/trigger/</loc>
+    <lastmod>2017-06-08T08:31:17+02:00</lastmod>
+  </url><url>
+    <loc>https://blog.goodfast.info/tags/view/</loc>
+    <lastmod>2017-06-08T08:31:17+02:00</lastmod>
+  </url><url>
+    <loc>https://blog.goodfast.info/tags/algorithms/</loc>
+    <lastmod>2016-10-12T22:01:20+02:00</lastmod>
+  </url><url>
+    <loc>https://blog.goodfast.info/categories/algorithms/</loc>
+    <lastmod>2016-10-12T22:01:20+02:00</lastmod>
+  </url><url>
+    <loc>https://blog.goodfast.info/tags/bitwise-operators/</loc>
+    <lastmod>2016-10-12T22:01:20+02:00</lastmod>
+  </url><url>
+    <loc>https://blog.goodfast.info/tags/brute-force/</loc>
+    <lastmod>2016-10-12T22:01:20+02:00</lastmod>
+  </url><url>
+    <loc>https://blog.goodfast.info/tags/c#/</loc>
+    <lastmod>2016-10-12T22:01:20+02:00</lastmod>
+  </url><url>
+    <loc>https://blog.goodfast.info/categories/complexity/</loc>
+    <lastmod>2016-10-12T22:01:20+02:00</lastmod>
+  </url><url>
+    <loc>https://blog.goodfast.info/categories/computer-science/</loc>
+    <lastmod>2016-10-12T22:01:20+02:00</lastmod>
+  </url><url>
     <loc>https://blog.goodfast.info/post/knapsack-bitwise/</loc>
     <lastmod>2016-10-12T22:01:20+02:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
+    <loc>https://blog.goodfast.info/tags/knapsack-problem/</loc>
+    <lastmod>2016-10-12T22:01:20+02:00</lastmod>
+  </url><url>
+    <loc>https://blog.goodfast.info/categories/optimisation/</loc>
+    <lastmod>2016-10-12T22:01:20+02:00</lastmod>
+  </url><url>
+    <loc>https://blog.goodfast.info/tags/tdd/</loc>
+    <lastmod>2016-10-12T22:01:20+02:00</lastmod>
+  </url><url>
+    <loc>https://blog.goodfast.info/tags/cartesian-join/</loc>
+    <lastmod>2016-10-09T21:26:17+02:00</lastmod>
+  </url><url>
+    <loc>https://blog.goodfast.info/tags/cte/</loc>
+    <lastmod>2016-10-09T21:26:17+02:00</lastmod>
+  </url><url>
     <loc>https://blog.goodfast.info/post/cte-sub-queries-simplified/</loc>
     <lastmod>2016-10-09T21:26:17+02:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
+    <loc>https://blog.goodfast.info/tags/full-join/</loc>
+    <lastmod>2016-10-09T21:26:17+02:00</lastmod>
+  </url><url>
+    <loc>https://blog.goodfast.info/categories/readability/</loc>
+    <lastmod>2016-10-09T21:26:17+02:00</lastmod>
+  </url><url>
+    <loc>https://blog.goodfast.info/tags/sub-query/</loc>
+    <lastmod>2016-10-09T21:26:17+02:00</lastmod>
+  </url><url>
+    <loc>https://blog.goodfast.info/tags/alias/</loc>
+    <lastmod>2016-01-19T21:26:17+02:00</lastmod>
+  </url><url>
+    <loc>https://blog.goodfast.info/tags/bash/</loc>
+    <lastmod>2016-01-19T21:26:17+02:00</lastmod>
+  </url><url>
     <loc>https://blog.goodfast.info/post/reasonable-git-workflow/</loc>
     <lastmod>2016-01-19T21:26:17+02:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
+    <loc>https://blog.goodfast.info/tags/git/</loc>
+    <lastmod>2016-01-19T21:26:17+02:00</lastmod>
+  </url><url>
+    <loc>https://blog.goodfast.info/tags/merge/</loc>
+    <lastmod>2016-01-19T21:26:17+02:00</lastmod>
+  </url><url>
+    <loc>https://blog.goodfast.info/tags/rebase/</loc>
+    <lastmod>2016-01-19T21:26:17+02:00</lastmod>
+  </url><url>
+    <loc>https://blog.goodfast.info/categories/source-control/</loc>
+    <lastmod>2016-01-19T21:26:17+02:00</lastmod>
+  </url><url>
+    <loc>https://blog.goodfast.info/categories/version-control/</loc>
+    <lastmod>2016-01-19T21:26:17+02:00</lastmod>
+  </url><url>
+    <loc>https://blog.goodfast.info/categories/workflow/</loc>
+    <lastmod>2016-01-19T21:26:17+02:00</lastmod>
+  </url><url>
+    <loc>https://blog.goodfast.info/tags/clustered-index/</loc>
+    <lastmod>2014-11-21T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://blog.goodfast.info/tags/heaps/</loc>
+    <lastmod>2014-11-21T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://blog.goodfast.info/tags/nonclustered-index/</loc>
+    <lastmod>2014-11-21T00:00:00+00:00</lastmod>
+  </url><url>
     <loc>https://blog.goodfast.info/post/now-make-it-fast/</loc>
     <lastmod>2014-11-21T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://blog.goodfast.info/tags/physical-layout/</loc>
+    <lastmod>2014-11-21T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://blog.goodfast.info/series/</loc>
   </url>
-  
 </urlset>

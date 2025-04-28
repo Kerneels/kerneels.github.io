@@ -1,84 +1,20 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Social Media on Good Fast</title>
+    <title>social media on Good Fast</title>
     <link>https://blog.goodfast.info/tags/social-media/</link>
-    <description>Recent content in Social Media on Good Fast</description>
+    <description>Recent content in social media on Good Fast</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Tue, 27 Jun 2017 14:14:17 +0200</lastBuildDate>
-    <atom:link href="https://blog.goodfast.info/tags/social-media/index.xml" rel="self" type="application/rss+xml" />
-    
+    <lastBuildDate>Tue, 27 Jun 2017 14:14:17 +0200</lastBuildDate><atom:link href="https://blog.goodfast.info/tags/social-media/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>10 Ways to outsmart cyber criminals</title>
       <link>https://blog.goodfast.info/post/outsmart-cyber-crims/</link>
       <pubDate>Tue, 27 Jun 2017 14:14:17 +0200</pubDate>
       
       <guid>https://blog.goodfast.info/post/outsmart-cyber-crims/</guid>
-      <description>
-
-&lt;p&gt;Big day; our first guest contribution! &lt;a href=&#34;http://www.proz.com/profile/1571336&#34;&gt;Johann Bergh&lt;/a&gt;, a professional translator and recovering software developer put together this list of 10 ways how you can be proactive and outsmart cyber criminals. Enjoy, and take action!&lt;/p&gt;
-
-&lt;p&gt;Information is key to the success of cyber criminals. It is the driver that enables them to destroy, steal and extort. Cyber criminals are great detectives. They unite scraps of information from various sources into a nefarious plan.
-&amp;ldquo;What’s the big deal?&amp;rdquo;, you may ask. You are the big deal, because you could be their next target. Your online presence puts you at risk. Reducing your personal online content is an important weapon in the fight against cyber criminals.&lt;/p&gt;
-
-&lt;h3 id=&#34;1-social-media-you-don-t-have-to-be-famous:9a68116aa77ac38be69d0ef6e7b8e503&#34;&gt;1.  Social media – you don’t have to be famous&lt;/h3&gt;
-
-&lt;p&gt;We all love social media. Posting cool pictures of yourself in weird and wonderful places, complemented by exotic people in the same photo frame. And it’s so much fun browsing the photos (and the latest gossip news) of family and friends.
-Beware! The information that you post online is a treasure trove for foreign governments and cyber criminals alike. Be selective with what you share. If you took 100 photos of a weekend outing, select 3 or 4 appropriate pictures and be cognisant of the comments that you add. Too much information gives would-be identity thieves a foot hole &lt;a href=&#34;http://www.bbc.co.uk/webwise/0/21259413&#34;&gt;1&lt;/a&gt;.
-Most social media platforms have privacy and security settings. Be sure to tighten them. You don’t want everything to be available to the whole world!&lt;/p&gt;
-
-&lt;h3 id=&#34;2-minimize-online-accounts:9a68116aa77ac38be69d0ef6e7b8e503&#34;&gt;2.  Minimize online accounts&lt;/h3&gt;
-
-&lt;p&gt;Let’s be honest. The average person has accounts on more websites than they care to remember. Unfortunately, many sites only give access to their resources after you have created an account, resulting in an explosion of your digital footprint. In the world of cyber security, more information is bad news &lt;a href=&#34;http://www.pcworld.com/article/2143846/leave-no-trace-tips-to-cover-your-digital-footprint-and-reclaim-your-privacy.html&#34;&gt;5&lt;/a&gt;.
-How can you reign in your online omniscience? Make an inventory of all the online accounts that you have. Your email inbox might be able to give you some hints if you have forgotten. Log into the accounts and delete them if they have fallen into disuse. If you are unable to delete the account, remove as much sensitive information as you can.&lt;/p&gt;
-
-&lt;h3 id=&#34;3-clean-up-your-pc:9a68116aa77ac38be69d0ef6e7b8e503&#34;&gt;3.  Clean up your PC&lt;/h3&gt;
-
-&lt;p&gt;Did you know that your PC’s hard drive contains documents with very personal and sensitive information? When is the last time that you cleaned up your files? Cyber criminals love information. Financial and personal information are very valuable to them.&lt;/p&gt;
-
-&lt;p&gt;How much is the information on your PC worth to you? Intruders can install ransomware &lt;a href=&#34;http://www.bbc.com/news/uk-northern-ireland-37660657&#34;&gt;2&lt;/a&gt; on your PC. The result is that all your files are encrypted, and you won’t be able to access it again unless you pay a ransom to the intruder. Delete unimportant files and move unused files with valuable data to an external hard drive (or to the cloud). Ransomware? No problem, reformat and start afresh.&lt;/p&gt;
-
-&lt;h3 id=&#34;4-where-are-all-my-passwords:9a68116aa77ac38be69d0ef6e7b8e503&#34;&gt;4.  Where are all my passwords?&lt;/h3&gt;
-
-&lt;p&gt;There are so many websites that you sign up for and you don’t want to create a unique password for each of them.  So you just reuse the same password across all of the sites. No problem, right? Wrong! Big problem &lt;a href=&#34;http://dl.acm.org/citation.cfm?id=1143127&#34;&gt;4&lt;/a&gt;.&lt;/p&gt;
-
-&lt;p&gt;Consider the following scenario. John creates an account on website X but decides to use the same password as his email website because it’s easier to remember.  Unfortunately, website X doesn’t have the same security measures as John’s email provider. Cyber criminals can easily get John’s email address and the password that he used to sign into website X. The cyber criminals go to John’s email website and try to log in with the password John used on website X. And low and behold; they have access to John’s email inbox!&lt;/p&gt;
-
-&lt;p&gt;Luckily, there are many free password managers that you can use to generate random passwords for different sites. Download a password manager and make use of it.&lt;/p&gt;
-
-&lt;h3 id=&#34;5-don-t-be-the-weakest-link-keep-yourself-updated:9a68116aa77ac38be69d0ef6e7b8e503&#34;&gt;5.  Don’t be the weakest link, keep yourself updated&lt;/h3&gt;
-
-&lt;p&gt;Cyber criminals, like pick-pockets, tend to prey on easy targets. Do you have virus protection and is it enabled? Is all your software up to date? Outdated software poses a significant risk &lt;a href=&#34;https://community.norton.com/en/blogs/norton-protection-blog/importance-general-software-updates-and-patches&#34;&gt;6&lt;/a&gt;. It is not uncommon for software packages to release patches on a weekly basis, and there is reason why they call some of these patches &amp;ldquo;security patches.&amp;rdquo; Enable automatic updates for all your installed software. These basic steps are easy to follow. Don’t become the weakest link!&lt;/p&gt;
-
-&lt;h3 id=&#34;6-avoid-the-seedy-places-on-the-web:9a68116aa77ac38be69d0ef6e7b8e503&#34;&gt;6.  Avoid the seedy places on the web&lt;/h3&gt;
-
-&lt;p&gt;Watching the latest series? You didn’t get it from a torrent site. Or did you? Files downloaded from torrent sites often include a nasty surprise: malware &lt;a href=&#34;https://pdfs.semanticscholar.org/899b/9b82abe737118efe131b899bc1bdc3cc8938.pdf&#34;&gt;7&lt;/a&gt;. Software, with malicious intent, that will be installed on your PC without your consent. You are potentially giving cyber criminals access to your files and computing resources. It’s a blank check. They’re having a field day.
-Torrent sites aren’t the only dubious, dark corners of the web. Porn sites and online gambling platforms are notorious contenders, inter alia.&lt;/p&gt;
-
-&lt;h3 id=&#34;7-they-are-watching-you-don-t-get-tracked:9a68116aa77ac38be69d0ef6e7b8e503&#34;&gt;7.  They are watching you – don’t get tracked&lt;/h3&gt;
-
-&lt;p&gt;Tracking, tracking, tracking. Online advertising is big business, and you might not be aware that everything you do on the web is tracked and analyzed.
-Most websites that you visit store a small file on your computer’s hard drive called a &amp;ldquo;cookie&amp;rdquo;. These are often used to track your browsing activities for online advertising purposes. More information is available about you. It could give cyber criminals some valuable insights. Browsers have privacy and security settings that you could tighten to minimize tracking &lt;a href=&#34;http://www.zonealarm.com/blog/2014/07/online-privacy-how-to-minimize-your-digital-footprint/&#34;&gt;3&lt;/a&gt;. Browsers also have several plugins on offer that can help thwart tracking efforts by third parties. Eat the cookie before it eats you!&lt;/p&gt;
-
-&lt;h3 id=&#34;8-choose-your-friends-carefully:9a68116aa77ac38be69d0ef6e7b8e503&#34;&gt;8.  Choose your friends carefully&lt;/h3&gt;
-
-&lt;p&gt;The internet is a great place to meet new people. Online friendships and romances are commonplace in the modern era of the internet.&lt;/p&gt;
-
-&lt;p&gt;However, not all people using the internet are well-intentioned &lt;a href=&#34;http://edition.cnn.com/2011/11/11/tech/gaming-gadgets/kids-online-safety-steinberg/index.html&#34;&gt;9&lt;/a&gt;. The good news is that there are a few basic considerations that will shield you from internet fraudsters. Don’t reply to dubious Emails. Messages don’t go to your spam folder without reason. Maybe you are love sick. Do your research and join a reputable online dating site and you will meet plenty of like-minded individuals.&lt;/p&gt;
-
-&lt;h3 id=&#34;9-don-t-leave-a-paper-trail:9a68116aa77ac38be69d0ef6e7b8e503&#34;&gt;9.  Don’t leave a paper trail&lt;/h3&gt;
-
-&lt;p&gt;Despite all the propaganda about saving trees, hard copies of documents are more pervasive than ever. The information on physical documents is just as valuable as the information on digital documents.&lt;/p&gt;
-
-&lt;p&gt;Dumpster divers are not only fictional characters that you see in the movies. They exist in the real world &lt;a href=&#34;http://verb.lib.lehigh.edu/index.php/verb/article/viewArticle/19/18&#34;&gt;8&lt;/a&gt;. How many hard copies of documents with sensitive information do you have? Maybe it’s time for a spring-clean. Consider investing in a paper shredder, if you like working with hard copies.&lt;/p&gt;
-
-&lt;h3 id=&#34;10-physical-security:9a68116aa77ac38be69d0ef6e7b8e503&#34;&gt;10. Physical security&lt;/h3&gt;
-
-&lt;p&gt;Physical security? What does that have to do with keeping cyber criminals at bay? The answer is simple: Grabbing a laptop is the easiest way to make a quick buck and get free access to juicy information &lt;a href=&#34;http://www.macleans.ca/education/uniandcollege/the-danger-of-laptop-theft/&#34;&gt;10&lt;/a&gt;.&lt;/p&gt;
-
-&lt;p&gt;It goes without saying that you shouldn’t leave your electronic devices unattended in public areas. Laptop bags also tend to attract maliciously inclined individuals. A nifty trick is to get a backpack that has a laptop compartment. It will keep the criminals guessing.&lt;/p&gt;
-</description>
+      <description>Big day; our first guest contribution! Johann Bergh, a professional translator and recovering software developer put together this list of 10 ways how you can be proactive and outsmart cyber criminals. Enjoy, and take action!
+Information is key to the success of cyber criminals. It is the driver that enables them to destroy, steal and extort. Cyber criminals are great detectives. They unite scraps of information from various sources into a nefarious plan.</description>
     </item>
     
   </channel>
