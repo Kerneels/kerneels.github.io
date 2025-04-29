@@ -294,7 +294,8 @@ A major theme of Data Vault is to make it easier and easier to build out denorma
 </ul>
 <h2 id="data-vault-main-concepts">Data Vault Main Concepts</h2>
 <h3 id="three-types-of-tables">Three types of tables</h3>
-<p>Everything is modelled as one of three types of tables, with two additional tables - point-in-time (PIT) and bridge tables serving as optimisation structures:</p>
+<p>Everything is modelled  with essentially only three types of tables: hubs, links and satellites.
+Some additional tables - point-in-time (PIT) and bridge tables serves as optimisation structures.</p>
 <ul>
 <li>hub : track natural keys of entities, real-world or virtual</li>
 <li>satellite : track changes of hub or link properties over time</li>
