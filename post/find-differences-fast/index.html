@@ -129,7 +129,7 @@ We want to  show that the data in <code>table_a</code> and <code>table_b</code> 
 In this article, I want to share with you a method that helped me do this.
 SQL, being set-based, help us find differing rows easily and elegantly, but  finding the differing columns requires a bit of careful and systematic manual work on our part.</p>
 <h1 id="comparing-on-two-dimensions">Comparing on two dimensions</h1>
-<p>Assuming that the &ldquo;shape&rdquo; or schema of the two  tables is equivalent (see notes below on how to determine this), 
+<p>Assuming that the &ldquo;shape&rdquo; or schema of the two  tables is equivalent (see notes below on how to determine this),
 we can consider how similar the contained data is by looking at the vertical (rows), and horizontal (columns) dimensions.</p>
 <h1 id="vertical-or-row-difference">Vertical, or row difference</h1>
 <p>these possibilities exist:</p>
@@ -172,7 +172,7 @@ As a reminder, <code>UNION</code> between two queries will produce the set union
 );
 </code></pre></div><h3 id="except">EXCEPT</h3>
 <p>When we use the <code>EXCEPT</code> set operator, for example, <code>query_1 EXCEPT query_2</code>, we are left with all rows from <code>query_1</code> that do not occur in <code>query_2</code>.
-Note that <code>query_2</code> might contain rows that are not present in <code>query_1</code>, but because <code>EXCEPT</code> is not commutative, similar to how minus is not commutative, <code>query_1 EXCEPT query_2</code> is not the same as <code>query_2 EXCEPT  query_1</code>, and we are only left with non occurring rows in <code>query_1</code>.</p>
+Note that <code>query_2</code> might contain rows that are not present in <code>query_1</code>, but because <code>EXCEPT</code> is not commutative, similar to how minus is not commutative, <code>query_1 EXCEPT query_2</code> is not the same as <code>query_2 EXCEPT  query_1</code>, and we are only left with non occurring rows in <code>query_1</code>.</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sql" data-lang="sql"><span style="color:#66d9ef">select</span> <span style="color:#f92672">*</span> <span style="color:#66d9ef">from</span> table_a
 <span style="color:#66d9ef">except</span>
 <span style="color:#66d9ef">select</span> <span style="color:#f92672">*</span> <span style="color:#66d9ef">from</span> table_b;

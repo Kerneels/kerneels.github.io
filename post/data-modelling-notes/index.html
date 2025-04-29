@@ -1,0 +1,518 @@
+<!doctype html5>
+<html lang="en-us">
+  <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no"><meta name="description" content="A collection of notes on Data Vault and data modelling" >
+    <meta property="og:description" content="A collection of notes on Data Vault and data modelling" ><meta name="keywords" content="data modelling,data vault,data profiling,hashing,natural keys,surrogate keys"><meta name="author" content="Kerneels Roos"><meta name="theme-color" content="#2d2d2d">
+  <meta name="twitter:card" content="summary"><meta name="twitter:creator" content="@twitter user"><meta property="og:type" content="blog">
+  <meta property="og:title"content="Notes on Data Vault and data modelling | Good Fast">
+  <meta property="og:url" content="https://blog.goodfast.info/">
+  <meta property="og:site_name" content="Base16">
+  
+  
+  <link rel="stylesheet" href="https://blog.goodfast.info/style.815a0436c85997db50e9ab6cf5ad0762bd92c602213b2b7975a922ef4117cabb227c29a9c1285d8036ee446b387e6eac5ead873e5571e7a9a14d672acc69b876.css" type="text/css"integrity="sha512-gVoENshZl9tQ6ats9a0HYr2SxgIhOyt5daki70EXyrsifCmpwShdgDbuRGs4fm6sXq2HPlVx56mhTWcqzGm4dg==" >
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Code+Pro:400,700" type="text/css">
+  <link rel="alternate" href="/index.xml" type="application/rss+xml" title="Good Fast">
+  <link rel="shortcut icon" type="image/x-icon" href="https://blog.goodfast.info/favicon.ico">
+  <title>Notes on Data Vault and data modelling - Good Fast</title>
+</head>
+
+  <body>
+    <!DOCTYPE html>
+<html lang="en-us">
+<head>
+<meta charset="utf-8">
+<meta name="description" content="A collection of notes on Data Vault and data modelling">
+<meta name="keywords" content="data modelling,data vault,data profiling,hashing,natural keys,surrogate keys">
+<meta name="author" content="Kerneels Roos">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://blog.goodfast.info/css/style.css" type="text/css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Code+Pro:400,700" type="text/css">
+<link rel="alternate" href="https://blog.goodfast.info/index.xml" type="application/rss+xml" title="Good Fast">
+<title>Notes on Data Vault and data modelling - Good Fast</title>
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.0/jquery.min.js"></script>
+<script type="text/javascript" src="https://blockchain.info/Resources/js/pay-now-button.js"></script>
+<script type="text/javascript" async
+  src="https://cdn.rawgit.com/mathjax/MathJax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+  MathJax.Hub.Config({
+  tex2jax: {
+    inlineMath: [['$','$'], ['\\(','\\)']],
+    displayMath: [['$$','$$']],
+    processEscapes: true,
+    processEnvironments: true,
+    skipTags: ['script', 'noscript', 'style', 'textarea', 'pre'],
+    TeX: { equationNumbers: { autoNumber: "AMS" },
+         extensions: ["AMSmath.js", "AMSsymbols.js"] }
+  }
+  });
+  MathJax.Hub.Queue(function() {
+    
+    
+    
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i = 0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+
+  MathJax.Hub.Config({
+  
+  TeX: { equationNumbers: { autoNumber: "AMS" } }
+  });
+</script>
+
+</head>
+<body>
+
+<header>
+  <div class="container clearfix">
+    <a class="path" href="https://blog.goodfast.info/">[Good Fast]</a>
+    <span class="caret"># _</span>
+    <div class="right">
+      
+    </div>
+  </div>
+</header>
+
+<div class="container">
+
+      <div class="container">
+        <main role="main" class="article">
+          
+<article class="single" itemscope itemtype="http://schema.org/BlogPosting">
+  <div class="meta">
+
+    <span class="key">published on</span>
+    <span class="val"><time itemprop="datePublished" datetime="2025-04-28">April 28, 2025</time></span>
+
+
+    <span class="key">in</span>
+    <span class="val">
+
+        <a href="https://blog.goodfast.info/categories/data-modelling">data modelling</a>
+
+        <a href="https://blog.goodfast.info/categories/data-vault">data vault</a>
+
+        <a href="https://blog.goodfast.info/categories/notes">notes</a>
+
+    </span>
+
+
+  </div>
+  <h1 class="headline" itemprop="headline">Notes on Data Vault and data modelling</h1>
+    <div id="toc" class="well col-md-4 col-sm-6">
+    <nav id="TableOfContents">
+  <ul>
+    <li><a href="#observations">Observations</a></li>
+    <li><a href="#profiling-raw-data">Profiling raw data</a></li>
+  </ul>
+
+  <ul>
+    <li><a href="#traditional-data-warehouse">Traditional Data Warehouse</a></li>
+    <li><a href="#data-vault">Data Vault</a></li>
+    <li><a href="#data-vault-main-concepts">Data Vault Main Concepts</a>
+      <ul>
+        <li><a href="#three-types-of-tables">Three types of tables</a></li>
+        <li><a href="#other-concepts">Other concepts</a></li>
+      </ul>
+    </li>
+    <li><a href="#how-to-implement">How to implement</a>
+      <ul>
+        <li><a href="#data-vault-required-information">Data Vault required information</a></li>
+        <li><a href="#common-columns-to-hub-link-and-satellite">Common columns to hub, link and satellite</a></li>
+        <li><a href="#hub">Hub</a></li>
+        <li><a href="#satellite">Satellite</a></li>
+        <li><a href="#link">Link</a></li>
+      </ul>
+    </li>
+    <li><a href="#benefits">Benefits</a></li>
+  </ul>
+
+  <ul>
+    <li><a href="#references">References</a></li>
+  </ul>
+</nav>
+    </div>
+  <section class="body" itemprop="articleBody">
+    <p>When we model data we are confronted with the hard problem of encoding complex systems such as businesses, factories, organisations, institutions or online platforms into useful digital representations.
+A consistent problem I have observed is that for OLAP/data-intensive/AI solutions, data modelling tends to get  badly neglected.
+There are many reasons for this  neglect, which we will discuss later, but I believe the main reasons are ignorance, nuance and difficulty.
+Ignorance about available techniques, technologies, and the meaning of source data.
+Nuance in that modelling data is accepting compromises for attaining desired gains.
+Difficulty related to truely getting to grips with the meaning of the source data and in being consistent and standardised when modelling data.</p>
+<h1 id="data-modelling">Data Modelling</h1>
+<blockquote>
+<p>Data modelling is the process of analysing and defining all the different data your business collects and produces, as well as the relationships between those bits of data.
+Data modelling concepts create visual representations of data as it&rsquo;s used at your business, and the process itself is an exercise in understanding and clarifying your data requirements.</p>
+</blockquote>
+<p><a href="https://powerbi.microsoft.com/en-ie/what-is-data-modeling/">What is  data modelling: MS Power BI</a></p>
+<blockquote>
+<p>A data model is an abstract model that organizes elements of data and standardizes how they relate to one another and to the properties of real-world entities.
+For instance, a data model may specify that the data element representing a car be composed of a number of other elements which, in turn, represent
+the color and size of the car and define its owner.
+The term data model can refer to two distinct but closely related concepts.
+Sometimes it refers to an abstract formalization of the objects and relationships found in a particular application domain: for example the customers, products, and orders found in
+a manufacturing organization.
+At other times it refers to the set of concepts used in defining such formalizations:
+for example concepts such as entities, attributes, relations, or tables.
+So the &ldquo;data model &quot; of a banking application may be defined using the entity -relationship &ldquo;data model&rdquo;.</p>
+</blockquote>
+<p><a href="https://en.wikipedia.org/wiki/Data_model">Data Model : Wikipedia</a></p>
+<blockquote>
+<p>Data modeling is the process of creating a visual representation of either a whole information system or parts of it to communicate connections between data points and structures.
+The goal is to illustrate the types of data used and stored within the system, the relationships among these data types, the ways the data can be grouped and organized and its
+formats and attributes.</p>
+</blockquote>
+<p><a href="https://www.ibm.com/cloud/learn/data-modeling">IBM : Data Modelling</a></p>
+<h2 id="observations">Observations</h2>
+<ul>
+<li>Data  modelling and data models are foundational to  all information systems.</li>
+<li>Data modelling brings a deeper understanding to data.</li>
+<li>A data model assists reasoning about,  and managing data.</li>
+<li>Well modelled data greatly increase the data&rsquo;s value.</li>
+<li>Properly modelling data upfront  sets the data-intensive project up for   success.</li>
+<li>Failing  to  properly model  data early  on in the project introduces a lot of risk and unknowns - data debt.</li>
+<li>Per definition, a data model has a fixed scope and can only model so much, and this  is  acceptable and even desirable  since it narrows focus to what is really  important.</li>
+</ul>
+<h2 id="profiling-raw-data">Profiling raw data</h2>
+<p>The most important task in any data modelling project is profiling the data in order to develop a sufficient understanding to drive the modelling.
+Without a sufficiently complete comprehension of the data, it is impossible to model the data effectively.
+Profiling the data involves extensively exploring the data&rsquo;s schema, types, typical values, relationships and identifying unique keys.
+This is most often performed through querying raw data using SQL, Pyspark, Excel or any other tool that allows for rapid  querying.
+Although you  might be so fortunate to have other documentation at your disposal explaining the data,  you  still need to  query it  to verify all assertions.</p>
+<blockquote>
+<p>Give yourself enough time to properly and thoroughly      understand your raw data! You will not regret the time spent.</p>
+</blockquote>
+<h1 id="about-data-vault">About Data Vault</h1>
+<p>Essentially, a &ldquo;data vault&rdquo;  is  a  layer between raw data and purpose built data warehouses.
+We have these   challenges to overcome:</p>
+<ul>
+<li>we do not want to tamper with raw data because our tampering might be faulty, yet we want to be able to  easily revisit raw data</li>
+<li>reprocessing everything from raw source is too complicated and expensive</li>
+<li>we want to keep track of changes in the data (CDC)  in  a storage technology independant manner</li>
+<li>we want to capture and encode  what we have found out structurally about our raw data so  that everyone else can benefit from this  understanding</li>
+<li>because we ingest frequently we want to optimise for fast, cheap and scalable insert</li>
+</ul>
+<p>Peter ter Braake, in his book &ldquo;Data Modeling for Azure Data Services&rdquo; puts it this way:</p>
+<blockquote>
+<p>The general idea is to build a layer between the data&rsquo;s origin, the line-of-business applications, and its analytical use in a dimensionally modeled data mart
+that is optimized for specific usage.
+The data warehouse is the layer that should be stable over time.
+When processes or legislation change, the data itself does not, so the data warehouse should not.
+In that way, you create a repository to store historical data.
+The repository, the data warehouse, should be optimized for the long-term storage of historical data.
+It should be flexible in that when new types of data are introduced, new data should be easy to add to the data warehouse.
+By now, we know that when you optimize any type of database for a certain use case, it probably is not optimized to do something else.
+A Data Vault data warehouse is optimized for the long-term, flexible storing of historical data.
+It will, most of the time, show really bad query performance for the types of queries that we write to create reports.
+It is not made for using the data at all.</p>
+</blockquote>
+<ul>
+<li>Data vault modelling is well suited for OLAP ingest, but poorly suited for any kind of querying.</li>
+<li>A data vault needs to be augmented with business / data marts: mini data warehouses in the Inmon and Kimball  tradition.</li>
+<li>A data vault is agile and can evolve:
+<ul>
+<li>You do not have to specify it all upfront, but can develop and extend it as time goes on.</li>
+</ul>
+</li>
+<li>It is not a Data Lake, although you could implement a Data Vault using Data Lake technology.</li>
+<li>In general, it prefers implementation in a cloud anlytics type of database, with column store physical table layout.
+<ul>
+<li>storage and compute tehcnologies such as Snowflake Computing&rsquo;s main offering, Google&rsquo;s Big Query, Amazon&rsquo;s Redshift, Databricks SQL Warehouse are good choices.</li>
+</ul>
+</li>
+<li>Can be thought of as evolution of Star and Snowflake Schema modelling for analytics.</li>
+<li>modelling data to optimise or achieve:
+<ul>
+<li>source system independence</li>
+<li>longgevity: to outlive current source system specifics</li>
+<li>rapid ingestion at high volumes</li>
+<li>supporting parallelism in the ingest phase</li>
+<li>tracking changes over time</li>
+<li>as a source from which further analytics and data science can happen</li>
+<li>as a means to standardise and simplify how analytical data is modelled</li>
+<li>as a means of persisting data in a raw, but useful format</li>
+</ul>
+</li>
+<li>Introduces a layer between completely raw, and transformed data from which future transforms can happen.</li>
+<li>Aims to push transformations as far down the line as possible, to a single stage of the data life cycle.</li>
+<li>Combats the tirany of figuring out what transform happened where.</li>
+<li>Enable &ldquo;straight join&rdquo; ability via the use of ghost records, greatly speeding up joining.</li>
+<li>Designed with big data use cases in mind.</li>
+<li>Designed to be source-system agnostic: your data will live far longer than this or that source system, so do not depend on any keys from it.</li>
+</ul>
+<h1 id="data-vault--contrasted-against-straight-to-data-warehouse">Data Vault  Contrasted Against Straight to Data Warehouse</h1>
+<p>Essentially, Data Vault does not aim to replace traditional Data Warehouse modelling wisdom, but rather pitches itself as a layer between raw source data and the Data Warehouse.
+One of the goals of a Data Vault is to provide the bedrock from which to build many currently unforseen domain and business specific Data Warehouses and data surfaces in a repeatable manner.
+This is tipified by  the realisation that at any point in time, we more completely know what data we have than what questions the data in our hands might be able to answer in the future.
+Driven by this realisation, we build a structure that should be able to answer combinatorially more future questions than  simply transforming data for a specific set of end-user use cases.</p>
+<p>Additionally, Data Vault strives to capatalise on the new features of distributed cloud  analytics and massively parallel processing (MPP) storage systems.
+Data Vault prefers an extract, load, transform ELT process where transformation is encouraged to happen inside the storage technology.
+Contrast this with the traditional external transformation paradigm that requires data to be read into a compute system such as Spark, transformed, and then written back.
+A major theme of Data Vault is to make it easier and easier to build out denormalised views on data, driven by the realisation that storage is currently far cheaper than compute.</p>
+<h2 id="traditional-data-warehouse">Traditional Data Warehouse</h2>
+<ul>
+<li>A subject-oriented, integrated, time-varying, non-volatile collection of data that is used primarily in organizational decision making.</li>
+<li>A specially prepared repository of data : the data has been wrangled much and possibly altered the meaning of the original, raw data.</li>
+<li>Composed of facts and dimension tables which provides the user with the necessary information for decision making.</li>
+<li>A duplicate of transactional data that is specially structured for the purpose of analysis and querying.</li>
+<li>Beforehand, the questions that need answering needs to be known, and will exactly determine the structure of the DW, and what it can only ever answer.</li>
+<li>Not suited for agility in terms of delivery of value or accomodating changes in the source business.</li>
+<li>Due to data wrangling, a semantic gap develops between the source data and the facts and dimensions of the warehouse, requireing agressive documentation efforrts to keep under control.</li>
+<li>Was birthed in an ear where storage and compute was limited, and when changes in business rules were infrequent.</li>
+<li>For many years, Data warehouse architecture consisted of Inmon or Kimball methodology.</li>
+<li>Each methodology design (Star Schema vs. Snowflake Schema) has its own pros and cons but are unable to meet the requirements of handling large volume of data processing and re-engineering of data.</li>
+<li>Both Star Schema and Snowflake Schema are time variant, non-volatile, costly and not user-friendly.</li>
+<li>With large amount of data from multiple sources and regular business rules changes, Inmon and Kimball data modelling approaches become less effective.</li>
+<li>A better evolved model of data vault is created by Dan linstedt.</li>
+<li>both Star and Snowflake schema designs are optimised for query read performance of OLAP-type queries.</li>
+</ul>
+<h2 id="data-vault">Data Vault</h2>
+<ul>
+<li>A detail-oriented, historical tracking and uniquely linked set of normalized tables that support one or more functional areas of business, organised in a type of scale-free network.</li>
+<li>Inspired by presumed scale-free networks found in nature and explicityly constructed, such as neural networks, airline networks, social networks, computer networks.</li>
+<li>It is a hybrid approach encompassing the best of breed between 3rd normal form (3NF) and star schema.</li>
+<li>The design makes the model efficient to store large volumes of data and changes of business rules do not require changes in the data warehouse hence it is cost efficient and user friendly.</li>
+<li>Source tracking is an integral part of the design: every record is accompanied by the name of the source file, table or other identifier.</li>
+<li>Design allows for accomodating varying frequencies of data loads: one entity can at the same time have both frequently, and seldomly changing attributes.</li>
+<li>Since all relevant data are tracked, questions the business seeks to answer need not be known in advance, in contrast with the traditional approach of crafting the data warehouse to answer specific questions only.</li>
+<li>Can be queried directly, or can serve as the basis from where to build out materialized information marts of denormalised views.</li>
+<li>Single, fixed width data type for all keys, based on hashes computed on real world business keys - zero dependence on meaningless surrogate keys from source systems.</li>
+<li>Single data type for all keys presents many optimisation opportunities, and simplifies joins.</li>
+<li>Since keys are computed rather than looked up, parallel data loads are the norm rather than the exception.</li>
+<li>Computed keys simplifies data loads from multiple systems into one single vault.</li>
+<li>Can perform change tracking through a write-only data ingest process, avoiding expensive update-based operations.</li>
+<li>Data errors the business systems introduced are not corrected but stored as is: data correction only happens in derived information marts so as to preserve full integrity at all times.</li>
+<li>Because of the modelling of business entities, their relationships between each other, and the attributes describing entities and relationships, the vault becomes an enduring model of the business itself.
+<ul>
+<li>Contrast this with a purpose-built data warehouse that is shaped by performance concerns that particular storage technologies impose and arbitrary choices in defining relations and granularity.</li>
+</ul>
+</li>
+<li>All of these design patterns enable the Data Vault model to inherit scale-free attributes, meaning there is no known inherent limitation on the size of the model or the size of data that the model can represent, other than those limitations imposed by the infrastructure.</li>
+<li>Optimised for write at scale, with poor read performance, hence the need for data marts.</li>
+</ul>
+<h2 id="data-vault-main-concepts">Data Vault Main Concepts</h2>
+<h3 id="three-types-of-tables">Three types of tables</h3>
+<p>Everything is modelled as one of three types of tables, with two additional tables - point-in-time (PIT) and bridge tables serving as optimisation structures:</p>
+<ul>
+<li>hub : track natural keys of entities, real-world or virtual</li>
+<li>satellite : track changes of hub or link properties over time</li>
+<li>link : track relationships between hubs over time</li>
+</ul>
+<p>and the optimisation structures:</p>
+<ul>
+<li>point-in-time (PIT) : assembles together related satellite data at specific points in time</li>
+<li>bridge : assembles together related relationships (links) at specific points in time</li>
+</ul>
+<p>In more detail:</p>
+<ul>
+<li>hub : represents real-world entities, but only their natural keys, not tracked over time, so one-to-one mapping between a real-world entity and a row in a hub
+<ul>
+<li>think of a person&rsquo;s passport number, a car&rsquo;s VIN, a product&rsquo;s serial number</li>
+</ul>
+</li>
+<li>satellite : all &ldquo;properties&rdquo; of a real-world entity, with changes tracked over time
+<ul>
+<li>think of a sensor&rsquo;s geo-location, engineering unit, description etc.</li>
+<li>one-to-many cardinality between hub and satellite(s)</li>
+<li>one record of a hub can have multiple satellites,</li>
+<li>but each satellite represents similar properties of the entity, i.e. a geo_location_satellite for a marine vessel, and a maintenance_log_satellite for the same vessel</li>
+</ul>
+</li>
+<li>link : relationship between hubs, tracked over time
+<ul>
+<li>An example of a link is a retail sale relating hubs (customer, product, store), sales representative) with degenerate dimensions (qty, price, timestamp).</li>
+<li>Such a sale link would represent a sales event.</li>
+<li>In this representation, the degenerate dimensions are added to establish uniqueness.</li>
+</ul>
+</li>
+</ul>
+<h3 id="other-concepts">Other concepts</h3>
+<ul>
+<li>Keys are always computed as hashes of the natural keys: no lookups of keys, no use of source system surrogate keys.</li>
+<li>All loaded records have a <code>_loaddatetime</code> column, which is not when the record &ldquo;occured&rdquo; but the first time the vault saw it.</li>
+<li>For a given load batch, the <code>_loaddatetime</code> needs to  be similar for a given table: it is through this <code>_loaddatetime</code> that a load batch can be identified.</li>
+<li>A convention is required in terms of hashes: will they be stored as hexadecimal ASCII representations as string or as binary fields.
+<ul>
+<li>both approaches have benefits and drawbacks</li>
+<li>the norm is to use hexadecimal ASCII representations to assist portablility</li>
+<li>for saving space and speeding up joins, binary representations are preferred</li>
+</ul>
+</li>
+<li>A convention on how to handle null values in hashes is required, with options:
+<ul>
+<li>use the string &ldquo;<em>NULL</em>&rdquo; or something similar</li>
+<li>use the empty string</li>
+</ul>
+</li>
+<li>For hashes that span multiple columns (_hashdiff and _hashkey of complex keys) a seperator char needs to be chosen, with options such as:
+<ul>
+<li>use &lsquo;|&rsquo; to seperate before hashing</li>
+</ul>
+</li>
+<li>A suitable hashing algorithm needs to be chosen: a good choice here is sha256 with these properties:
+<ul>
+<li>very unique, very low chance of collisions</li>
+<li>relatively common and fast</li>
+<li>256 bits = 64 hexadecimal ASCII chars or 32 bytes of a binary column type</li>
+</ul>
+</li>
+</ul>
+<h2 id="how-to-implement">How to implement</h2>
+<h3 id="data-vault-required-information">Data Vault required information</h3>
+<p>You need to have proper answers to the following questions if you plan to build a data vault:</p>
+<ol>
+<li>Entities: identify all the real-world or virtual entities you have to model and in which source data they are found. Some entities might be spread out over multiple sources.</li>
+<li>Business keys: identify the column(s) that uniquely define each entity you will be modelling.</li>
+<li>Properties to track: for each entity modelled, identify the set of properties you have to track changes for.</li>
+<li>Property groups and rate of change:  for all properties to track changes for, group them into related subsets, taking into account rate of change such that properties changing at similar rates are grouped together.</li>
+<li>Relationships and events: for all modelled entities, identify all the relationships and events involving more than one entity.</li>
+<li>Relationships and events properties: for all relationships or events to model, identify all properties associated with the relationship or event that are key in defining the relationship or event.</li>
+<li>Properties or degenerate dimensions: for all properties associated with relationships or events, make a distinction between properties that define the relation or event, and properties that represents additional information that need to be tracked over time.</li>
+</ol>
+<p>It is important to note that you need not model your entire domain along Data Vault 2.0 before you can derive value from it.
+A better approach is to identify the smallest possible subset of the answers to the above questions that would satisfy some business use case so that you can build a kind minimal viable product (MVP) data vault.</p>
+<p>Once you have solid answers to the questions above, for a minimal  viable subset of your domain , you can proceed as follows:</p>
+<ol>
+<li>Entities: each of these will be a hub table, and they should be loaded from the various sources so that there is only ever one entity per row in the hub table - even if multiple sources define the same entity.</li>
+<li>Business keys: the hashed concatenated columns will be the primary keys for the hubs.</li>
+<li>Properties to track: the concatenation of the text versions of the property values will be hashed to form the hash diffs, an essential part in tracking changes.</li>
+<li>Property groups and rate of change:  each group of properties will form a satellite.</li>
+<li>Relationships and events: each relationship or event to be modelled will be represented as a link table.</li>
+<li>Relationships and events properties: some of these will be required to define the relationship or event, and some of these will be tracked as satellites off of links.</li>
+<li>Properties or degenerate dimensions:  all the properties that define the relationship or event will be part of the link table, and the rest will be tracked in one or more satellites off of the link tables.</li>
+</ol>
+<h3 id="common-columns-to-hub-link-and-satellite">Common columns to hub, link and satellite</h3>
+<ul>
+<li>_hashkey : cryptographic hash such as sha2 256-bit over text of natural key</li>
+<li>_loaddatetime : timestamp of load, when the vault first encountered this record
+<ul>
+<li>not to be  confused with the time an event occured, or measurement taken: this is simply when first the vault saw the data</li>
+</ul>
+</li>
+<li>_originsource : text of file name, or database table, or api endpoint URI for data lineage from which this information was derived</li>
+</ul>
+<h3 id="hub">Hub</h3>
+<ul>
+<li>Contain base columns, and only one record per real-world or virtual entity.</li>
+<li>Contain one or more columns that form the natural key, to store the original representation of the natural key: usually called name or code or id.</li>
+</ul>
+<p>Columns:</p>
+<ul>
+<li>_hashkey : cryptographic hash such as sha256 over text of natural key</li>
+<li>_loaddatetime : timestamp of load, when the vault first encountered this record</li>
+<li>_originsource : text of file name, or database table, or api endpoint URI for data lineage from which this information was derived</li>
+<li>name columns : the columns from which the _hashkey is computed</li>
+<li>primary key (_hashkey)</li>
+</ul>
+<p>It is important to note that:</p>
+<ol>
+<li>because the _hashkey is computed via a known algorithm such as sha256, there is never the required step to &ldquo;lookup the id&rdquo; while ingesting data from other sources:
+<ul>
+<li>one simply compute the hash.</li>
+</ul>
+</li>
+<li>no matter how many source systems feed in, each entity will have a singular identity and single row in it&rsquo;s hub</li>
+</ol>
+<h3 id="satellite">Satellite</h3>
+<p>Satellites persist the associated data for a hub.</p>
+<p>The columns are:</p>
+<ul>
+<li>_hashkey : cryptographic hash such as sha256 over text of natural key from related hub
+<ul>
+<li>this is the foreign key to the hub for which this satellite tracks values</li>
+</ul>
+</li>
+<li>_hashdiff : cryptographic hash such as sha256 over text concatenation of all of the property columns tracked here
+<ul>
+<li>_hashdiff makes it easy to check if a set of properties changed or not: a single comparison is required</li>
+</ul>
+</li>
+<li>_loaddatetime : timestamp of load, when the vault first encountered this record</li>
+<li>_originsource : text of file name, or database table, or api endpoint URI for data lineage from which this information was derived</li>
+<li>property_1, &hellip;, property_n : but of names that makes sense in the context
+<ul>
+<li>this is the properties that are tracked and persisted</li>
+<li>recent trends additionally use JSON columns here to accomodate future yet unknown schema changes
+<ul>
+<li>See <a href="https://www.snowflake.com/blog/tips-for-optimizing-the-data-vault-architecture-on-snowflake-part-3/">here</a> for an example of how to use JSON in the VARIANT column type of Snowflake to achieve this.</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>primary key (_hashkey, _hashdiff)</li>
+</ul>
+<p>It is important to note that:</p>
+<ol>
+<li>if a hub receives an additional body of properties to be persisted, this does not require a schema change but simply the addition of a new satellite for this purpose</li>
+<li>if, for a particular _hashkey, if any of the associated properties changed, a new record is added to the satellite</li>
+<li>no update to past records ever occur - this is a fundamental feature of data vault: ingest only, write only, immutability</li>
+</ol>
+<h3 id="link">Link</h3>
+<p>Here we track the relation between different hubs:</p>
+<ul>
+<li>_hashkey : cryptographic hash such as sha256 over text concatenation of all of the hub_1_hashkey, &hellip;, hub_n_hashkey values, as well as any degenerate keys such as datetime
+<ul>
+<li>this _hashkey would be pointed at by a related satellite (if required)</li>
+<li>such a related satellite would capture additional properties of the relation that are not  part of the degenerate keys (if any)</li>
+</ul>
+</li>
+<li>hub_1_hashkey, .., hub_n_hashkey  : cryptographic hash such as sha256 over text of natural keys of all hubs involved in this relation
+<ul>
+<li>this is what relates the hubs together</li>
+</ul>
+</li>
+<li>_loaddatetime : timestamp of load, when the vault first encountered this record</li>
+<li>_originsource : text of file name, or database table, or api endpoint URI for data lineage from which this information was derived</li>
+<li>primary key (_hashkey)</li>
+</ul>
+<h2 id="benefits">Benefits</h2>
+<p>Adopting an approach such as this, inspired by Data Vault 2.0 includes these benefits (among other things):</p>
+<ul>
+<li>Because all keys are computed from the hashes of natural keys rather than looked  up, the dependance of having to query a lookup table is removed, and ingest can happen in parallel.</li>
+<li>Because of the write-only architecture (compare this to merge or upsert semantics) ingest can happen faster and on a larger scale.</li>
+<li>Because no actual transformation of data happens, the data can be considered as raw and representing the real-world, and can power many future transforms with confidence.
+<ul>
+<li>Consider the scenario where an assumption about a scaling was proven wrong: no problem, since we still have the raw data but in a queryable form.</li>
+</ul>
+</li>
+<li>Because no transforms happen, there are no confusion over at what stage something might have changed.
+<ul>
+<li>We know it did not happen in the vault layer, so it must be in a data mart built form the vault, or some data science or analytics artifact.</li>
+</ul>
+</li>
+<li>Because a common procedure is followed for modelling data there is less confusion in the team over how data was modelled.</li>
+<li>Because changes to data are tracked it is possible to see a view of the raw data at a given point in time.</li>
+<li>Because the _originsource column tracks the origin of each and every record, it is easy to identify the source of data.</li>
+</ul>
+<h1 id="conclusion">Conclusion</h1>
+<p>Although a data vault is not necessarily always the best choice when modelling data, the thinking behind it and the ideas it brings can improve your ad hock modelling also.
+Perhaps you might find it useful.</p>
+<h2 id="references">References</h2>
+<ul>
+<li><a href="https://www.amazon.com/Building-Scalable-Data-Warehouse-Vault/dp/0128025107">Building a Scalable Data Warehouse with Data Vault 2.0: Linstedt, Daniel, Olschimke, Michael: 9780128025109</a></li>
+<li><a href="https://www.packtpub.com/product/data-modeling-for-azure-data-services/9781801077347">Data Modeling for Azure Data Services - Peter ter Braake</a></li>
+<li><a href="https://www.databricks.com/glossary/data-vault">What is a Data Vault? | Databricks</a></li>
+<li><a href="https://www.databricks.com/blog/2022/06/24/prescriptive-guidance-for-implementing-a-data-vault-model-on-the-databricks-lakehouse-platform.html">What&rsquo;s a Data Vault and How to Implement It on the Databricks Lakehouse Platform - Databricks Blog</a></li>
+</ul>
+
+  </section>
+</article>
+
+        </main>
+      </div>
+    
+</div>
+
+<footer>
+  <div class="container">
+    <span class="copyright">&copy; 2025  Good Fast - <a rel="license" href="http://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a></span>
+  </div>
+</footer>
+
+</body>
+</html>
+
+  </body>
+</html>

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>data vault on Good Fast</title>
+    <link>https://blog.goodfast.info/categories/data-vault/</link>
+    <description>Recent content in data vault on Good Fast</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Mon, 28 Apr 2025 21:28:30 +0000</lastBuildDate><atom:link href="https://blog.goodfast.info/categories/data-vault/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Notes on Data Vault and data modelling</title>
+      <link>https://blog.goodfast.info/post/data-modelling-notes/</link>
+      <pubDate>Mon, 28 Apr 2025 21:28:30 +0000</pubDate>
+      
+      <guid>https://blog.goodfast.info/post/data-modelling-notes/</guid>
+      <description>When we model data we are confronted with the hard problem of encoding complex systems such as businesses, factories, organisations, institutions or online platforms into useful digital representations. A consistent problem I have observed is that for OLAP/data-intensive/AI solutions, data modelling tends to get badly neglected. There are many reasons for this neglect, which we will discuss later, but I believe the main reasons are ignorance, nuance and difficulty. Ignorance about available techniques, technologies, and the meaning of source data.</description>
+    </item>
+    
+  </channel>
+</rss>

@@ -6,7 +6,34 @@
     <description>Recent content in Categories on Good Fast</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Fri, 05 Feb 2021 10:26:20 +0000</lastBuildDate><atom:link href="https://blog.goodfast.info/categories/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Mon, 28 Apr 2025 21:28:30 +0000</lastBuildDate><atom:link href="https://blog.goodfast.info/categories/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>data modelling</title>
+      <link>https://blog.goodfast.info/categories/data-modelling/</link>
+      <pubDate>Mon, 28 Apr 2025 21:28:30 +0000</pubDate>
+      
+      <guid>https://blog.goodfast.info/categories/data-modelling/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>data vault</title>
+      <link>https://blog.goodfast.info/categories/data-vault/</link>
+      <pubDate>Mon, 28 Apr 2025 21:28:30 +0000</pubDate>
+      
+      <guid>https://blog.goodfast.info/categories/data-vault/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>notes</title>
+      <link>https://blog.goodfast.info/categories/notes/</link>
+      <pubDate>Mon, 28 Apr 2025 21:28:30 +0000</pubDate>
+      
+      <guid>https://blog.goodfast.info/categories/notes/</guid>
+      <description></description>
+    </item>
+    
     <item>
       <title>anomalies</title>
       <link>https://blog.goodfast.info/categories/anomalies/</link>
