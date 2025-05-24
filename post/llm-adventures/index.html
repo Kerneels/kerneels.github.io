@@ -1,0 +1,469 @@
+<!doctype html5>
+<html lang="en-us">
+  <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no"><meta name="description" content="Come along for a journey in generative AI usage to solve a data engineering / SQL meta programming challenge." >
+    <meta property="og:description" content="Come along for a journey in generative AI usage to solve a data engineering / SQL meta programming challenge." ><meta name="keywords" content="llm,ai,vibe coding,dbt,jinja,meta programming,power set,recursion,natural key"><meta name="author" content="Kerneels Roos"><meta name="theme-color" content="#2d2d2d">
+  <meta name="twitter:card" content="summary"><meta name="twitter:creator" content="@twitter user"><meta property="og:type" content="blog">
+  <meta property="og:title"content="Where LLMs fail to tread - successes,failures and how we may remain relevant | Good Fast">
+  <meta property="og:url" content="https://blog.goodfast.info/">
+  <meta property="og:site_name" content="Base16">
+  
+  
+  <link rel="stylesheet" href="https://blog.goodfast.info/style.815a0436c85997db50e9ab6cf5ad0762bd92c602213b2b7975a922ef4117cabb227c29a9c1285d8036ee446b387e6eac5ead873e5571e7a9a14d672acc69b876.css" type="text/css"integrity="sha512-gVoENshZl9tQ6ats9a0HYr2SxgIhOyt5daki70EXyrsifCmpwShdgDbuRGs4fm6sXq2HPlVx56mhTWcqzGm4dg==" >
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Code+Pro:400,700" type="text/css">
+  <link rel="alternate" href="/index.xml" type="application/rss+xml" title="Good Fast">
+  <link rel="shortcut icon" type="image/x-icon" href="https://blog.goodfast.info/favicon.ico">
+  <title>Where LLMs fail to tread - successes,failures and how we may remain relevant - Good Fast</title>
+</head>
+
+  <body>
+    <!DOCTYPE html>
+<html lang="en-us">
+<head>
+<meta charset="utf-8">
+<meta name="description" content="Come along for a journey in generative AI usage to solve a data engineering / SQL meta programming challenge.">
+<meta name="keywords" content="llm,ai,vibe coding,dbt,jinja,meta programming,power set,recursion,natural key">
+<meta name="author" content="Kerneels Roos">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://blog.goodfast.info/css/style.css" type="text/css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Code+Pro:400,700" type="text/css">
+<link rel="alternate" href="https://blog.goodfast.info/index.xml" type="application/rss+xml" title="Good Fast">
+<title>Where LLMs fail to tread - successes,failures and how we may remain relevant - Good Fast</title>
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.0/jquery.min.js"></script>
+<script type="text/javascript" src="https://blockchain.info/Resources/js/pay-now-button.js"></script>
+<script type="text/javascript" async
+  src="https://cdn.rawgit.com/mathjax/MathJax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+  MathJax.Hub.Config({
+  tex2jax: {
+    inlineMath: [['$','$'], ['\\(','\\)']],
+    displayMath: [['$$','$$']],
+    processEscapes: true,
+    processEnvironments: true,
+    skipTags: ['script', 'noscript', 'style', 'textarea', 'pre'],
+    TeX: { equationNumbers: { autoNumber: "AMS" },
+         extensions: ["AMSmath.js", "AMSsymbols.js"] }
+  }
+  });
+  MathJax.Hub.Queue(function() {
+    
+    
+    
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i = 0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+
+  MathJax.Hub.Config({
+  
+  TeX: { equationNumbers: { autoNumber: "AMS" } }
+  });
+</script>
+
+</head>
+<body>
+
+<header>
+  <div class="container clearfix">
+    <a class="path" href="https://blog.goodfast.info/">[Good Fast]</a>
+    <span class="caret"># _</span>
+    <div class="right">
+      
+    </div>
+  </div>
+</header>
+
+<div class="container">
+
+      <div class="container">
+        <main role="main" class="article">
+          
+<article class="single" itemscope itemtype="http://schema.org/BlogPosting">
+  <div class="meta">
+
+    <span class="key">published on</span>
+    <span class="val"><time itemprop="datePublished" datetime="2025-05-14">May 14, 2025</time></span>
+
+
+    <span class="key">in</span>
+    <span class="val">
+
+        <a href="https://blog.goodfast.info/categories/llm">llm</a>
+
+        <a href="https://blog.goodfast.info/categories/data-engineering">data engineering</a>
+
+        <a href="https://blog.goodfast.info/categories/dbt">dbt</a>
+
+        <a href="https://blog.goodfast.info/categories/vibe-coding">vibe coding</a>
+
+    </span>
+
+
+  </div>
+  <h1 class="headline" itemprop="headline">Where LLMs fail to tread - successes,failures and how we may remain relevant</h1>
+    <div id="toc" class="well col-md-4 col-sm-6">
+    <nav id="TableOfContents">
+  <ul>
+    <li><a href="#uniqueness-and-finding-natural-keys">Uniqueness and finding natural keys</a></li>
+    <li><a href="#act-1-where-the-llm-worked---well-sort-of">Act 1: where the LLM worked - well, sort of</a>
+      <ul>
+        <li><a href="#what-i-already-had">What I already had</a></li>
+        <li><a href="#what-i-wanted">What I wanted</a></li>
+        <li><a href="#in-more-detail">In more detail&hellip;</a></li>
+        <li><a href="#what-i-wanted-1">What I wanted</a></li>
+      </ul>
+    </li>
+    <li><a href="#act-2-first-run">Act 2: First run&hellip;</a></li>
+    <li><a href="#act-3-extending-the-solution">Act 3: Extending the solution</a></li>
+    <li><a href="#act-4-focussing-on-the-small-but-hard-part">Act 4: Focussing on the small but hard part</a>
+      <ul>
+        <li></li>
+      </ul>
+    </li>
+    <li><a href="#finale-a-working-recursive-powerset-expansion-in-jinja-that-works-in-dbt">Finale: A working recursive powerset expansion in Jinja that works in DBT!</a></li>
+    <li><a href="#summary">Summary</a></li>
+    <li><a href="#conclusion">Conclusion</a></li>
+    <li><a href="#ps">P.S.</a>
+      <ul>
+        <li><a href="#pps">P.P.S.</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+    </div>
+  <section class="body" itemprop="articleBody">
+    <p>Generative LLM-backed AI is controversial and amazing, no debate about that.  It hinders, it helps. It frustrates, it amuses, and, it is here to stay.
+Knowing when to, and when not to lean on the LLM is probably a skill to acquire.
+This post is a reflection on a bit of work, where I was both helped and hindered by an LLM.
+The adventure is set to the backdrop of writing a Jinja2 macro, DBT model and config for finding natural keys.
+It&rsquo;s a long story, quite a journey really, so feel free to skip to the summary and conclusion first before investing your time in reading the whole post.</p>
+<h2 id="uniqueness-and-finding-natural-keys">Uniqueness and finding natural keys</h2>
+<p>Finding the natural key is a process that is critical in any attempt to understand data.
+Most data sets come with some kind of surrogate key, such as an incrementing integer ID, a hash or some other artificial unique identifier.
+It can at times be fine to simply use that identifier as a key in your data modelling for OLAP/ML/AI, but this is not generally a good idea.
+When we use a surrogate key produced by a source system to define uniqueness in our system, we are tightly coupling our system to the source system.
+Tight coupling is problamatic since a change in the source system producing the data could change how this key is calculated.
+We accept an understanding of uniqueness that is not grounded in reality but one that is artificially generated.
+The system offering us this &ldquo;artificial definition of uniqueness&rdquo; we usually have little to no insight or influence on.</p>
+<h2 id="act-1-where-the-llm-worked---well-sort-of">Act 1: where the LLM worked - well, sort of</h2>
+<p>Just before the April Easter holidays I found out about <a href="https://github.com/Aider-AI/aider">Aider</a> - a CLI-based generative/agentic AI tool that can function with many LLM backends.
+It&rsquo;s not <a href="https://www.cursor.com/">Cursor</a> or <a href="https://replit.com">Replit</a> but an open source project, CLI-based - it needs a lot of hand-holding.
+For that hand-holding you get to be fully in control; you choose exactly which files to provide as context, and when what happens.
+Not exactly <em>vibe coding</em> unless of course you simply go on a roll and accept all changes blindly.
+There is an <code>/ask</code> mode for finding out the plan, a <code>/code</code> mode for actioning the plan, and an <code>/architect</code> mode I do not understand yet.
+Playing around with it I achieved some success, but judged it to be too green, requiring too much effort to precisely instruct.</p>
+<p>During the April Easter holidays I heard one of the ThoughtWorks Ninjas, Lilly Ryan, <a href="https://www.thoughtworks.com/insights/podcasts/technology-podcasts/vibe-coding">talk about her success using Aider</a>.
+It was a minor comment, a little side quest, but enough to motivate me, so I gave it another chance.</p>
+<h3 id="what-i-already-had">What I already had</h3>
+<ul>
+<li>A completeness model/macro pair controlled by config alone that could count blank or null values for all columns of a model.</li>
+<li>A specialisation of this model/macro pair that enabled it to operate on a subset of columns.</li>
+<li>A uniqueness model/macro pair controlled by config alone that could count  number of rows involved in duplication.</li>
+</ul>
+<h3 id="what-i-wanted">What I wanted</h3>
+<ul>
+<li>The uniqueness macro/model pair to operate on a subset of columns, similar to the completeness one.</li>
+<li>The uniqueness macro/model pair to expand to all combinations of the subset of columns, explained below.</li>
+</ul>
+<h3 id="in-more-detail">In more detail&hellip;</h3>
+<p>I already had a method consisting of macro, model and config for null/blank checking, as part of a larger data quality project:</p>
+<ol>
+<li>A model that would dynamically interpret the <code>vars:</code> global element in a <code>dbt_project.yml</code> file to figure out which models, and optionally which columns to operate on - the &ldquo;config&rdquo;.</li>
+<li>This model would then make DBT aware of dependencies by means of SQL comments constructed through calling the <code>ref()</code> function while emitting <code>-- Depends on {{ ref('model_name') }}</code> for each of the specified models in the <code>vars:</code> element.</li>
+<li>It would then call the main macro with the respective parts of the <code>vars:</code> element.</li>
+<li>The main macro would then proceed to construct SQL to perform null/blank checking which is basically a counting of rows where the value is NULL or epty string in the case of text column data type.</li>
+</ol>
+<p>This workes great, and given input in <code>dbt_project.yml</code>:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yml" data-lang="yml"><span style="color:#f92672">vars</span>:
+  <span style="color:#f92672">adq_models</span>:
+    - <span style="color:#f92672">name</span>: <span style="color:#ae81ff">patients</span>
+      <span style="color:#f92672">completeness</span>:
+        - <span style="color:#ae81ff">non_blank_score</span>
+</code></pre></div><p>the model and macro combination would know how to construct SQL that would perform a <code>non_blank_score</code> query on each column in model patients, and this &ldquo;check&rdquo; is in the &ldquo;completeness&rdquo; category of checks.
+The result of this is a very easy method for obtaining a count of null or blank column values, for each column of a model.
+Generally, this type of check is something you have to write for each column individually, but now you can do it by simply providing a couple of lines of YML and have the counts for all columns.</p>
+<p>Extending this pattern further, when we have a very wide &ldquo;patients&rdquo; model, with hundreds of columns;  We do not want to calculate <code>non_blank_score</code> for all columns.
+We are only interested in a small subset - in this case one column only <code>drivers</code> representing drivers license number.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yml" data-lang="yml"><span style="color:#f92672">vars</span>:
+  <span style="color:#f92672">adq_models</span>:
+    - <span style="color:#f92672">name</span>: <span style="color:#ae81ff">patients</span>
+      <span style="color:#f92672">completeness</span>:
+        - <span style="color:#ae81ff">non_blank_score</span>
+      <span style="color:#f92672">columns</span>:
+        - <span style="color:#f92672">name</span>: <span style="color:#e6db74">&#34;drivers&#34;</span>
+          <span style="color:#f92672">completeness</span>:
+             - <span style="color:#ae81ff">non_blank_score</span>
+</code></pre></div><p>The columns specified overrides the all columns behaviour and performs the <code>non_blank_score</code> for the <code>drivers</code> column only.</p>
+<p>Lastly I had an additional model macro pair that would perform a type of uniqueness check on all columns.
+This is a method for calculating how many rows are part of any kind of duplication.
+For 5 rows <code>[(1), (1), (2), (2), (3)]</code> the check returns 4 since 4 of the 5 rows are involved in duplication.</p>
+<h3 id="what-i-wanted-1">What I wanted</h3>
+<p>This uniqueness check I wanted to enable on a per-column basis for a subset of columns, similar to the <code>non_blank_score</code> check.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yml" data-lang="yml"><span style="color:#f92672">vars</span>:
+  <span style="color:#f92672">adq_models</span>:
+    - <span style="color:#f92672">name</span>: <span style="color:#ae81ff">patients</span>
+      <span style="color:#f92672">columns</span>:
+        - <span style="color:#f92672">name</span>: <span style="color:#e6db74">&#34;birthdate&#34;</span>
+          <span style="color:#f92672">uniqueness</span>:
+             - <span style="color:#ae81ff">uniqueness_score</span>
+        - <span style="color:#f92672">name</span>: <span style="color:#e6db74">&#34;deathdate&#34;</span>
+          <span style="color:#f92672">uniqueness</span>:
+             - <span style="color:#ae81ff">uniqueness_score</span>
+        - <span style="color:#f92672">name</span>: <span style="color:#e6db74">&#34;ssn&#34;</span>
+          <span style="color:#f92672">uniqueness</span>:
+             - <span style="color:#ae81ff">uniqueness_score</span>
+        - <span style="color:#f92672">name</span>: <span style="color:#e6db74">&#34;passport&#34;</span>
+          <span style="color:#f92672">uniqueness</span>:
+             - <span style="color:#ae81ff">uniqueness_score</span>
+        - <span style="color:#f92672">name</span>: <span style="color:#e6db74">&#34;drivers&#34;</span>
+          <span style="color:#f92672">completeness</span>:
+             - <span style="color:#ae81ff">non_blank_score</span>
+          <span style="color:#f92672">uniqueness</span>:
+             - <span style="color:#ae81ff">uniqueness_score</span>
+</code></pre></div><p>After connecting Aider to OpenAI API I added the relevant files to the context using <code>/add file</code> command.
+Then I entered the <code>/ask</code> mode and told it the whole story; that I wanted it to morf my existing <code>uniqueness</code> model/macro pair into a per-column mode similar to the <code>non_blank_score</code> check.
+I asked Aider to modify the model/macro to be able to do uniqueness on a per-column basis.
+A minute or so later it had a plan, which I scanned, and it looked decent enough, so I entered the <code>/code</code> mode and told it to go ahead.</p>
+<h2 id="act-2-first-run">Act 2: First run&hellip;</h2>
+<p>Using <a href="https://docs.getdbt.com/reference/node-selection/syntax">DBT&rsquo;s selector syntax</a> I isolated the model that would cause the new code to be executed.
+Unsurprisingly, the first time execution failed due to SQL errors, but the Jinja was not broken.
+Interestingly, it seemed that the LLM introduced a subtle SQL bug.  It was calling the SQL aggregation function <code>sum()</code> in a context where summation was not required - only one row was returned.
+Because other columns were also referenced in the <code>SELECT</code>, Postgres was saying that the other columns need to be in a <code>GROUP BY</code> clause.
+This is easy to fix, although tedious, but since the LLM introduced this bug I did not trust it to solve it cleanly, so I did the fix manually.
+Success! With the fix applied there were no more errors and I confirmed that the uniqueness check now could function on a per-column basis.</p>
+<p>Considering what just happend, I was impressed. The LLM was able to do meta programming; write code that would write code.
+Yes, the LLM had code from me to work with, but it had to apply patterns from one set of files to another without introducing problems.
+Yes, there was a limit to this, but it is conceivable that, given additional prompting, that it would have been able to solve the <code>sum()</code> bug, but I estimated that the probability for it to do more unwanted code was high enough to warrant a manual intervention.</p>
+<h2 id="act-3-extending-the-solution">Act 3: Extending the solution</h2>
+<p>In addition to the per-column behaviour, I also wanted to have it perform the uniqueness check on all subsets of the subsets.
+For example, given columns <code>a, b, c</code> I wanted to perform uniqueness checking on <code>(a), (b), (c), (a, b), (b, c), (a, c), (a, b, c)</code>.</p>
+<p>Aider is quite cool in that it commits code before changes are made so that rollback is straight forward.
+None the less, I created a new branch for this work, just to be safe.</p>
+<p>I went ahead and asked for this added behaviour. The LLM responded with altered code which seemed decent enough, so I ran it&hellip;</p>
+<p>This time we were not so lucky - the macro could not even run because the LLM farmed out the combinations part to some specific Python module that is not available in DBT Jinja.</p>
+<p>At this point I realised that the critical part of the problem was the combinations; I needed a macro to produce all combinations given an input list of columns.</p>
+<h2 id="act-4-focussing-on-the-small-but-hard-part">Act 4: Focussing on the small but hard part</h2>
+<p>Leaving the CLI and Aider, I moved over to Chat GPT since this was a problem I could frame precisely.</p>
+<h4 id="i-said">I said:</h4>
+<p>Given a list, write code to produce all combinations of the items in the list; produce a new list of lists where the elements of the outermost list are all combinations of the original list.
+This needs to work in Jinja, and ideally a single expression, but a function is also acceptable.</p>
+<h4 id="chatgpt-said">ChatGPT said:</h4>
+<p>In Jinja, producing all combinations (i.e., power set) of a list is a bit tricky since Jinja is not a full programming language.
+However, with a custom macro or a well-written function in a supported Jinja environment (e.g., in DBT, Ansible, or Flask), you can still get it done.</p>
+<h5 id="-solution-using-a-jinja-macro-recommended-for-clarity">🔧 Solution using a Jinja macro (recommended for clarity)</h5>
+<p>This builds the power set (all combinations of all lengths including the empty set):</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-jinja" data-lang="jinja"><span style="color:#75715e">{%</span> <span style="color:#66d9ef">macro</span> powerset<span style="color:#f92672">(</span>seq<span style="color:#f92672">)</span> <span style="color:#75715e">%}</span>
+  <span style="color:#75715e">{%</span> <span style="color:#66d9ef">set</span> result <span style="color:#f92672">=</span> <span style="color:#f92672">[[]]</span> <span style="color:#75715e">%}</span>
+  <span style="color:#75715e">{%</span> <span style="color:#66d9ef">for</span> item <span style="color:#66d9ef">in</span> seq <span style="color:#75715e">%}</span>
+    <span style="color:#75715e">{%</span> <span style="color:#66d9ef">set</span> result <span style="color:#f92672">=</span> result <span style="color:#f92672">+</span> result <span style="color:#f92672">|</span> <span style="color:#a6e22e">map</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#39;union&#39;</span><span style="color:#f92672">,</span> <span style="color:#f92672">[</span>item<span style="color:#f92672">])</span> <span style="color:#f92672">|</span> <span style="color:#a6e22e">list</span> <span style="color:#75715e">%}</span>
+  <span style="color:#75715e">{%</span> <span style="color:#66d9ef">endfor</span> <span style="color:#75715e">%}</span>
+  <span style="color:#75715e">{{</span> result <span style="color:#75715e">}}</span>
+<span style="color:#75715e">{%</span> <span style="color:#66d9ef">endmacro</span> <span style="color:#75715e">%}</span>
+</code></pre></div><h4 id="i-thought">I thought:</h4>
+<p>This macro does not even look correct, but none the less, I gave it a try, but it would not execute, with DBT complaining that <code>union</code> was ot available.
+It also  confidently asserted what the results would be should this macro be implemented, but alas&hellip; It was very wrong.</p>
+<h4 id="i-said-1">I said:</h4>
+<p>No filter named &lsquo;union&rsquo;.</p>
+<h4 id="chatgpt-said-1">ChatGPT said:</h4>
+<p>You&rsquo;re right — Jinja does not have a built-in union filter. That error occurs because union is not available unless you define it yourself (which you typically can&rsquo;t in DBT, Ansible, etc. without custom extensions).
+But we can still achieve all non-empty combinations using Jinja-native syntax with a macro. We simulate the logic manually by appending new combinations to the list using basic iteration.</p>
+<p>✅ Jinja Macro for All Non-Empty Combinations (No union filter)</p>
+<pre tabindex="0"><code class="language-jinja2" data-lang="jinja2">{% macro powerset_nonempty(seq) %}
+  {% set result = [[]] %}
+  {% for item in seq %}
+    {% set new_result = [] %}
+    {% for r in result %}
+      {% set new_result = new_result + [r + [item]] %}
+    {% endfor %}
+    {% set result = result + new_result %}
+  {% endfor %}
+  {{ result | reject('equalto', []) | list }}
+{% endmacro %}
+</code></pre><h4 id="i-thought-1">I thought:</h4>
+<p>Now at least the macro executed, but it produced no output at all.
+Taking a closer look, I could not imagine that this macro would work, and I started to doubt this is solveable with iteration alone -  that this is in fact a problem that would  need recursion.</p>
+<p>In addition, a more basic bug with the macro would be obvious to anyone who has ever tried to do something in a Jinja for loop.
+Looping introduce new scope, so assignment becomes instantiation.
+In other words, what happens in the loop stays in the loop!
+To avoid this,  we can use the <code>.append()</code> method on the previously defined list instead of assignment with <code>=</code>.
+Interestingly, a while back I was able to make Chat GPT understand this, but it seems it forgot about it.</p>
+<h4 id="i-said-2">I said:</h4>
+<p>Write Jinja to filter the power set such that it only contains elements of two or more items.</p>
+<h4 id="chatgpt-said-2">ChatGPT said:</h4>
+<p>To filter the power set so that it only includes combinations of two or more items (i.e., excludes both the empty list [] and any list of length 1), you can extend the Jinja macro like this:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-jinja" data-lang="jinja"><span style="color:#75715e">{%</span> <span style="color:#66d9ef">macro</span> powerset_min2<span style="color:#f92672">(</span>seq<span style="color:#f92672">)</span> <span style="color:#75715e">%}</span>
+  <span style="color:#75715e">{%</span> <span style="color:#66d9ef">set</span> result <span style="color:#f92672">=</span> <span style="color:#f92672">[[]]</span> <span style="color:#75715e">%}</span>
+  <span style="color:#75715e">{%</span> <span style="color:#66d9ef">for</span> item <span style="color:#66d9ef">in</span> seq <span style="color:#75715e">%}</span>
+    <span style="color:#75715e">{%</span> <span style="color:#66d9ef">set</span> new_result <span style="color:#f92672">=</span> <span style="color:#f92672">[]</span> <span style="color:#75715e">%}</span>
+    <span style="color:#75715e">{%</span> <span style="color:#66d9ef">for</span> r <span style="color:#66d9ef">in</span> result <span style="color:#75715e">%}</span>
+      <span style="color:#75715e">{%</span> <span style="color:#66d9ef">set</span> new_result <span style="color:#f92672">=</span> new_result <span style="color:#f92672">+</span> <span style="color:#f92672">[</span>r <span style="color:#f92672">+</span> <span style="color:#f92672">[</span>item<span style="color:#f92672">]]</span> <span style="color:#75715e">%}</span>
+    <span style="color:#75715e">{%</span> <span style="color:#66d9ef">endfor</span> <span style="color:#75715e">%}</span>
+    <span style="color:#75715e">{%</span> <span style="color:#66d9ef">set</span> result <span style="color:#f92672">=</span> result <span style="color:#f92672">+</span> new_result <span style="color:#75715e">%}</span>
+  <span style="color:#75715e">{%</span> <span style="color:#66d9ef">endfor</span> <span style="color:#75715e">%}</span>
+  <span style="color:#75715e">{{</span> result <span style="color:#f92672">|</span> <span style="color:#a6e22e">selectattr</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#39;length&#39;</span><span style="color:#f92672">,</span> <span style="color:#e6db74">&#39;&gt;=&#39;</span><span style="color:#f92672">,</span> <span style="color:#ae81ff">2</span><span style="color:#f92672">)</span> <span style="color:#f92672">|</span> <span style="color:#a6e22e">list</span> <span style="color:#75715e">}}</span>
+<span style="color:#75715e">{%</span> <span style="color:#66d9ef">endmacro</span> <span style="color:#75715e">%}</span>
+</code></pre></div><h4 id="i-said-3">I said:</h4>
+<p>The macro powerset_nonempty does not work: it returns an empty list.</p>
+<h4 id="chatgpt-said-3">ChatGPT said:</h4>
+<p>Thanks for pointing that out — you&rsquo;re absolutely right. The issue is that Jinja&rsquo;s set statements cannot modify existing lists in-place, and when we write:
+<code>{% set result = result + new_result %}</code>
+…it doesn&rsquo;t behave as expected unless we re-assign everything carefully, especially in nested loops.
+Let me give you a fully working and tested Jinja2 macro that generates all combinations of a list with length ≥ 2, without relying on unavailable filters like union.</p>
+<p>✅ Working Jinja Macro: Power Set with Combinations of 2 or More</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-jinja" data-lang="jinja"><span style="color:#75715e">{%</span> <span style="color:#66d9ef">macro</span> powerset_min2<span style="color:#f92672">(</span>seq<span style="color:#f92672">)</span> <span style="color:#75715e">%}</span>
+  <span style="color:#75715e">{%</span> <span style="color:#66d9ef">set</span> result <span style="color:#f92672">=</span> <span style="color:#f92672">[[]]</span> <span style="color:#75715e">%}</span>
+  <span style="color:#75715e">{%</span> <span style="color:#66d9ef">for</span> item <span style="color:#66d9ef">in</span> seq <span style="color:#75715e">%}</span>
+    <span style="color:#75715e">{%</span> <span style="color:#66d9ef">set</span> temp <span style="color:#f92672">=</span> <span style="color:#f92672">[]</span> <span style="color:#75715e">%}</span>
+    <span style="color:#75715e">{%</span> <span style="color:#66d9ef">for</span> subset <span style="color:#66d9ef">in</span> result <span style="color:#75715e">%}</span>
+      <span style="color:#75715e">{%</span> <span style="color:#66d9ef">set</span> temp <span style="color:#f92672">=</span> temp <span style="color:#f92672">+</span> <span style="color:#f92672">[</span>subset <span style="color:#f92672">+</span> <span style="color:#f92672">[</span>item<span style="color:#f92672">]]</span> <span style="color:#75715e">%}</span>
+    <span style="color:#75715e">{%</span> <span style="color:#66d9ef">endfor</span> <span style="color:#75715e">%}</span>
+    <span style="color:#75715e">{%</span> <span style="color:#66d9ef">set</span> result <span style="color:#f92672">=</span> result <span style="color:#f92672">+</span> temp <span style="color:#75715e">%}</span>
+  <span style="color:#75715e">{%</span> <span style="color:#66d9ef">endfor</span> <span style="color:#75715e">%}</span>
+  <span style="color:#75715e">{%</span> <span style="color:#66d9ef">set</span> result <span style="color:#f92672">=</span> result <span style="color:#f92672">|</span> <span style="color:#a6e22e">selectattr</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#39;length&#39;</span><span style="color:#f92672">,</span> <span style="color:#e6db74">&#39;ge&#39;</span><span style="color:#f92672">,</span> <span style="color:#ae81ff">2</span><span style="color:#f92672">)</span> <span style="color:#f92672">|</span> <span style="color:#a6e22e">list</span> <span style="color:#75715e">%}</span>
+  <span style="color:#75715e">{{</span> result <span style="color:#75715e">}}</span>
+<span style="color:#75715e">{%</span> <span style="color:#66d9ef">endmacro</span> <span style="color:#75715e">%}</span>
+</code></pre></div><h4 id="i-thought-2">I thought:</h4>
+<p>Well, it still hasn&rsquo;t figured out the bit about not using assignment in loops&hellip;
+Needless to say, this too did not work, and we are not even on recursion yet - still iterating.
+Note that I have simplified this: yes, there were more iterations, let&rsquo;s just say more than I would comfortably like to admit.
+I really tried hard to help Chat GPT to win.
+Another prompt I threw in was: &ldquo;Rewrite the original power set macro specifically for DBT constraints and usage.&rdquo;.
+Like everything that went before it, it too failed.
+It is time for the big gun: recursion!</p>
+<h4 id="i-said-4">I said:</h4>
+<p>Write a recursive Jinja macro to produce the power set from a given set.</p>
+<h4 id="chatgpt-said-4">ChatGPT said:</h4>
+<p>Jinja2 doesn’t support true recursion out of the box — especially in DBT, which disables some advanced features like call blocks (used for recursion in standard Jinja).
+However, we can still simulate recursion using a helper macro that behaves recursively by calling itself with smaller slices of the list. Here&rsquo;s a DBT-compatible recursive macro to generate the power set of a list (including the empty list):</p>
+<p>✅ Recursive Power Set Macro for DBT</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-jinja" data-lang="jinja"><span style="color:#75715e">{%</span> <span style="color:#66d9ef">macro</span> powerset_recursive<span style="color:#f92672">(</span>seq<span style="color:#f92672">)</span> <span style="color:#75715e">%}</span>
+  <span style="color:#75715e">{%</span> <span style="color:#66d9ef">if</span> seq <span style="color:#f92672">|</span> <span style="color:#a6e22e">length</span> <span style="color:#f92672">==</span> <span style="color:#ae81ff">0</span> <span style="color:#75715e">%}</span>
+    <span style="color:#75715e">{{</span> return<span style="color:#f92672">([[]])</span> <span style="color:#75715e">}}</span>
+  <span style="color:#75715e">{%</span> <span style="color:#66d9ef">else</span> <span style="color:#75715e">%}</span>
+    <span style="color:#75715e">{%</span> <span style="color:#66d9ef">set</span> head <span style="color:#f92672">=</span> <span style="color:#f92672">[</span>seq<span style="color:#f92672">[</span><span style="color:#ae81ff">0</span><span style="color:#f92672">]]</span> <span style="color:#75715e">%}</span>
+    <span style="color:#75715e">{%</span> <span style="color:#66d9ef">set</span> tail <span style="color:#f92672">=</span> seq<span style="color:#f92672">[</span><span style="color:#ae81ff">1</span><span style="color:#f92672">:]</span> <span style="color:#75715e">%}</span>
+    <span style="color:#75715e">{%</span> <span style="color:#66d9ef">set</span> tail_powerset <span style="color:#f92672">=</span> powerset_recursive<span style="color:#f92672">(</span>tail<span style="color:#f92672">)</span> <span style="color:#75715e">%}</span>
+    <span style="color:#75715e">{%</span> <span style="color:#66d9ef">set</span> combined <span style="color:#f92672">=</span> <span style="color:#f92672">[]</span> <span style="color:#75715e">%}</span>
+    <span style="color:#75715e">{%</span> <span style="color:#66d9ef">for</span> subset <span style="color:#66d9ef">in</span> tail_powerset <span style="color:#75715e">%}</span>
+      <span style="color:#75715e">{%</span> <span style="color:#66d9ef">set</span> combined <span style="color:#f92672">=</span> combined <span style="color:#f92672">+</span> <span style="color:#f92672">[</span>subset<span style="color:#f92672">]</span> <span style="color:#f92672">+</span> <span style="color:#f92672">[</span>head <span style="color:#f92672">+</span> subset<span style="color:#f92672">]</span> <span style="color:#75715e">%}</span>
+    <span style="color:#75715e">{%</span> <span style="color:#66d9ef">endfor</span> <span style="color:#75715e">%}</span>
+    <span style="color:#75715e">{{</span> return<span style="color:#f92672">(</span>combined<span style="color:#f92672">)</span> <span style="color:#75715e">}}</span>
+  <span style="color:#75715e">{%</span> <span style="color:#66d9ef">endif</span> <span style="color:#75715e">%}</span>
+<span style="color:#75715e">{%</span> <span style="color:#66d9ef">endmacro</span> <span style="color:#75715e">%}</span>
+</code></pre></div><h4 id="i-thought-3">I thought</h4>
+<p>A very helpful output from Chat GPT was identifying that this was power set expansion way in the beginning.
+I did test the new and improved macro, but it failed also.
+At this point though I felt that things had gone too far.
+Next I turned to Google, and researched a bit, you know, in the old-fashioned way.</p>
+<p>I found many examples of power set expansion in Python through recursion, and the solutions were elegant, so I thought, let&rsquo;s see if Chat GPT also knows.
+I started a new chat since I feared all the context from the past would cloud things a bit.</p>
+<h4 id="i-said-5">I said:</h4>
+<p>Implement in Python using lists a recursive function to produce the power set. Explain the code.</p>
+<h4 id="chatgpt-said-5">ChatGPT said:</h4>
+<p>Here&rsquo;s a clean and fully recursive implementation of the power set in Python using lists, followed by a clear explanation:</p>
+<p>✅ Python Code:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">power_set</span>(lst):
+    <span style="color:#66d9ef">if</span> <span style="color:#f92672">not</span> lst:
+        <span style="color:#66d9ef">return</span> [[]]  <span style="color:#75715e"># Base case: power set of empty list is list with empty list</span>
+
+    first <span style="color:#f92672">=</span> lst[<span style="color:#ae81ff">0</span>]
+    rest <span style="color:#f92672">=</span> lst[<span style="color:#ae81ff">1</span>:]
+
+    <span style="color:#75715e"># Recursively compute power set of the rest</span>
+    without_first <span style="color:#f92672">=</span> power_set(rest)
+
+    <span style="color:#75715e"># For each subset, add another subset that includes the first element</span>
+    with_first <span style="color:#f92672">=</span> [[first] <span style="color:#f92672">+</span> subset <span style="color:#66d9ef">for</span> subset <span style="color:#f92672">in</span> without_first]
+
+    <span style="color:#66d9ef">return</span> without_first <span style="color:#f92672">+</span> with_first
+</code></pre></div><h4 id="i-thought-4">I thought:</h4>
+<p>Well, this looks quite nice, so I gave it a try and it was the first thing that worked!
+But, we want to do this within DBT and Jinja macros.
+So, me, the human stepped in  in and started translating and rewriting this Python code into a Jinja macro.</p>
+<h2 id="finale-a-working-recursive-powerset-expansion-in-jinja-that-works-in-dbt">Finale: A working recursive powerset expansion in Jinja that works in DBT!</h2>
+<p>I would not say it was simple, nor was it quick. The rewriting of the Python recursive code into Jinja macro took a bit of time and a lot of testing.
+It also required me to make use of my experiential knowledge with Jinja macros, and probbly more faculties such as debugging, that I am not aware of directly.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-jinja" data-lang="jinja"><span style="color:#75715e">{%</span> <span style="color:#66d9ef">macro</span> powerset_recursive<span style="color:#f92672">(</span>seq<span style="color:#f92672">)</span> <span style="color:#75715e">%}</span>
+  <span style="color:#75715e">{%</span> <span style="color:#66d9ef">if</span> seq <span style="color:#f92672">|</span> <span style="color:#a6e22e">length</span> <span style="color:#f92672">==</span> <span style="color:#ae81ff">0</span> <span style="color:#75715e">%}</span>
+    <span style="color:#75715e">{{</span> return<span style="color:#f92672">([[]])</span> <span style="color:#75715e">}}</span>
+  <span style="color:#75715e">{%</span> <span style="color:#66d9ef">endif</span> <span style="color:#75715e">%}</span>
+  <span style="color:#75715e">{%</span> <span style="color:#66d9ef">set</span> head <span style="color:#f92672">=</span> seq<span style="color:#f92672">[</span><span style="color:#ae81ff">0</span><span style="color:#f92672">]</span> <span style="color:#75715e">%}</span>
+  <span style="color:#75715e">{%</span> <span style="color:#66d9ef">set</span> tail <span style="color:#f92672">=</span> seq<span style="color:#f92672">[</span><span style="color:#ae81ff">1</span><span style="color:#f92672">:]</span> <span style="color:#75715e">%}</span>
+  <span style="color:#75715e">{%</span> <span style="color:#66d9ef">set</span> tail_powerset <span style="color:#f92672">=</span> powerset_recursive<span style="color:#f92672">(</span>tail<span style="color:#f92672">)</span> <span style="color:#75715e">%}</span>
+  <span style="color:#75715e">{%</span> <span style="color:#66d9ef">set</span> combined <span style="color:#f92672">=</span> <span style="color:#f92672">[]</span> <span style="color:#75715e">%}</span>
+  <span style="color:#75715e">{%</span> <span style="color:#66d9ef">for</span> item <span style="color:#66d9ef">in</span> tail_powerset <span style="color:#75715e">%}</span>
+    <span style="color:#75715e">{%</span> <span style="color:#66d9ef">set</span> subset <span style="color:#f92672">=</span> item <span style="color:#f92672">|</span> <span style="color:#a6e22e">list</span>  <span style="color:#75715e">%}</span>
+    <span style="color:#75715e">{%</span> <span style="color:#66d9ef">do</span> subset.append<span style="color:#f92672">(</span>head<span style="color:#f92672">)</span> <span style="color:#75715e">%}</span>
+    <span style="color:#75715e">{%</span> <span style="color:#66d9ef">do</span> combined.append<span style="color:#f92672">(</span>subset <span style="color:#f92672">|</span> <span style="color:#a6e22e">list</span><span style="color:#f92672">)</span> <span style="color:#75715e">%}</span>
+  <span style="color:#75715e">{%</span> <span style="color:#66d9ef">endfor</span> <span style="color:#75715e">%}</span>
+  <span style="color:#75715e">{{</span> return<span style="color:#f92672">(</span>combined <span style="color:#f92672">|</span> <span style="color:#a6e22e">list</span> <span style="color:#f92672">+</span> tail_powerset <span style="color:#f92672">|</span> <span style="color:#a6e22e">list</span><span style="color:#f92672">)</span> <span style="color:#75715e">}}</span>
+<span style="color:#75715e">{%</span> <span style="color:#66d9ef">endmacro</span> <span style="color:#75715e">%}</span>
+</code></pre></div><p>Note of caution: power set expansion  of N elements results in a set with 2 ^ N elements, so it grows exponentially.</p>
+<h2 id="summary">Summary</h2>
+<ul>
+<li>At the start of this year, Open AI&rsquo;s models made basic mistakes when writing Jinja, like changing <code>{% .. %}</code> into &lsquo;{{ &hellip; }}&rsquo;, but now it is able to write much better code.</li>
+<li>The first step, the slog work of transferring the learnings from one macro/model pair into another it handled expertly. It saved time and was a huge help.</li>
+<li>Where things started going wrong was with the more trickey part of the problem: the combinations.</li>
+<li>The LLM providing the correct term (power set expansion), although a small thing, helped a lot with further investigations.</li>
+<li>The LLM was unable to make the leap from an iterative to a recursive solution without prompt direction. If I was unaware of recursion, who knows how long we would have been stuck.</li>
+<li>Although not really a niche thing, DBT, Jinja and macros are niche enough for a strong commercial model like 4O to struggle with.</li>
+<li>Chat GPT was not able to harvest the history of chats where the looping issue with Jinja was dealt with, and although it had some notion that you should approach with caution, it didn&rsquo;t really know how to solve it.</li>
+<li>Python remains the language it can code really well in, so a reasonable strategy is to let it code Python and then translate into something else.</li>
+</ul>
+<h2 id="conclusion">Conclusion</h2>
+<p>Make sure that you can make use of agentic/generative AI to assist with your work, but also make sure that you can identify the small but complex parts that the AIs struggle with.
+I suspect that without a fair number of these small, trickey parts to your work your job is at risk of AI replacement.</p>
+<p>I hope this article can be of use to you, to help you a little bit more to navigate these strange times of generative AI assisted programming.
+Don&rsquo;t be discouraged to invest in learning new programming languages and frameworks just because some of the new tools can build entire simple systems.
+Now, more than ever before, we are going to need people with deep technical skills to do the really hard parts and to step in where LLMs fail to tread.</p>
+<h2 id="ps">P.S.</h2>
+<p>I also want to give credit where credit is due - kind of. As part of the first response, Chat GPT did inform me of a simple Python-based solution through itertools module. I copy it beloe.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#f92672">from</span> itertools <span style="color:#f92672">import</span> chain, combinations
+
+<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">powerset</span>(seq):
+    <span style="color:#66d9ef">return</span> list(chain<span style="color:#f92672">.</span>from_iterable(combinations(seq, r) <span style="color:#66d9ef">for</span> r <span style="color:#f92672">in</span> range(len(seq)<span style="color:#f92672">+</span><span style="color:#ae81ff">1</span>)))
+</code></pre></div><p>Let&rsquo;s see if it works:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#f92672">&gt;&gt;&gt;</span> l<span style="color:#f92672">=</span>[<span style="color:#e6db74">&#39;a&#39;</span>,<span style="color:#e6db74">&#39;b&#39;</span>,<span style="color:#e6db74">&#39;c&#39;</span>]
+<span style="color:#f92672">&gt;&gt;&gt;</span> l
+[<span style="color:#e6db74">&#39;a&#39;</span>, <span style="color:#e6db74">&#39;b&#39;</span>, <span style="color:#e6db74">&#39;c&#39;</span>]
+<span style="color:#f92672">&gt;&gt;&gt;</span> powerset(l)
+[(), (<span style="color:#e6db74">&#39;a&#39;</span>,), (<span style="color:#e6db74">&#39;b&#39;</span>,), (<span style="color:#e6db74">&#39;c&#39;</span>,), (<span style="color:#e6db74">&#39;a&#39;</span>, <span style="color:#e6db74">&#39;b&#39;</span>), (<span style="color:#e6db74">&#39;a&#39;</span>, <span style="color:#e6db74">&#39;c&#39;</span>), (<span style="color:#e6db74">&#39;b&#39;</span>, <span style="color:#e6db74">&#39;c&#39;</span>), (<span style="color:#e6db74">&#39;a&#39;</span>, <span style="color:#e6db74">&#39;b&#39;</span>, <span style="color:#e6db74">&#39;c&#39;</span>)]
+<span style="color:#f92672">&gt;&gt;&gt;</span>
+<span style="color:#f92672">&gt;&gt;&gt;</span> <span style="color:#ae81ff">2</span><span style="color:#f92672">**</span>len(l) <span style="color:#f92672">==</span> len(powerset(l))
+<span style="color:#66d9ef">True</span>
+</code></pre></div><h3 id="pps">P.P.S.</h3>
+<p>A quick Google revealed that no, defining custom Jinja filters in DBT is not possible, but DBT now has support for a couple of very useful Python standard library modules:</p>
+<blockquote>
+<p>Although this still isn’t possible (and comes up from time to time), we have made good progress on knocking off the sorts of things that make them particularly necessary.
+dbt now includes native support for:
+the re regex module (in v0.19.0), which enabled slugify in dbt-utils
+zip, set and itertools in v1.2.0</p>
+</blockquote>
+<ul>
+<li><a href="https://discourse.getdbt.com/t/creating-a-custom-jinja-filter/763/3">Creating a custom jinja filter - Help - dbt Community Forum</a></li>
+<li><a href="https://docs.getdbt.com/reference/dbt-jinja-functions">dbt Jinja functions | dbt Developer Hub</a></li>
+<li><a href="https://docs.getdbt.com/reference/dbt-jinja-functions/modules">About modules variable | dbt Developer Hub</a></li>
+</ul>
+<p>Thank you for reading.</p>
+
+  </section>
+</article>
+
+        </main>
+      </div>
+    
+</div>
+
+<footer>
+  <div class="container">
+    <span class="copyright">&copy; 2025  Good Fast - <a rel="license" href="http://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a></span>
+  </div>
+</footer>
+
+</body>
+</html>
+
+  </body>
+</html>

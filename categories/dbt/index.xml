@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>dbt on Good Fast</title>
+    <link>https://blog.goodfast.info/categories/dbt/</link>
+    <description>Recent content in dbt on Good Fast</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Wed, 14 May 2025 14:06:30 +0000</lastBuildDate><atom:link href="https://blog.goodfast.info/categories/dbt/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Where LLMs fail to tread - successes,failures and how we may remain relevant</title>
+      <link>https://blog.goodfast.info/post/llm-adventures/</link>
+      <pubDate>Wed, 14 May 2025 14:06:30 +0000</pubDate>
+      
+      <guid>https://blog.goodfast.info/post/llm-adventures/</guid>
+      <description>Generative LLM-backed AI is controversial and amazing, no debate about that. It hinders, it helps. It frustrates, it amuses, and, it is here to stay. Knowing when to, and when not to lean on the LLM is probably a skill to acquire. This post is a reflection on a bit of work, where I was both helped and hindered by an LLM. The adventure is set to the backdrop of writing a Jinja2 macro, DBT model and config for finding natural keys.</description>
+    </item>
+    
+  </channel>
+</rss>

@@ -3,7 +3,28 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
     <loc>https://blog.goodfast.info/categories/</loc>
-    <lastmod>2025-04-28T21:28:30+00:00</lastmod>
+    <lastmod>2025-05-14T14:06:30+00:00</lastmod>
+  </url><url>
+    <loc>https://blog.goodfast.info/categories/data-engineering/</loc>
+    <lastmod>2025-05-14T14:06:30+00:00</lastmod>
+  </url><url>
+    <loc>https://blog.goodfast.info/categories/dbt/</loc>
+    <lastmod>2025-05-14T14:06:30+00:00</lastmod>
+  </url><url>
+    <loc>https://blog.goodfast.info/</loc>
+    <lastmod>2025-05-14T14:06:30+00:00</lastmod>
+  </url><url>
+    <loc>https://blog.goodfast.info/categories/llm/</loc>
+    <lastmod>2025-05-14T14:06:30+00:00</lastmod>
+  </url><url>
+    <loc>https://blog.goodfast.info/post/</loc>
+    <lastmod>2025-05-14T14:06:30+00:00</lastmod>
+  </url><url>
+    <loc>https://blog.goodfast.info/categories/vibe-coding/</loc>
+    <lastmod>2025-05-14T14:06:30+00:00</lastmod>
+  </url><url>
+    <loc>https://blog.goodfast.info/post/llm-adventures/</loc>
+    <lastmod>2025-05-14T14:06:30+00:00</lastmod>
   </url><url>
     <loc>https://blog.goodfast.info/categories/data-modelling/</loc>
     <lastmod>2025-04-28T21:28:30+00:00</lastmod>
@@ -11,16 +32,10 @@
     <loc>https://blog.goodfast.info/categories/data-vault/</loc>
     <lastmod>2025-04-28T21:28:30+00:00</lastmod>
   </url><url>
-    <loc>https://blog.goodfast.info/</loc>
-    <lastmod>2025-04-28T21:28:30+00:00</lastmod>
-  </url><url>
     <loc>https://blog.goodfast.info/categories/notes/</loc>
     <lastmod>2025-04-28T21:28:30+00:00</lastmod>
   </url><url>
     <loc>https://blog.goodfast.info/post/data-modelling-notes/</loc>
-    <lastmod>2025-04-28T21:28:30+00:00</lastmod>
-  </url><url>
-    <loc>https://blog.goodfast.info/post/</loc>
     <lastmod>2025-04-28T21:28:30+00:00</lastmod>
   </url><url>
     <loc>https://blog.goodfast.info/categories/anomalies/</loc>
